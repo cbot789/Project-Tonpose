@@ -24,15 +24,20 @@ public class Encryption {
         StringBuffer buffer = new StringBuffer(inputString);
         int temp = 1;
         int currentKey = 1;
-        if (key == null ^ key.length() < length){
-            return  "ERROR: KEY";
-        }
+        int j = 0;
+
         for(int i = 0; i < length; i++){
             temp = (int) buffer.charAt(i);
             currentKey = (int) key.charAt(i);
             temp = (temp * (currentKey-31));
             buffer.setCharAt(i, (char)temp);
+
+            j++;
+            if(j >= length){
+                j = 0;
+            }
         }
+
         return buffer.toString();
     }
     public static String decrypt(String inputString, String key) {                      //decrypts a string using the given key
@@ -40,24 +45,20 @@ public class Encryption {
         StringBuffer buffer = new StringBuffer(inputString);
         int temp = 1;
         int currentKey = 1;
-        if (key == null ^ key.length() < length){
-            return "ERROR: KEY";
-        }
-        for(int i = 0; i < length; i++){
-            temp = (int) buffer.charAt(i);
+        int j = 0;
+
+        for(int i = 0; i < keyLength; i++){
+            temp = (int) buffer.charAt(j);
             currentKey = (int) key.charAt(i);
             temp = (temp / (currentKey-31));
-            buffer.setCharAt(i, (char)temp);
+            buffer.setCharAt(j, (char)temp);
+
+            j++;
+            if(j >= length){
+                j = 0;
+            }
         }
+
         return buffer.toString();
     }
-    public static boolean check(String input, String dataBase){                         //change to compare string to all strings in dataBase, separate passwords and usernames
-        if(input.compareTo(dataBase) == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
 }
