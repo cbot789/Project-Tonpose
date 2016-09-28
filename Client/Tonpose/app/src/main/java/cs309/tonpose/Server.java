@@ -11,19 +11,13 @@ public class Server {
     private String name;
     private String ip;
     private int port;
-    private List<User> banList = new ArrayList<User>();
-    private List<User> modList = new ArrayList<User>();
-    private List<User> adminList = new ArrayList<User>();
     private int playerCount;
     private Map map;
-    private String recieved;
-    private boolean sending;
 
     public Server(String nameInput, String ipInput, int portInput){     //Server object initialize
         name = nameInput;
         ip = ipInput;
         port = portInput;
-        sending = false;
     }
     public String getIp(){                                              //return server's ip address
         return ip;
@@ -34,15 +28,6 @@ public class Server {
     public int getPort(){                                              //returns server's port number
         return port;
     }
-    public List<User> getBanList(){                                     //returns the list of users banned on this server
-        return banList;
-    }
-    public List<User> getModList(){                                     //returns the list of users with modderator permissions on the server
-        return modList;
-    }
-    public List<User> getAdminList(){                                     //returns the list of users with admin permissions on the server
-        return modList;
-    }
     public boolean compare(Server other){                               //compares the ip and port number of two servers. if they are the same, returns true
         if(other.getIp().equals(ip)){
             if(other.getPort() == port){
@@ -52,29 +37,21 @@ public class Server {
         return false;
     }
     public int getPlayerCount(){                                        //returns players currently on the server
-        updatePlayerCount();
+        updatePlayerCount();                                            //add delay so to update? (update only once every second?)
         return playerCount;
     }
 
     private void updatePlayerCount(){
-                                                                        //add delay so to update? (update only once every second?)
         sendData("updatePlayerCount");                                  //change string to speed up sending
-        receiveData();
+        String data = receiveData();
+        playerCount = Integer.parseInt(data);
     }
 
-    public Boolean receiveData(){
-        recieved = null;
-
-        //placeholder checking mysql database
-        //recievedData = mysql database info
-        if(recieved == null){
-            return false;
-        }
-        sending = false;
-        return true;
+    public String receiveData(){
+        //placeholder to recive data from server
+        return null;
     }
     public void sendData(String toSend){
         //placeholder to send data to mysql
-        sending = true;
     }
 }
