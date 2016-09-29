@@ -1,20 +1,17 @@
 package tonpose;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class Server{
 	
 	private ArrayList<Thread> clients;
 	private ServerSocket serverSocket = null;
-	private Socket ClientSocket = null;
 
 	
 	public Server(int port){
@@ -93,12 +90,17 @@ class ClientHandler extends Thread {
 	
 	public void handle(Message msg){
 		Message m = new Message("serverType");
+		if(msg.getType().equals("username")){
+			String name = msg.getData();
+			m.setData("Hello " + name);
+			sendMsg(m);
+		}
 		if(msg.getType().equals("type1")){
 			String d = msg.getData();
 			m.setData("You sent a type1 message that said: " + d);
 			sendMsg(m);
 		}
-		if(msg.getType().equals("type2")){
+		else if(msg.getType().equals("type2")){
 			m.setData("You sent a type2 message. Stop sending type2 messages.");
 			sendMsg(m);
 		}
