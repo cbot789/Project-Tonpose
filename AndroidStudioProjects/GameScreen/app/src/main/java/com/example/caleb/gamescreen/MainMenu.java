@@ -50,7 +50,7 @@ public class MainMenu extends AppCompatActivity {
 
         }
 
-    });
+    });}
 
     private void goToSecondActivity() {
 
