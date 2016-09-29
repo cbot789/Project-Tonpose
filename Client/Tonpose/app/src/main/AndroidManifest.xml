@@ -15,6 +15,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="cs309.tonpose.Settings"/>
+        android:screenOrientation="landscape"
+        <activity android:name="cs309.tonpose.ServerSelect"/>
+        <activity android:name="cs309.tonpose.MainMenu"></activity>
     </application>
 
 </manifest>
