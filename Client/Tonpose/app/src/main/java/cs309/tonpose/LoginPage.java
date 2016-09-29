@@ -1,6 +1,7 @@
 package cs309.tonpose;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class LoginPage extends AppCompatActivity {
         if(tempData == "true"){
             popup("Log in success!");
             receiveData();
-            //go to main menu
+            goToMainMenu();
         }
         else{
             popup("Incorrect Username or Password");
@@ -168,5 +169,11 @@ public class LoginPage extends AppCompatActivity {
             }
         }
         return true;
+    }
+    private void goToMainMenu() {
+
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+
     }
 }
