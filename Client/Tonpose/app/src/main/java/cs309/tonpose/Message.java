@@ -1,6 +1,8 @@
 package cs309.tonpose;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable{
 	private String type;
 	private String data;
 	

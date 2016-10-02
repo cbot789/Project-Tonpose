@@ -1,4 +1,4 @@
-package cs309.tonpose;
+package tonpose;
 
 import java.net.*;
 import java.io.*;
