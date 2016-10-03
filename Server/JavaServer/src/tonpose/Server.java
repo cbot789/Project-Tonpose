@@ -43,7 +43,7 @@ public class Server{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		Server server = new Server(4444);
+		Server server = new Server(8080);
 	}
 }
 
@@ -97,16 +97,16 @@ class ClientHandler extends Thread {
 		}
 		if(msg.getType().equals("type1")){
 			String d = msg.getData();
-			m.setData("You sent a type1 message that said: " + d);
+			m.setData("You sent a \"type1\" message that said: \"" + d + "\"");
 			sendMsg(m);
 		}
 		else if(msg.getType().equals("type2")){
-			m.setData("You sent a type2 message. Stop sending type2 messages.");
+			m.setData("You sent a \"type2\" message. Stop sending \"type2\" messages.");
 			sendMsg(m);
 		}
 		else{
 			String t = msg.getType();
-			m.setData("You sent a "+ t + " message, I have no idea what to do with this.");
+			m.setData("You sent a \""+ t + "\" message, I have no idea what to do with this.");
 			sendMsg(m);
 		}
 	}
