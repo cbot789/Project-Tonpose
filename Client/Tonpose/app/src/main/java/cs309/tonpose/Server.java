@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by Quade Spellman on 9/19/2016.
  */
-public class Server {
+public class Server {//TODO delete?
     private String name;
     private String ip;
     private int port;

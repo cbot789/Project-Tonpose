@@ -1,71 +1,70 @@
 package cs309.tonpose;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+
 import java.net.*;
 import java.io.*;
 
-public class Client
+public class Client extends AsyncTask<Void, Void, Void>
 {
 	private Socket socket = null;
 	private ObjectOutputStream streamOut = null;
 	private ObjectInputStream streamIn = null;
-	private String username;
-	protected String serverMsg;
+	private String ip;
+	private int port;
+	private Message msg = null;
 
-	public Client(String ipAddr, String username, int serverPort)
+	public Client(String ipAddr, int serverPort) throws Exception
 	{
-		this.username = username;
-		try{
-			socket = new Socket(ipAddr, serverPort);
-			start();
-		} catch (Exception e){
-			e.printStackTrace();
-			System.exit(1);
-		}
+		ip = ipAddr;
+		port = serverPort;
 	}
-
-	public synchronized void sendMsg(Message msg)
-	{
-		try{
-			streamOut.writeObject(msg);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	public void start() throws IOException
-	{
-		try{
+	@Override
+	protected Void doInBackground(Void... parm) {													//new thread
+		socket = new Socket();
+		try {
+			socket.connect(new InetSocketAddress(ip, port), 3000);
 			streamIn = new ObjectInputStream(socket.getInputStream());
 			streamOut = new ObjectOutputStream(socket.getOutputStream());
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			System.out.println("client stream gen error");
-		}
-		new ServerHandler().start();
-		Message msg = new Message("username");
-		msg.setData(username);
-		try{
 			streamOut.writeObject(msg);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	class ServerHandler extends Thread {
-		public void run() {
 			while(true){
 				try{
-					Message msg = (Message)streamIn.readObject();
-					serverMsg = msg.getData();//TODO show(msg);
+					msg = (Message)streamIn.readObject();											//when recieve response save to msg and break
+					break;
 				}
-				catch(Exception e){
+				catch(NullPointerException e){								//do nothing and wait
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			msg = null;
+		}finally{
+			if(socket != null){
+				try{
+					socket.close();
+				}catch (IOException e){
 					e.printStackTrace();
-					System.exit(1);
 				}
 			}
 		}
+		return null;
+	}
+	public void setMsg(Message message){
+		msg = message;
+	}
+
+	@Override
+	protected void onPostExecute(Void results){
+		if(msg != null){
+			msg.decrypt();
+		}else{
+			msg = new Message("Error");
+			msg.setData("Timeout");
+		}
+		super.onPostExecute(results);
+	}
+	public Message getMessage(){
+		return msg;
 	}
 }

@@ -20,9 +20,7 @@ public class ServerSelect extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-
-
-
+                    //place holder for connecting to given server and starting game                  //TODO add connect function
             }
 
         });
@@ -30,11 +28,8 @@ public class ServerSelect extends AppCompatActivity {
         buttonQuickPlay.setOnClickListener(new View.OnClickListener() {
 
             @Override
-
-            public void onClick(View v) {
-
-
-
+            public void onClick(View v) {                                                       //TODO add click play function
+                    //place holder for starting game
             }
 
         });
@@ -42,22 +37,15 @@ public class ServerSelect extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
-
             public void onClick(View v) {
                 goToMain();
-
-
             }
-
         });
 
     }
     private void goToMain() {
-
         Intent intent = new Intent(this, MainMenu.class);
-
         startActivity(intent);
-
     }
 
 

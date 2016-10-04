@@ -26,11 +26,11 @@ public class Encryption {
         int currentKey = 1;
         int j = 0;
 
-        for(int i = 0; i < length; i++){
-            temp = (int) buffer.charAt(i);
+        for(int i = 0; i < keyLength; i++){
+            temp = (int) buffer.charAt(j);
             currentKey = (int) key.charAt(i);
             temp = (temp * (currentKey-31));
-            buffer.setCharAt(i, (char)temp);
+            buffer.setCharAt(j, (char)temp);
 
             j++;
             if(j >= length){
