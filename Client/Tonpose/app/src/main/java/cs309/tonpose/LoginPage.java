@@ -34,7 +34,6 @@ public class LoginPage extends AppCompatActivity {
     public static final int PASSMAX = 32;
     public static final int NAMEMIN = 4;
     public static final int PASSMIN = 4;
-    public static final String TEMPKEY = "132950YUDS9FH920U3Y4IDFJ3IRNMD0W";        //key used for encryption
 
     private String userName;                                                        //last entered strings in username and password fields
     private String password;
@@ -147,10 +146,9 @@ public class LoginPage extends AppCompatActivity {
             connected = true;
         }
         if (connected) {                                                            //TODO uneeded if?
-            String type = Encryption.encrypt(inputType, TEMPKEY);
-            String data = Encryption.encrypt(toSend, TEMPKEY);
-            Message message = new Message(type);
-            message.setData(data);
+            Message message = new Message(inputType);
+            message.setData(toSend);
+            message.encrypt();
             client.setMsg(message);
             client.execute();
         } else {

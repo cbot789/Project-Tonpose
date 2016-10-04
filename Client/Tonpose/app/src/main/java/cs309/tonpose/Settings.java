@@ -15,40 +15,27 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-
         Button button = (Button) findViewById(R.id.Back);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
-
             public void onClick(View v) {
-
                 goToMainMenu();
-
             }
-
         });
         Button button2 = (Button) findViewById(R.id.Save);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
-
             public void onClick(View v) {
-
                 goToMainMenu();
-
             }
-
         });
     }
 
-
     private void goToMainMenu() { //Returns to the main menu
-
         Intent intent = new Intent(this, MainMenu.class);
-
         startActivity(intent);
-
     }
 
 }

@@ -57,9 +57,7 @@ public class Client extends AsyncTask<Void, Void, Void>
 	@Override
 	protected void onPostExecute(Void results){
 		if(msg != null){
-			Message response = new Message(Encryption.decrypt(msg.getType(), LoginPage.TEMPKEY)); 		//decrypt message
-			response.setData(Encryption.decrypt(msg.getData(), LoginPage.TEMPKEY));
-			msg = response;
+			msg.decrypt();
 		}else{
 			msg = new Message("Error");
 			msg.setData("Timeout");
