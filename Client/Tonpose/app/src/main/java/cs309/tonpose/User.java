@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Quade Spellman on 9/15/2016.
  */
-public class User {
+public class User {//TODO delete?
     private String userName;                                    //user's login name
     private String password = null;                                    //user's login password
     private String key;                                         //key used for encryption
