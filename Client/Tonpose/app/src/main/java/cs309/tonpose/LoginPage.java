@@ -205,15 +205,22 @@ public class LoginPage extends AppCompatActivity { //TODO force login to landsca
         String ip = "10.25.70.122"; //DK-02 Server IP
         int port = 8080;
         String type = "type1";
-        if(client == null) {
+        //if(client == null) {
             try {
                 client = new Client(ip, username, port);
                 client.execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        //}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        Message msg = new Message(type);
+        System.out.println(client.serverMsg);
+
+        /*Message msg = new Message(type);
         msg.setData("Attempting to connect");
         client.sendMsg(msg);
         try {
@@ -222,6 +229,6 @@ public class LoginPage extends AppCompatActivity { //TODO force login to landsca
             e.printStackTrace();
         }
         System.out.println(client.serverMsg);
-
+        */
     }
 }

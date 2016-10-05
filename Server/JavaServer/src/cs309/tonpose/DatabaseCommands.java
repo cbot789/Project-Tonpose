@@ -4,18 +4,18 @@ public class DatabaseCommands {
 
 	
 	
-	public static void insertUser(String username, String password, Connection connection) throws SQLException{ //inserts a user into the database using the given connection
+	public static boolean insertUser(String username, String password, Connection connection) throws SQLException{ //inserts a user into the database using the given connection
 		if(connection==null){
 			System.out.println("No connection found");
-			return;
+			return false;
 		}
 		if(userExists(username, connection)){
 			System.out.println("username already exists");
-			return;
+			return false;
 		}
 		Statement stmt = connection.createStatement() ;
 		stmt.executeUpdate("INSERT INTO Users " + "VALUES ('"+username+"', '"+password+"')"); //will throw an exception if there is already a user with the same name in the database
-		return;
+		return true;
 	}
 	
 	public static boolean userExists(String username, Connection connection) throws SQLException{ //will check if a specific user exists in the database. is NOT case sensitive

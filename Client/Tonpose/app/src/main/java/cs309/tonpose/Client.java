@@ -38,11 +38,20 @@ public class Client extends AsyncTask<Void, Void, Void>
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		new ServerHandler().start();
+		//new ServerHandler().start();
 		Message msg = new Message("username");
 		msg.setData(username);
 		try{
 			streamOut.writeObject(msg);
+			System.out.println("Sending "+ msg.getType() + " message");
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+
+		try{
+			msg = (Message)streamIn.readObject();
+			serverMsg = msg.getData();
 		}
 		catch(Exception e){
 			e.printStackTrace();
