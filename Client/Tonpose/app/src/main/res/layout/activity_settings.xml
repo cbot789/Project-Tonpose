@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.caleb.gamescreen.Settings">
+    tools:context="cs309.tonpose.Settings">
 
     <Button
         android:layout_width="wrap_content"
@@ -26,4 +26,55 @@
         android:layout_above="@+id/Back"
         android:layout_alignLeft="@+id/Back"
         android:layout_alignStart="@+id/Back" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/musicMute"
+        android:layout_alignBottom="@+id/musicBar"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_height="wrap_content"
+        android:id="@+id/sfxBar"
+        android:layout_marginBottom="110dp"
+        style="@android:style/Widget.SeekBar"
+        android:layout_width="300dp"
+        android:layout_above="@+id/Save"
+        android:layout_alignParentEnd="true" />
+
+    <SeekBar
+        android:layout_height="wrap_content"
+        android:id="@+id/musicBar"
+        android:layout_marginBottom="59dp"
+        style="@android:style/Widget.SeekBar"
+        android:layout_width="300dp"
+        android:layout_above="@+id/sfxBar"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="SFX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sfxBar"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <TextView
+        android:text="Music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/musicMute"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sfxMute"
+        android:layout_alignBottom="@+id/sfxBar"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

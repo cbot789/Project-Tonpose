@@ -31,7 +31,6 @@ public class ServerSelect extends AppCompatActivity {
             public void onClick(View v) {                                                       //TODO add click play function
                     //place holder for starting game
             }
-
         });
         Button buttonBack = (Button) findViewById(R.id.Back); //this button goes to the Main Menu screen
         buttonBack.setOnClickListener(new View.OnClickListener() {

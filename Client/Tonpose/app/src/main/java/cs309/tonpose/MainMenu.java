@@ -26,7 +26,7 @@ public class MainMenu extends AppCompatActivity {
         if(mp == null){                                                                             //starts playing music
             mp = new MediaPlayer();                                                                 //FIXME music keeps playing after switching pages every other time
             mp = MediaPlayer.create(MainMenu.this, R.raw.mainmusic);                                //TODO make so it continues while in settings
-            //mp.setLooping(true);
+            mp.setLooping(true);
             mp.setVolume(100, 100);
         }
         mp.start();

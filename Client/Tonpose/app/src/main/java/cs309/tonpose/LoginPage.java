@@ -19,14 +19,14 @@ import java.util.List;
 
 import cs309.tonpose.user.R;
 
-public class LoginPage extends AppCompatActivity {
-
+public class LoginPage extends AppCompatActivity { //TODO force login to landscape
+                                                    //TODO
     EditText userField;
     EditText passField;
     TextView textView;
 
     Client client;
-    static Boolean connected = false;                                           //is the app currently connected to the server //TODO remove?
+    static Boolean connected = false;                                           //is the app currently connected to the server
 
     private Message response = null;                                       //response from server
 
@@ -35,7 +35,7 @@ public class LoginPage extends AppCompatActivity {
     public static final int NAMEMIN = 4;
     public static final int PASSMIN = 4;
 
-    private String userName;                                                        //last entered strings in username and password fields
+    private String username;                                                        //last entered strings in username and password fields
     private String password;
 
     @Override
@@ -47,12 +47,13 @@ public class LoginPage extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         Button loginButton = (Button) findViewById(R.id.loginButton);
         Button newUserButton = (Button) findViewById(R.id.newUserButton);
+        Button offlineButton = (Button) findViewById(R.id.offline);
 
         loginButton.setOnClickListener(new View.OnClickListener() {             //login attempt when "Login" Button is pressed
             @Override
             public void onClick(View view) {                                    //when login button is pressed
                 if (!connected) {
-                    userName = userField.getText().toString();
+                    username = userField.getText().toString();
                     password = passField.getText().toString();
                     try {
                         loginAttempt();
@@ -60,16 +61,18 @@ public class LoginPage extends AppCompatActivity {
                         e.printStackTrace();
                         popup("Cannot Connect to Server", true);
                     }
-                } else {
-                    if (client.getMessage().getType() != null) {
+                }
+                /*else {
+                    if (client.getMessage().getType() != null) {                                    //TODO change to always checking instead of just when login button is pressed
                         if (response == null) {
                             response = client.getMessage();
+                            connected = false;
                             receiveData();
                         }
                     }else{
                         popup("Waiting for Server response", false);
                     }
-                }
+                }*/
             }
         });
 
@@ -77,7 +80,7 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {                                 //when new user button is pressed
                 if (!connected) {
-                    userName = userField.getText().toString();
+                    username = userField.getText().toString();
                     password = passField.getText().toString();
                     try {
                         createUserAttempt();
@@ -90,10 +93,18 @@ public class LoginPage extends AppCompatActivity {
                 }
             }
         });
+
+        offlineButton.setOnClickListener(new View.OnClickListener() {           //create new user attempt when "New User" button is pressed
+            @Override
+            public void onClick(View view) {                                 //when new user button is pressed
+               popup("Offline Mode", false);
+                goToMainMenu();
+            }
+        });
     }
 
     public void popup(String message, Boolean button) {                         //create popup with "message" and ok button if input 'button' is true
-        if (button) {
+        if (button) {                                                           //TODO move to 'global' static class? getApplicationContext and this are not static
             AlertDialog.Builder errorBox = new AlertDialog.Builder(this);
             errorBox.setMessage(message)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -110,14 +121,15 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
-    public void loginAttempt() throws Exception {                               //attempts to log user in with given password and username
+    private void loginAttempt() throws Exception {                               //attempts to log user in with given password and username
         if (checkLength()) {
-            sendData("login", userName + " " + password);                       //TODO change strings
+            connect();
+            //sendData("login", username + " " + password);                       //TODO change strings?
         }
     }
 
-    public void login() {                                                       //when server responds to login attempt
-        if (response.getData() == "true") {                                     //TODO change string
+    private void login() {                                                       //when server responds to login attempt
+        if (response.getData().equals("true")) {                                     //TODO change string?
             popup("Log in success!", false);
             goToMainMenu();
         } else {
@@ -125,45 +137,42 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
-    public void createUserAttempt() throws Exception {                          //connects to server with request to create new user
+    private void createUserAttempt() throws Exception {                          //connects to server with request to create new user
         if (checkLength()) {
-            sendData("create", userName + " " + password);                      //TODO change strings
+            connect();
+            //sendData("create", username + " " + password);                      //TODO change strings?
         }
     }
 
-    public void userCreated() {                                                  //when server responds to create attempt
-        if (response.getData() == "true") {                                     //TODO change string
-            popup("User created with Username '" + userName + "'", false);
+    private void userCreated() {                                                  //when server responds to create attempt
+        if (response.getData() == "true") {                                     //TODO change string?
+            popup("User created with Username '" + username + "'", false);
             goToMainMenu();
         } else {
-            popup("Username '" + userName + "' Taken", false);
+            popup("Username '" + username + "' Taken", false);
         }
     }
 
-    public void sendData(String inputType, String toSend) throws Exception {                      //sends message with type of inputType and Data of toSend, also encrypts
-        if (!connected) {
-            client = new Client("10.25.70.112", 8080);
+    /*public void sendData(String inputType, String toSend) throws Exception {                      //sends message with type of inputType and Data of toSend, also encrypts
+        if (!connected) {                                                                           //TODO move to 'global' static class?
+            client = new Client("10.25.70.122", username, 8080);
             connected = true;
         }
-        if (connected) {                                                            //TODO uneeded if?
-            Message message = new Message(inputType);
-            message.setData(toSend);
-            message.encrypt();
-            client.setMsg(message);
-            client.execute();
-        } else {
-            popup("ERROR: not connected to server", true);
-        }
-    }
+        Message message = new Message(inputType);
+        message.setData(toSend);
+        client.setMsg(message);
+        client.execute();
+    }*/
 
     public void goToMainMenu() {                                                //goes to main menu screen      //TODO move to new global class?
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 
-    public void receiveData() {                                                 //when data is reveived, deciedes which function to call based on message type
-        connected = false;
-        switch (response.getType()) {                                           //TODO test
+    /*public void receiveData() {                                                 //when data is received, decides which function to call based on message type
+        switch (response.getType()) {
+            case "serverType":
+                popup(response.getData(), true);
             case "login":
                 login();
                 break;
@@ -178,10 +187,10 @@ public class LoginPage extends AppCompatActivity {
                 break;
         }
         response = null;
-    }
+    }*/
 
-    public boolean checkLength() {                                              //returns false and displays message if either sting is too short or long
-        if (userName.length() < NAMEMIN || userName.length() > NAMEMAX) {
+    public boolean checkLength() {                                                      //returns false and displays message if either sting is too short or long
+        if (username.length() < NAMEMIN || username.length() > NAMEMAX) {               //TODO dont allow spaces
             popup("Username must be between " + NAMEMIN + " and " + NAMEMAX + " chars", false);
             return false;
 
@@ -190,5 +199,29 @@ public class LoginPage extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public void connect(){
+        String ip = "10.25.70.122"; //DK-02 Server IP
+        int port = 8080;
+        String type = "type1";
+        if(client == null) {
+            try {
+                client = new Client(ip, username, port);
+                client.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Message msg = new Message(type);
+        msg.setData("Attempting to connect");
+        client.sendMsg(msg);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(client.serverMsg);
+
     }
 }
