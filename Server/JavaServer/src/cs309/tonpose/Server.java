@@ -1,4 +1,4 @@
-package tonpose;
+package cs309.tonpose;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -76,6 +76,7 @@ class ClientHandler extends Thread {
 			catch(Exception e){
 				break;
 			}
+			System.out.println(username + " sent a \"" + msg.getType() + "\" message");
 			handle(msg);
 		}
 	}
