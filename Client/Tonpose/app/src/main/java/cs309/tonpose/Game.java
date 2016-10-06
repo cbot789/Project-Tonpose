@@ -1,15 +1,20 @@
 package cs309.tonpose;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.io.ObjectInputStream;
@@ -19,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static android.R.attr.width;
+import static cs309.tonpose.R.attr.height;
+
 public class Game extends AppCompatActivity implements View.OnTouchListener {
     private int xDelta;
     private int yDelta;
@@ -26,19 +34,51 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     private ClientUpdateTask updateRequest = null;
     private int timeoutCounter = 0;
     List<User> userList = new ArrayList<>();
+    Updater mUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        Music.startSong(this, Music.Song.action, true);
+
+        Music.startSong(this, Music.Song.action, true);                                             //plays action song
+
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        Button Exit = (Button) findViewById(R.id.ExitGame);                                       //button to exit game
-        ImageView j = (ImageView)findViewById(R.id.Player);
         //screen = (FrameLayout)findViewById(R.id.activity_game);
         //screen.setOnClickListener(this);
-        j.setOnTouchListener(this);
-        Exit.setOnClickListener(new View.OnClickListener() {                              //this button goes to the server select screen
+
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
+        ImageView p2 = new ImageView(this);
+        p2.setImageResource(R.drawable.mainbase);
+        p2.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
+        p2.setVisibility(View.VISIBLE);
+        p2.setX(100);
+        p2.setY(500);
+        rl.addView(p2);                                                                                 //end delete
+
+        final ImageView playerModel = (ImageView)findViewById(R.id.Player);
+        playerModel.setOnTouchListener(this);
+
+        mUpdater = new Updater(new Runnable() {
+            @Override
+            public void run() {
+                if(playerModel.getVisibility() == View.VISIBLE){                                    //TODO delete for testing purposes only
+                    playerModel.setVisibility(View.INVISIBLE);
+                }else{
+                    playerModel.setVisibility(View.VISIBLE);
+                }                                                                                   //end delete
+                /*timeoutCounter++;                                                              //TODO uncomment and test
+                getUpdates();
+                if(timeoutCounter > 10){
+                    //timeout
+                }
+                */
+            }
+        });
+        mUpdater.startUpdates();
+
+        Button Exit = (Button) findViewById(R.id.ExitGame);                                          //this button goes to the main menu
+        Exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToMainMenu();
@@ -48,12 +88,12 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {//this function moves the image along with the touch event //TODO add constant rather than instantaneous motion
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
-        ImageView j = (ImageView)findViewById(R.id.Player);
+        ImageView playerModel = (ImageView)findViewById(R.id.Player);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                xDelta = (int) (X - j.getTranslationX());
-                yDelta = (int) (Y - j.getTranslationY());
+                xDelta = (int) (X - playerModel.getTranslationX());
+                yDelta = (int) (Y - playerModel.getTranslationY());
                 break;
             case MotionEvent.ACTION_UP:
 
@@ -64,29 +104,29 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_MOVE:
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-
-                j.setTranslationX(X - xDelta);
-                j.setTranslationY(Y - yDelta);
+                playerModel.setTranslationX(X - xDelta);
+                playerModel.setTranslationY(Y - yDelta);
                 break;
         }
 
         return true;
     }
-    private void goToMainMenu() { //Returns to the main menu
+    private void goToMainMenu() {                                                           //Returns to the main menu
+        mUpdater.stopUpdates();
         Music.playSFX(this, Music.SFX.pop);
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 
-    private void getUpdates(){                                                                      //starts async thread TODO implement on delay to game
+    private void getUpdates(){                                                                      //starts async thread to tell client updated info
         if(updateRequest != null){
             return;
         }
-        updateRequest = new ClientUpdateTask("email", "X Y");
+        updateRequest = new ClientUpdateTask("email", "X Y");                                       //TODO change to username and picture's x y location;
         updateRequest.execute((Void) null);
     }
 
-    private void updateMap(String updates){                                                         //TODO move to new thread
+    private void updateUserList(String updates){                                                    //given a string gets the name, and (x,y) coordinates and updates userList
         String name;
         int x;
         int y;
@@ -98,7 +138,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             x = scan.nextInt();
             y = scan.nextInt();
             for (User user:userList) {
-                if(name.equals(user.getName())){
+                if(user.getName().equals(name)){
                     user.setLocationX(x);
                     user.setLocationY(y);
                     found = true;
@@ -106,10 +146,24 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
                 }
             }
             if(!found){
-                userList.add(new User(name, x, y));
+                userList.add(new User(name, x, y, getApplicationContext()));
             }
         }
-                                                                                                  //TODO display other chars on screen
+       updateMap();
+    }
+
+    private void updateMap() {                                                                      //updates the model and location of each player //TODO test me
+        ImageView model;
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);
+        for (User user:userList) {
+            model = user.getModel();
+            model.setImageResource(R.drawable.mainbase);
+            model.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
+            model.setX(user.getLocationX());
+            model.setY(user.getLocationY());
+            model.setVisibility(View.VISIBLE);
+            rl.addView(model);
+        }
     }
 
     public class ClientUpdateTask extends AsyncTask<Void, Void, Boolean> {
@@ -162,12 +216,8 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         @Override
         protected void onPostExecute(final Boolean success) {
             updateRequest = null;
-            if(success && response.getData1().equals("true")){
-                updateMap(response.getData2());                                                     //if there are map updates
-                timeoutCounter = 0;
-            }else if(!success){
-                timeoutCounter++;                                                                   //TODO see if connection timedout
-            }else{
+            if(success && response.getData1().equals("true")){                                          //if there are map updates
+                updateUserList(response.getData2());                                                  //FIXME what thread is this ran on?
                 timeoutCounter = 0;
             }
         }
@@ -178,5 +228,30 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
+    public class Updater {        // Create a Handler that uses the Main Looper to run in   //TODO test and improve
+        private Handler mHandler = new Handler(Looper.getMainLooper());
+
+        private Runnable mStatusChecker;
+        private int interval = 500;                                                            //update interval in ms
+
+        public Updater(final Runnable Updater) {
+            mStatusChecker = new Runnable() {
+                @Override
+                public void run() {
+                    Updater.run();                                                          // Run the passed runnable
+
+                    mHandler.postDelayed(this, interval);                                       // Re-run it after the update interval
+                }
+            };
+        }
+
+        public synchronized void startUpdates(){                                                //starts updates
+            mStatusChecker.run();
+        }
+
+        public synchronized void stopUpdates(){                                             //stops updates
+            mHandler.removeCallbacks(mStatusChecker);
+        }
+    }
 }
 

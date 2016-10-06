@@ -24,8 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/mainbase"
-        android:layout_marginTop="146dp"
         android:id="@+id/Player"
+        android:layout_marginTop="137dp"
         android:layout_below="@+id/ExitGame"
         android:layout_centerHorizontal="true" />
 
