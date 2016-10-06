@@ -1,5 +1,7 @@
 package cs309.tonpose;
 
+import android.support.design.widget.CoordinatorLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +10,35 @@ import java.util.List;
  */
 public class User {//TODO delete?
     private String userName;                                    //user's login name
-    private String password = null;                                    //user's login password
-    private List<Server> serverList = new ArrayList<Server>();       //stores recently played servers
-    private int maxListSize = 3;                                    //max number of recently played servers stored
+    private double locationX;
+    private double locationY;
 
-    public User(String name, String pass){                      //initialize user without key
-            password = pass;
-            userName = name;
+    public User(String name, int X, int Y){                      //initialize user without key
+        userName = name;
+        locationX = X;
+        locationY = Y;
     }
+
+    public String getName(){                            //returns userName
+        return userName;
+    }
+
+    public double getLocationX(){
+        return locationX;
+    }
+
+    public double getLocationY() {
+        return locationY;
+    }
+
+    public void setLocationX(double x){
+        locationX = x;
+    }
+
+    public void setLocationY(double y){
+        locationY = y;
+    }
+    /*                                                                                              //TODO delete
     public void updateServerList(Server newServer){             //adds lastest server to list after checking for duplicates, deletes oldest if list is longer than maxSize
         for (Server server: serverList) {
             if(newServer.compare(server)){
@@ -31,13 +54,7 @@ public class User {//TODO delete?
     public void setServerList(List<Server> list){
         serverList = list;
     }
-    public String getUser(){                            //returns userName
-        return userName;
-    }
-    public String getPassword(){                        //returns password
-        return password;
-    }
     public List getLastServer(){                        //returns 'maxSize' number of recently played servers
         return serverList;
-    }
+    }*/
 }
