@@ -4,6 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "cs309.tonpose"
         minSdkVersion 19
         targetSdkVersion 24

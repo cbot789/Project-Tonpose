@@ -77,4 +77,20 @@
         android:layout_alignBottom="@+id/sfxBar"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignStart="@+id/Save"
+        android:id="@+id/currentMusicVolume" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sfxMute"
+        android:layout_alignEnd="@+id/currentMusicVolume"
+        android:id="@+id/currentSfxVolume" />
+
 </RelativeLayout>

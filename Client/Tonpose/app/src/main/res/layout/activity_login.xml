@@ -72,6 +72,12 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button
+                android:text="Offline Mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/offlineButton" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
