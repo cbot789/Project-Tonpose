@@ -7,20 +7,23 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public class Game extends AppCompatActivity implements View.OnTouchListener {
-    private int _xDelta;
-    private int _yDelta;
+    private int xDelta;
+    private int yDelta;
+    private FrameLayout screen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        Button Exit = (Button) findViewById(R.id.ExitGame);                                       //button to enter game
+        Button Exit = (Button) findViewById(R.id.ExitGame);                                       //button to exit game
         ImageView j = (ImageView)findViewById(R.id.Player);
-
+        //screen = (FrameLayout)findViewById(R.id.activity_game);
+        //screen.setOnClickListener(this);
         j.setOnTouchListener(this);
         Exit.setOnClickListener(new View.OnClickListener() {                              //this button goes to the server select screen
             @Override
@@ -29,17 +32,18 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             }
         });
 }
-    public boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {//this function moves the image along with the touch event //TODO add constant rather than instantaneous motion
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
         ImageView j = (ImageView)findViewById(R.id.Player);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                _xDelta = (int) (X - j.getTranslationX());
-                _yDelta = (int) (Y - j.getTranslationY());
+                xDelta = (int) (X - j.getTranslationX());
+                yDelta = (int) (Y - j.getTranslationY());
                 break;
             case MotionEvent.ACTION_UP:
+
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 break;
@@ -48,8 +52,8 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             case MotionEvent.ACTION_MOVE:
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
 
-                j.setTranslationX(X - _xDelta);
-                j.setTranslationY(Y - _yDelta);
+                j.setTranslationX(X - xDelta);
+                j.setTranslationY(Y - yDelta);
                 break;
         }
 
