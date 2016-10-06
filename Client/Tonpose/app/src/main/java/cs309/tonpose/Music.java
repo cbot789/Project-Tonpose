@@ -19,7 +19,7 @@ import cs309.tonpose.R;
 
 public class Music {                                                                //TODO read from file
     public enum Song {
-        main, action, brush, nothing
+        main, action, brush, nothing, boss
     }
     public enum SFX {
         pop
@@ -42,8 +42,9 @@ public class Music {                                                            
                 case action:
                     play(context, R.raw.actionmusic, Song.action);
                     break;
-                case brush:
-                    play(context, R.raw.brushmusic, Song.brush);
+                case boss:
+                    play(context, R.raw.bossmusic, Song.boss);
+
                 default:
                     play(context, R.raw.brushmusic, Song.brush);
             }
@@ -119,5 +120,8 @@ public class Music {                                                            
         }
         musicPlayer.setVolume(musicVolume, musicVolume);
         musicPlayer.start();
+    }
+    public static boolean isMusicPlaying(){
+        return musicPlayer.isPlaying();
     }
 }

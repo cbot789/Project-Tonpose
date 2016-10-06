@@ -1,5 +1,8 @@
 package cs309.tonpose;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -35,6 +38,9 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     private int timeoutCounter = 0;
     List<User> userList = new ArrayList<>();
     Updater mUpdater;
+    private int interval = 500;                                                            //update interval in ms for pinging server
+    private int TIMEOUTVARB = 10;                                                           //TIMEOUTVARB * interval = ms before timeout
+    Context gameContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //screen = (FrameLayout)findViewById(R.id.activity_game);
         //screen.setOnClickListener(this);
+
+        gameContext = this;
 
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
         ImageView p2 = new ImageView(this);
@@ -67,12 +75,25 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
                 }else{
                     playerModel.setVisibility(View.VISIBLE);
                 }                                                                                   //end delete
-                /*timeoutCounter++;                                                              //TODO uncomment and test
+                timeoutCounter++;
                 getUpdates();
-                if(timeoutCounter > 10){
-                    //timeout
+                if(timeoutCounter == TIMEOUTVARB){                                                   //when client times out from server
+                    new AlertDialog.Builder(gameContext)
+                            .setTitle("ERROR: Server Timeout")
+                            .setMessage("Lost connection to server. Return to Menu?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    goToMainMenu();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
-                */
             }
         });
         mUpdater.startUpdates();
@@ -166,7 +187,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
-    public class ClientUpdateTask extends AsyncTask<Void, Void, Boolean> {
+    public class ClientUpdateTask extends AsyncTask<Void, Void, Boolean> {                          //connects to server on new thread, sends player location and looks for other player locations
 
         private final String mEmail;
         private final String location;
@@ -231,11 +252,10 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     public class Updater {        // Create a Handler that uses the Main Looper to run in   //TODO test and improve
         private Handler mHandler = new Handler(Looper.getMainLooper());
 
-        private Runnable mStatusChecker;
-        private int interval = 500;                                                            //update interval in ms
+        private Runnable pingServer;
 
         public Updater(final Runnable Updater) {
-            mStatusChecker = new Runnable() {
+            pingServer = new Runnable() {
                 @Override
                 public void run() {
                     Updater.run();                                                          // Run the passed runnable
@@ -246,11 +266,11 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         }
 
         public synchronized void startUpdates(){                                                //starts updates
-            mStatusChecker.run();
+            pingServer.run();
         }
 
         public synchronized void stopUpdates(){                                             //stops updates
-            mHandler.removeCallbacks(mStatusChecker);
+            mHandler.removeCallbacks(pingServer);
         }
     }
 }
