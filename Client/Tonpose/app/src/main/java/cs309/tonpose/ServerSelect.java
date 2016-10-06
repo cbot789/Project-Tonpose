@@ -28,10 +28,11 @@ public class ServerSelect extends AppCompatActivity {
         buttonQuickPlay.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {                                                       //TODO add click play function
-                    //place holder for starting game
+            public void onClick(View v) {
+                    goToGame();
             }
         });
+
         Button buttonBack = (Button) findViewById(R.id.Back); //this button goes to the Main Menu screen
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
@@ -46,7 +47,11 @@ public class ServerSelect extends AppCompatActivity {
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
-
+    private void goToGame(){
+        Intent intent = new Intent(this, Game.class);
+        startActivity(intent);
+    }
 
 }
+
 

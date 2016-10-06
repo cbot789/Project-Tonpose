@@ -23,11 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cs309.tonpose.Settings" />
-        <activity android:name="cs309.tonpose.ServerSelect"/>
-        <activity android:name="cs309.tonpose.MainMenu">
-        android:screenOrientation="landscape"
+        <activity android:name=".Settings" />
+        <activity android:name=".ServerSelect" />
+        <activity android:name=".MainMenu">
+            android:screenOrientation="landscape"
         </activity>
+        <activity android:name=".Game"></activity>
     </application>
 
 </manifest>
