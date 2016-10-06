@@ -1,4 +1,4 @@
-package tonpose;
+package cs309.tonpose;
 
 import java.net.*;
 import java.io.*;
@@ -45,7 +45,7 @@ public class Client
 		}
 		new ServerHandler().start();
 		Message msg = new Message("username");
-		msg.setData(username);
+		msg.setData1(username);
 		try{
 			streamOut.writeObject(msg);
 		}
@@ -59,7 +59,7 @@ public class Client
 			while(true){
 				try{
 					Message msg = (Message)streamIn.readObject();
-					serverMsg = msg.getData();//TODO show(msg);
+					serverMsg = msg.getData1();//TODO show(msg);
 				}
 				catch(Exception e){
 					e.printStackTrace();
