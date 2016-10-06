@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import cs309.tonpose.user.R;
+import cs309.tonpose.R;
 
 public class Settings extends AppCompatActivity {
 

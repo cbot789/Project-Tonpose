@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import cs309.tonpose.user.R;
+import cs309.tonpose.R;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -71,8 +71,9 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void goToLogin() {
-        Intent intent = new Intent(this, LoginPage.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void stopMusic(){                                                                       //stops all music being played
