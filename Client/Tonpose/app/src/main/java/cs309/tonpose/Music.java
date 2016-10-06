@@ -60,7 +60,7 @@ public class Music {
     public static Song getCurrentSong(){
         return currentSong;
     }
-    public static void playSFX(Context context, SFX sfx, int volume){
+    public static void playSFX(Context context, SFX sfx){
         if(sfxOn) {
             sfxPlayer.setVolume(sfxVolume, sfxVolume);
             switch (sfx) {

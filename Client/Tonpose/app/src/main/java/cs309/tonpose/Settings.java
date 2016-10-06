@@ -36,6 +36,7 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                Music.playSFX(Settings.this, Music.SFX.pop);
                 goToMainMenu();
             }
         });
@@ -46,6 +47,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveSettings();
+                Music.playSFX(Settings.this, Music.SFX.pop);
                 goToMainMenu();
             }
         });

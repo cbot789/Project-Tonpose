@@ -15,30 +15,21 @@ import cs309.tonpose.R;
 
 public class MainMenu extends AppCompatActivity {
 
-    private MediaPlayer mp = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        if(mp == null){                                                                             //starts playing music
-            mp = new MediaPlayer();                                                                 //FIXME music keeps playing after switching pages every other time
-            mp = MediaPlayer.create(MainMenu.this, R.raw.mainmusic);                                //TODO make so it continues while in settings
-            mp.setLooping(true);
-            mp.setVolume(100, 100);
-        }
-        mp.start();
-
         Button buttonSettings = (Button) findViewById(R.id.settings);                               //this button goes to the settings screen
         Button buttonLogOut = (Button) findViewById(R.id.logout);                                   //button to go back to login screen
         Button buttonPlay = (Button) findViewById(R.id.play);                                       //button to enter game
+        Music.startSong(MainMenu.this, Music.Song.main, true);
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {                              //this button goes to the settings screen
             @Override
             public void onClick(View v) {
-                stopMusic();
+                Music.playSFX(MainMenu.this, Music.SFX.pop);
                 goToSecondActivity();
             }
         });
@@ -46,7 +37,7 @@ public class MainMenu extends AppCompatActivity {
         buttonLogOut.setOnClickListener(new View.OnClickListener() {                                //button to go back to login screen
             @Override
             public void onClick(View v) {
-                stopMusic();
+                Music.endSong();
                 goToLogin();
             }
         });
@@ -54,7 +45,7 @@ public class MainMenu extends AppCompatActivity {
         buttonPlay.setOnClickListener(new View.OnClickListener() {                                  //button to enter game
             @Override
             public void onClick(View v) {
-                stopMusic();
+                Music.playSFX(MainMenu.this, Music.SFX.pop);
                 goToServerSelect();
             }
         });
@@ -76,13 +67,4 @@ public class MainMenu extends AppCompatActivity {
         finish();
     }
 
-    private void stopMusic(){                                                                       //stops all music being played
-        if(mp != null){                                                                             //FIXME works every other time
-            mp.setLooping(false);
-            mp.pause();
-            mp.stop();
-            mp.release();
-            mp = null;
-        }
-    }
 }
