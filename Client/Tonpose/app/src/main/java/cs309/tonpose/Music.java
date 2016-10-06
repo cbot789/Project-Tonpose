@@ -35,7 +35,6 @@ public class Music {                                                            
 
     public static void startSong(Context context, Song newSong, Boolean loop){              //starts song based on Song enum, loops if true
         if(musicOn){
-            musicPlayer.setVolume(musicVolume, musicVolume);
             switch (newSong) {
                 case main:
                     play(context, R.raw.mainmusic, Song.main);
@@ -59,16 +58,17 @@ public class Music {                                                            
     public static Song getCurrentSong(){                                                //returns current song
         return currentSong;
     }
-    public static void playSFX(Context context, SFX sfx){                               //plays a sfx from SFX enum//FIXME different volumes dont effect sfxPlayer
+    public static void playSFX(Context context, SFX sfx){                               //plays a sfx from SFX enum
         if(sfxOn) {
-            sfxPlayer.setVolume(sfxVolume, sfxVolume);
             switch (sfx) {
                 case pop:
                     sfxPlayer = MediaPlayer.create(context, R.raw.pop);
+                    sfxPlayer.setVolume(sfxVolume, sfxVolume);
                     sfxPlayer.start();
                     break;
                 default:
                     sfxPlayer = MediaPlayer.create(context, R.raw.pop);
+                    sfxPlayer.setVolume(sfxVolume, sfxVolume);
                     sfxPlayer.start();
             }
         }
@@ -109,7 +109,7 @@ public class Music {                                                            
         if(currentSong == song){
             if(!musicPlayer.isPlaying()){
                 musicPlayer.reset();
-                musicPlayer.start();
+
             }
         }
         else{
@@ -117,7 +117,8 @@ public class Music {                                                            
             musicPlayer.release();
             musicPlayer = MediaPlayer.create(context, file);
             currentSong = song;
-            musicPlayer.start();
         }
+        musicPlayer.setVolume(musicVolume, musicVolume);
+        musicPlayer.start();
     }
 }
