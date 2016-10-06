@@ -31,9 +31,9 @@ import static android.R.attr.width;
 import static cs309.tonpose.R.attr.height;
 
 public class Game extends AppCompatActivity implements View.OnTouchListener {
-    private int xDelta;
-    private int yDelta;
-    private FrameLayout screen;
+    private int xDelta, xVelocity,xPos;
+    private int yDelta, yVelocity,yPos;
+    //private FrameLayout screen;
     private ClientUpdateTask updateRequest = null;
     private int timeoutCounter = 0;
     List<User> userList = new ArrayList<>();
@@ -41,32 +41,33 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     private int interval = 500;                                                            //update interval in ms for pinging server
     private int TIMEOUTVARB = 10;                                                           //TIMEOUTVARB * interval = ms before timeout
     Context gameContext;
-
+    private View fullScreen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         Music.startSong(this, Music.Song.action, true);                                             //plays action song
-
+        fullScreen=(View)findViewById(R.id.activity_game);
+        //fullScreen= (RelativeLayout) findViewById(R.id.activity_game);
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //screen = (FrameLayout)findViewById(R.id.activity_game);
         //screen.setOnClickListener(this);
 
-        gameContext = this;
+        //gameContext = this;
 
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
+        /*RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
         ImageView p2 = new ImageView(this);
         p2.setImageResource(R.drawable.mainbase);
         p2.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
         p2.setVisibility(View.VISIBLE);
         p2.setX(100);
         p2.setY(500);
-        rl.addView(p2);                                                                                 //end delete
+        rl.addView(p2);  */                                                                               //end delete
 
         final ImageView playerModel = (ImageView)findViewById(R.id.Player);
-        playerModel.setOnTouchListener(this);
-
+       // playerModel.setOnTouchListener(this);
+        fullScreen.setOnTouchListener(this);
         mUpdater = new Updater(new Runnable() {
             @Override
             public void run() {
@@ -112,7 +113,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         ImageView playerModel = (ImageView)findViewById(R.id.Player);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                //RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 xDelta = (int) (X - playerModel.getTranslationX());
                 yDelta = (int) (Y - playerModel.getTranslationY());
                 break;
@@ -124,7 +125,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             case MotionEvent.ACTION_POINTER_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+               // RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 playerModel.setTranslationX(X - xDelta);
                 playerModel.setTranslationY(Y - yDelta);
                 break;
@@ -218,7 +219,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             msg.setData1(mEmail);
             msg.setData2(location);
             try {
-                streamOut.writeObject(msg);
+                streamOut.writeObject(msg); //null pointer exception encountered here
             }
             catch(Exception e){
                 e.printStackTrace();
