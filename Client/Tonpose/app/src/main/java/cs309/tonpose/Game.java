@@ -48,7 +48,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         setContentView(R.layout.activity_game);
 
         Music.startSong(this, Music.Song.action, true);                                             //plays action song
-        fullScreen=(View)findViewById(R.id.activity_game);
+        fullScreen=(View)findViewById(R.id.activity_game);                                          //This view is the entire screen
         //fullScreen= (RelativeLayout) findViewById(R.id.activity_game);
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //screen = (FrameLayout)findViewById(R.id.activity_game);
@@ -56,14 +56,14 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
 
         gameContext = this;
 
-        /*RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
-        ImageView p2 = new ImageView(this);
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
+        final ImageView p2 = new ImageView(this);
         p2.setImageResource(R.drawable.mainbase);
         p2.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
         p2.setVisibility(View.VISIBLE);
         p2.setX(100);
         p2.setY(500);
-        rl.addView(p2);  */                                                                               //end delete
+        rl.addView(p2);                                                                                 //end delete
 
         final ImageView playerModel = (ImageView)findViewById(R.id.Player);
        // playerModel.setOnTouchListener(this);
@@ -72,10 +72,10 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         mUpdater = new Updater(new Runnable() {
             @Override
             public void run() {
-                if(playerModel.getVisibility() == View.VISIBLE){                                    //TODO delete for testing purposes only
-                    playerModel.setVisibility(View.INVISIBLE);
+                if(p2.getVisibility() == View.VISIBLE){                                    //TODO delete for testing purposes only
+                    p2.setVisibility(View.INVISIBLE);
                 }else{
-                    playerModel.setVisibility(View.VISIBLE);
+                    p2.setVisibility(View.VISIBLE);
                 }                                                                                   //end delete
                 timeoutCounter++;
                 getUpdates();
@@ -108,7 +108,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             }
         });
     }
-    public boolean onTouch(View view, MotionEvent event) {//this function moves the image along with the touch event //TODO add constant rather than instantaneous motion
+    public boolean onTouch(View view, MotionEvent event) {//this function moves the image according to the touch event //TODO add constant rather than instantaneous motion
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
         ImageView playerModel = (ImageView)findViewById(R.id.Player);
@@ -119,7 +119,10 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
                 yDelta = (int) (Y - playerModel.getTranslationY());
                 break;
             case MotionEvent.ACTION_UP:
-
+                final int endX=(int)event.getRawX();
+                final int endY=(int)event.getRawY();
+                //playerModel.setTranslationX(endX-xDelta); //using these 2 lines causes movement upon release of the touch
+                //playerModel.setTranslationY(endY-yDelta);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 break;
@@ -127,7 +130,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_MOVE:
                // RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams(); //also gave class cast exception
-                playerModel.setTranslationX(X - xDelta);
+                playerModel.setTranslationX(X - xDelta); //using these 2 lines causes continuos movement during the touch action
                 playerModel.setTranslationY(Y - yDelta);
                 break;
         }
