@@ -46,7 +46,7 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Music.playSFX(MainMenu.this, Music.SFX.pop);
-                goToServerSelect();
+                goToGame();
             }
         });
     }
@@ -56,8 +56,9 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToServerSelect() {
-        Intent intent = new Intent(this, ServerSelect.class);
+    private void goToGame(){
+        Music.playSFX(this, Music.SFX.pop);
+        Intent intent = new Intent(this, Game.class);
         startActivity(intent);
     }
 

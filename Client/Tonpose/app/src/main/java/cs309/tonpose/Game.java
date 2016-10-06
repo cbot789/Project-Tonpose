@@ -19,6 +19,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        Music.startSong(this, Music.Song.action, true);
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Button Exit = (Button) findViewById(R.id.ExitGame);                                       //button to exit game
         ImageView j = (ImageView)findViewById(R.id.Player);
@@ -28,10 +29,10 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         Exit.setOnClickListener(new View.OnClickListener() {                              //this button goes to the server select screen
             @Override
             public void onClick(View v) {
-                goToServerSelect();
+                goToMainMenu();
             }
         });
-}
+    }
     public boolean onTouch(View view, MotionEvent event) {//this function moves the image along with the touch event //TODO add constant rather than instantaneous motion
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
@@ -59,10 +60,11 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
 
         return true;
     }
-private void goToServerSelect(){
-    Intent intent = new Intent(this, ServerSelect.class);
-    startActivity(intent);
-}
-
+    private void goToMainMenu() { //Returns to the main menu
+        Music.playSFX(this, Music.SFX.pop);
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
     }
+
+}
 

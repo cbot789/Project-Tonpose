@@ -20,7 +20,7 @@ public class ServerSelect extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                    //place holder for connecting to given server and starting game                  //TODO add connect function
+                    //place holder for connecting to given server and starting game                  //TODO delete?
             }
 
         });
@@ -44,10 +44,12 @@ public class ServerSelect extends AppCompatActivity {
 
     }
     private void goToMain() {
+        Music.playSFX(this, Music.SFX.pop);
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
     private void goToGame(){
+        Music.playSFX(this, Music.SFX.pop);
         Intent intent = new Intent(this, Game.class);
         startActivity(intent);
     }

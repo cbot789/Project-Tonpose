@@ -31,7 +31,7 @@ public class Settings extends AppCompatActivity {
         sfxOn = Music.getSfxOn();
         musicOn = Music.getMusicOn();
 
-        Button backButton = (Button) findViewById(R.id.Back);
+        Button backButton = (Button) findViewById(R.id.Back);                                       //goes back to menu without saving
         backButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -41,7 +41,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        Button saveButton = (Button) findViewById(R.id.Save);
+        Button saveButton = (Button) findViewById(R.id.Save);                                       //saves settings and goes back to menu
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -52,7 +52,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        SeekBar sfxBar = (SeekBar) findViewById(R.id.sfxBar);
+        SeekBar sfxBar = (SeekBar) findViewById(R.id.sfxBar);                                       //sfx slider
         sfxBar.setProgress(sfxVolume);
         final TextView sfxView = (TextView) findViewById(R.id.currentSfxVolume);
         sfxView.setText(sfxVolume + "");
@@ -72,7 +72,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        SeekBar musicBar = (SeekBar) findViewById(R.id.musicBar);
+        SeekBar musicBar = (SeekBar) findViewById(R.id.musicBar);                                   //music slider
         musicBar.setProgress(musicVolume);
         final TextView musicView = (TextView) findViewById(R.id.currentMusicVolume);
         musicView.setText(musicVolume + "");
@@ -92,7 +92,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        final CheckBox sfxCheck = (CheckBox) findViewById(R.id.sfxMute);
+        final CheckBox sfxCheck = (CheckBox) findViewById(R.id.sfxMute);                            //sfx checkbox, enables disable sfx
         if(sfxOn){
             sfxCheck.setChecked(true);
         }else{
@@ -109,7 +109,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        final CheckBox musicCheck = (CheckBox) findViewById(R.id.musicMute);
+        final CheckBox musicCheck = (CheckBox) findViewById(R.id.musicMute);                        //music checkbox, enables disable music
         if(musicOn){
             musicCheck.setChecked(true);
         }else{
@@ -127,12 +127,12 @@ public class Settings extends AppCompatActivity {
         });
     }
 
-    private void goToMainMenu() { //Returns to the main menu
+    private void goToMainMenu() {                                                                   //Returns to the main menu
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 
-    private void saveSettings(){
+    private void saveSettings(){                                                                    //helper method to save settings
         Music.setMusicVolume(musicVolume);
         Music.setSfxVolume(sfxVolume);
         Music.muteMusic(!musicOn);
