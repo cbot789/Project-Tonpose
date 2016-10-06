@@ -54,7 +54,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         //screen = (FrameLayout)findViewById(R.id.activity_game);
         //screen.setOnClickListener(this);
 
-        //gameContext = this;
+        gameContext = this;
 
         /*RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
         ImageView p2 = new ImageView(this);
@@ -68,6 +68,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         final ImageView playerModel = (ImageView)findViewById(R.id.Player);
        // playerModel.setOnTouchListener(this);
         fullScreen.setOnTouchListener(this);
+
         mUpdater = new Updater(new Runnable() {
             @Override
             public void run() {
@@ -113,7 +114,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         ImageView playerModel = (ImageView)findViewById(R.id.Player);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                //RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                //RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams(); //gave classcast exception
                 xDelta = (int) (X - playerModel.getTranslationX());
                 yDelta = (int) (Y - playerModel.getTranslationY());
                 break;
@@ -125,7 +126,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             case MotionEvent.ACTION_POINTER_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
-               // RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+               // RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams(); //also gave class cast exception
                 playerModel.setTranslationX(X - xDelta);
                 playerModel.setTranslationY(Y - yDelta);
                 break;
@@ -218,19 +219,20 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             Message msg = new Message("game");                                                      //send user and current location
             msg.setData1(mEmail);
             msg.setData2(location);
-            try {
-                streamOut.writeObject(msg); //null pointer exception encountered here
-            }
-            catch(Exception e){
-                e.printStackTrace();
-                return false;
-            }
-            try {
-                response = (Message)streamIn.readObject();                                          //get response
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                return false;
+            if(msg!=null) {
+                try {
+                    streamOut.writeObject(msg); //null pointer exception encountered here
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                try {
+                    response = (Message) streamIn.readObject();                                          //get response
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
             return response.getType().equals("game");
         }
