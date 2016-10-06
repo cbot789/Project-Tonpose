@@ -59,7 +59,7 @@ public class Client
 			while(true){
 				try{
 					Message msg = (Message)streamIn.readObject();
-					serverMsg = msg.getData1();//TODO show(msg);
+					serverMsg = msg.getData2();//TODO show(msg);
 				}
 				catch(Exception e){
 					e.printStackTrace();

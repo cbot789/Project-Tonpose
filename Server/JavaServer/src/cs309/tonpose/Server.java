@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 public class Server{
 	
-	private ArrayList<Thread> clients;
+	protected ArrayList<User> users;
 	private ServerSocket serverSocket = null;
 
 	
 	public Server(int port){
-		clients = new ArrayList<Thread>();
+		users = new ArrayList<User>();
 		try{
 			serverSocket = new ServerSocket(port);
 			System.out.println("Server started on port " + port);
@@ -32,8 +32,8 @@ public class Server{
 			try{
 				clientSocket = serverSocket.accept();
 				System.out.println("Server connected to a client");
-				Thread t = new Thread(new ClientHandler(clientSocket));
-				clients.add(t);
+				Thread t = new Thread(new ClientHandler(clientSocket, this));
+				//clients.add(t);
 				t.start();
 			}
 			catch(Exception e){
@@ -50,13 +50,15 @@ public class Server{
 
 class ClientHandler extends Thread {
 	Socket s;
+	Server server;
 	Connection connection;
 	ObjectInputStream in;
 	ObjectOutputStream out;
 	Message msg;
 
-	ClientHandler(Socket s) {
+	ClientHandler(Socket s, Server server) {
 		this.s = s;
+		this.server = server;
 		try {
 			connection = DatabaseCommands.establishConnection();
 		} 
@@ -94,6 +96,35 @@ class ClientHandler extends Thread {
 		}
 	}
 	
+	public void updateMap(String username, int x, int y){
+		Boolean found = false;
+		for(User user: server.users){
+			if(user.getName().equals(username)){
+				user.setLocationX(x);
+				user.setLocationY(y);
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			server.users.add(new User(username, x, y));
+		}
+		Message msg = new Message("gameServer");
+		msg.setData1("true");
+		String data = "";
+		for(User user: server.users){
+			data += user.getName();
+			data += " ";
+			data += (int)user.getLocationX();
+			data += " ";
+			data += (int)user.getLocationY();
+			data += " ";
+
+		}
+		msg.setData2(data);
+		sendMsg(msg);
+	}
+	
 	public void handle(Message msg){
 		Message m = new Message("serverType");
 		if(msg.getType().equals("checkUsername")){
@@ -113,7 +144,7 @@ class ClientHandler extends Thread {
 				e.printStackTrace();
 			}
 		}
-		if(msg.getType().equals("checkUser")){
+		else if(msg.getType().equals("checkUser")){
 			String username = msg.getData1();
 			String password = msg.getData2();
 			boolean exists;
@@ -131,7 +162,7 @@ class ClientHandler extends Thread {
 				e.printStackTrace();
 			}
 		}
-		if(msg.getType().equals("newUser")){
+		else if(msg.getType().equals("newUser")){
 			String username = msg.getData1();
 			String password = msg.getData2();
 			try {
@@ -146,6 +177,12 @@ class ClientHandler extends Thread {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		else if(msg.getType().equals("game")){
+			String username = msg.getData1();
+			int locationX = msg.getData3();
+			int locationY = msg.getData4();
+			updateMap(username, locationX, locationY); 				
 		}
 	}
 }
