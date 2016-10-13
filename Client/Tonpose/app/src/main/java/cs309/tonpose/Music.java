@@ -121,6 +121,22 @@ public class Music {                                                            
         musicPlayer.setVolume(musicVolume, musicVolume);
         musicPlayer.start();
     }
+    public static void pause(){
+        if(musicOn){
+            musicPlayer.pause();
+        }
+        if(sfxOn){
+            sfxPlayer.pause();
+        }
+    }
+    public static void resume(){
+        if(musicOn){
+            musicPlayer.start();
+        }
+        if(sfxOn){
+            sfxPlayer.start();
+        }
+    }
     public static boolean isMusicPlaying(){
         return musicPlayer.isPlaying();
     }

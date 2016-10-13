@@ -1,7 +1,10 @@
 package cs309.tonpose;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Quade Spellman on 9/15/2016.
@@ -20,6 +23,13 @@ public class User {//TODO delete?
         model.setImageResource(R.drawable.mainbase);
     }
 
+    public void display(RelativeLayout rl){
+        model.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
+        model.setX(locationX);
+        model.setY(locationY);
+        model.setVisibility(View.VISIBLE);
+        rl.addView(model);
+    }
     public String getName(){                            //returns userName
         return userName;
     }

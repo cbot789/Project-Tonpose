@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +25,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 import static android.R.attr.width;
@@ -42,12 +46,16 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
     private int TIMEOUTVARB = 10;                                                           //TIMEOUTVARB * interval = ms before timeout
     Context gameContext;
     private View fullScreen;
+    private RelativeLayout rl;
+    private ImageView playerModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         Music.startSong(this, Music.Song.action, true);                                             //plays action song
+
         fullScreen=(View)findViewById(R.id.activity_game);                                          //This view is the entire screen
         //fullScreen= (RelativeLayout) findViewById(R.id.activity_game);
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -56,7 +64,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
 
         gameContext = this;
 
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
+        rl = (RelativeLayout) findViewById(R.id.activity_game);                              //TODO delete for testing purposes only
         final ImageView p2 = new ImageView(this);
         p2.setImageResource(R.drawable.mainbase);
         p2.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
@@ -65,7 +73,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         p2.setY(500);
         rl.addView(p2);                                                                                 //end delete
 
-        final ImageView playerModel = (ImageView)findViewById(R.id.Player);
+        playerModel = (ImageView)findViewById(R.id.Player);
         // playerModel.setOnTouchListener(this);
         fullScreen.setOnTouchListener(this);
 
@@ -108,10 +116,20 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
             }
         });
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Music.pause();
+    }
+    @Override
+    public void onResume(){
+        super.onPause();
+        Music.resume();
+    }
     public boolean onTouch(View view, MotionEvent event) {//this function moves the image according to the touch event //TODO add constant rather than instantaneous motion
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
-        ImageView playerModel = (ImageView)findViewById(R.id.Player);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 //RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams(); //gave classcast exception
@@ -148,54 +166,34 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         if(updateRequest != null){
             return;
         }
-        updateRequest = new ClientUpdateTask("email", "X Y");                                       //TODO change to username and picture's x y location;
+        int x = (int)playerModel.getTranslationX();
+        int y = (int)playerModel.getTranslationY();
+        updateRequest = new ClientUpdateTask("a@a.aa", x, y);                                       //TODO change to username and picture's x y location;
         updateRequest.execute((Void) null);
     }
 
-    private void updateUserList(String updates){                                                    //given a string gets the name, and (x,y) coordinates and updates userList
-        String name;
-        int x;
-        int y;
-        Boolean found;
-        Scanner scan = new Scanner(updates);
-        while(scan.hasNext()){
-            found = false;
-            name = scan.next();
-            x = scan.nextInt();
-            y = scan.nextInt();
-            for (User user:userList) {
-                if(user.getName().equals(name)){
-                    user.setLocationX(x);
-                    user.setLocationY(y);
-                    found = true;
-                    break;
-                }
-            }
-            if(!found){
-                userList.add(new User(name, x, y, getApplicationContext()));
+    private void updateUserList(String name, int newX, int newY){                                                    //given a string gets the name, and (x,y) coordinates and updates userList
+        Boolean found = false;
+        for (User user:userList) {
+            if(user.getName().equals(name)){
+                user.setLocationX(newX);
+                user.setLocationY(newY);
+                user.display(rl);
+                found = true;
+                break;
             }
         }
-        updateMap();
-    }
-
-    private void updateMap() {                                                                      //updates the model and location of each player //TODO test me
-        ImageView model;
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_game);
-        for (User user:userList) {
-            model = user.getModel();
-            model.setImageResource(R.drawable.mainbase);
-            model.setLayoutParams(new RelativeLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT));
-            model.setX(user.getLocationX());
-            model.setY(user.getLocationY());
-            model.setVisibility(View.VISIBLE);
-            rl.addView(model);
+        if(!found){
+            userList.add(new User(name, newX, newY, getApplicationContext()));
+            userList.get(userList.size()-1).display(rl);
         }
     }
 
     public class ClientUpdateTask extends AsyncTask<Void, Void, Boolean> {                          //connects to server on new thread, sends player location and looks for other player locations
 
         private final String mEmail;
-        private final String location;
+        private final int x;
+        private final int y;
         private String ip = "10.25.70.122";
         private int port = 8080;
         private Socket socket = null;
@@ -203,9 +201,10 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         private ObjectInputStream streamIn = null;
         private Message response;
 
-        ClientUpdateTask(String email, String xy) {
+        ClientUpdateTask(String email, int locationX, int locationY) {
             mEmail = email;
-            location = xy;
+            x = locationX;
+            y = locationY;
         }
 
         @Override
@@ -221,7 +220,8 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
 
             Message msg = new Message("game");                                                      //send user and current location
             msg.setData1(mEmail);
-            msg.setData2(location);
+            msg.setData3(x);
+            msg.setData4(y);
             if(msg!=null) {
                 try {
                     streamOut.writeObject(msg); //null pointer exception encountered here
@@ -244,7 +244,7 @@ public class Game extends AppCompatActivity implements View.OnTouchListener {
         protected void onPostExecute(final Boolean success) {
             updateRequest = null;
             if(success && response.getData1().equals("true")){                                          //if there are map updates
-                updateUserList(response.getData2());                                                  //FIXME what thread is this ran on?
+                updateUserList(response.getData2(), response.getData3(), response.getData4());        //FIXME what thread is this ran on?
                 timeoutCounter = 0;
             }
         }
