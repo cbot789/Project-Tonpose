@@ -14,6 +14,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import org.w3c.dom.css.Rect;
+
 import java.util.Iterator;
 
 public class TonposeGame extends ApplicationAdapter {
@@ -21,19 +23,26 @@ public class TonposeGame extends ApplicationAdapter {
 	private Texture bucketImage;
 	private Sound dropSound;
 	private Music rainMusic;
+	private Texture playerImage, enemyImage;
 
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Rectangle bucket;
+	private Rectangle bucket,player,enemy;
 
 	private Array<Rectangle> raindrops;
 	private long lastDropTime; //time in ns
+	private int dropsLost;
+	private boolean touchedEnemy;
 
 	@Override
 	public void create () {
 		// load images for droplet and bucket
 		dropImage = new Texture(Gdx.files.internal("droplet.png"));
 		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
+		playerImage= new Texture(Gdx.files.internal("mainbase.png"));
+		enemyImage= new Texture(Gdx.files.internal("player2base.png"));
+		dropsLost=0;
+		touchedEnemy=false;
 
 		// load drop sound and rain music
 		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
@@ -56,6 +65,19 @@ public class TonposeGame extends ApplicationAdapter {
 		bucket.width = 64;
 		bucket.height = 64;
 
+		//initialize main character
+		player = new Rectangle();
+		player.width=64;
+		player.height=64;
+		player.x=200;
+		player.y=200;
+
+		enemy=new Rectangle();
+		enemy.width=64;
+		enemy.height=64;
+		enemy.x=500;
+		enemy.y=400;
+
 		// add raindrops
 		raindrops = new Array<Rectangle>();
 		spawnRaindrop();
@@ -72,7 +94,10 @@ public class TonposeGame extends ApplicationAdapter {
 		// render bucket and raindrops
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
-		batch.draw(bucketImage, bucket.x, bucket.y);
+		if(touchedEnemy==false)
+			batch.draw(bucketImage, bucket.x, bucket.y);
+		batch.draw(playerImage, player.x, player.y);
+		batch.draw(enemyImage,enemy.x,enemy.y);
 		for(Rectangle raindrop: raindrops){
 			batch.draw(dropImage, raindrop.x, raindrop.y);
 		}
@@ -83,7 +108,12 @@ public class TonposeGame extends ApplicationAdapter {
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-			bucket.x = touchPos.x - 64 / 2;
+			if(touchedEnemy==false) {
+				bucket.x = touchPos.x - 64 / 2;
+				bucket.y = touchPos.y - 64 / 2;
+			}
+			player.x= touchPos.x-64;
+			player.y= touchPos.y-64/2;
 		}
 
 		// make sure bucket stays in screen
@@ -91,6 +121,15 @@ public class TonposeGame extends ApplicationAdapter {
 			bucket.x = 0;
 		if(bucket.y > 800 - 64)
 			bucket.y = 800 - 64;
+
+		if(player.x < 0)
+			player.x = 0;
+		if(player.y > 800 - 64)
+			player.y = 800 - 64;
+
+		if(player.overlaps(enemy)){ //if the player is touching the enemy
+			touchedEnemy=true;
+		}
 
 		// spawn raindrop if enough time has passed
 		if(TimeUtils.nanoTime() - lastDropTime > 1000000000)
@@ -107,11 +146,16 @@ public class TonposeGame extends ApplicationAdapter {
 			}
 			if(raindrop.y + 64 < 0)
 				iter.remove();
+			 dropSound.play();
+			dropsLost++;
+
+
 		}
 
 	}
 
 	private void spawnRaindrop(){
+		moveEnemy();
 		Rectangle raindrop = new Rectangle();
 		raindrop.x = MathUtils.random(0, 800 - 64);
 		raindrop.y = 480;
@@ -120,6 +164,16 @@ public class TonposeGame extends ApplicationAdapter {
 		raindrops.add(raindrop);
 		lastDropTime = TimeUtils.nanoTime();
 	}
+
+	private void moveEnemy(){ // called whenever a raindrop spawns
+		enemy.x=MathUtils.random(0, 800 - 64);
+		enemy.y=MathUtils.random(0, 480 - 64);
+	}
+
+	/*private void goToGame(){
+		Intent intent = new Intent(this, AndroidLauncher.class);	//TODO implement interface to allow activity switching
+		startActivity(intent);
+	}*/
 
 	
 	@Override
