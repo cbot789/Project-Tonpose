@@ -19,6 +19,8 @@ import org.w3c.dom.css.Rect;
 import java.util.Iterator;
 
 public class TonposeGame extends ApplicationAdapter {
+
+	static AndroidMethods androidMethod; 															//used for android methods such as toasts or intent usage
 	private Texture dropImage;
 	private Texture bucketImage;
 	private Sound dropSound;
@@ -33,6 +35,12 @@ public class TonposeGame extends ApplicationAdapter {
 	private long lastDropTime; //time in ns
 	private int dropsLost;
 	private boolean touchedEnemy;
+
+
+	public TonposeGame(AndroidMethods androidMethod) {
+		this.androidMethod=androidMethod;
+	}
+
 
 	@Override
 	public void create () {
@@ -129,6 +137,7 @@ public class TonposeGame extends ApplicationAdapter {
 
 		if(player.overlaps(enemy)){ //if the player is touching the enemy
 			touchedEnemy=true;
+			Toast("ouch!");
 		}
 
 		// spawn raindrop if enough time has passed
@@ -154,6 +163,11 @@ public class TonposeGame extends ApplicationAdapter {
 
 	}
 
+
+	public void Toast(String text) {
+		TonposeGame.androidMethod.Toast(text);
+	}
+
 	private void spawnRaindrop(){
 		moveEnemy();
 		Rectangle raindrop = new Rectangle();
@@ -170,9 +184,9 @@ public class TonposeGame extends ApplicationAdapter {
 		enemy.y=MathUtils.random(0, 480 - 64);
 	}
 
-	/*private void goToGame(){
-		Intent intent = new Intent(this, AndroidLauncher.class);	//TODO implement interface to allow activity switching
-		startActivity(intent);
+	/*public void goToMenu(){
+		Intent intent = new Intent(this, MainMenu.class);	//TODO implement interface to allow activity switching
+		context.startActivity(intent);
 	}*/
 
 	
