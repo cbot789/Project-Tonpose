@@ -58,6 +58,7 @@ public class MainMenu extends AppCompatActivity {
 
     private void goToGame(){
         Music.playSFX(this, Music.SFX.pop);
+        Music.pause();
         Intent intent = new Intent(this, AndroidLauncher.class);                                    //starts the libGDX game
         startActivity(intent);
     }
