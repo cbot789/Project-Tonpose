@@ -38,8 +38,8 @@ public class TonposeGame extends ApplicationAdapter {
 	private long lastHit = 0;
 	private int dropsLost;
 	private boolean touchedEnemy;
-	private float lastX = 200;
-	private float lastY = 200;
+	private float lastX = 400;
+	private float lastY = 240;
 	private long lastTick = 0;
 	private final int TICKDELAY = 1000000;
 	private final int DROPDELAY = 1000000000;
@@ -170,18 +170,22 @@ public class TonposeGame extends ApplicationAdapter {
 			spawnRaindrop();
 	}
 
-	public void movePlayer(){
+	public void movePlayer(){																		//TODO have camera follow player in this method?
 		if(player.getX() < lastX - 65){
 			player.setX(player.getX() + 5);
+			camera.translate(5,0);
 		}
 		else if(player.getX() > lastX - 60){
 			player.setX(player.getX() - 5);
+			camera.translate(-5,0);
 		}
 		if(player.getY() < lastY - 65){
 			player.setY(player.getY() + 5);
+			camera.translate(0,5);
 		}
 		else if(player.getY() > lastY - 60){
 			player.setY(player.getY() - 5);
+			camera.translate(0,-5);
 		}
 		if(touchedEnemy==false) {
 			bucket.x = player.getX() + 32;
@@ -189,7 +193,7 @@ public class TonposeGame extends ApplicationAdapter {
 		}
 
 		// make sure bucket and player stays in screen					//TODO change to edit lastX and lastY
-		if(bucket.x < 0)
+	/*	if(bucket.x < 0)
 			bucket.x = 0;
 		if(bucket.y > 800 - 64)
 			bucket.y = 800 - 64;
@@ -197,7 +201,7 @@ public class TonposeGame extends ApplicationAdapter {
 		if(player.x < 0)
 			player.x = 0;
 		if(player.y > 800 - 64)
-			player.y = 800 - 64;
+			player.y = 800 - 64;*/
 
 		lastMove =  TimeUtils.nanoTime();
 	}
