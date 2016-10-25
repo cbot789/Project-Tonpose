@@ -22,6 +22,7 @@ public class TonposeGame extends ApplicationAdapter {
 
 	static AndroidMethods androidMethod; 															//used for android methods such as toasts or intent usage
 	private Texture dropImage;
+	private Map Map;
 	private Texture bucketImage;
 	private Sound dropSound;
 	private Music rainMusic;
