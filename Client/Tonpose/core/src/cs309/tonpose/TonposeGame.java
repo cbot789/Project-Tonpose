@@ -18,6 +18,8 @@ import org.w3c.dom.css.Rect;
 
 import java.util.Iterator;
 
+import static java.lang.Math.abs;
+
 public class TonposeGame extends ApplicationAdapter {
 
 	static AndroidMethods androidMethod; 															//used for android methods such as toasts or intent usage
@@ -172,6 +174,19 @@ public class TonposeGame extends ApplicationAdapter {
 	}
 
 	public void movePlayer(){																		//TODO have camera follow player in this method?
+
+		float x = lastX - player.getX();
+		float y = lastY - player.getY();
+		float sum = abs(x) + abs(y);
+
+		if(sum != 0){
+			float xMove = 5 * (x/sum);
+			float yMove = 5 * (y/sum);
+			player.x += xMove;
+			player.y += yMove;
+			camera.translate(xMove, yMove);
+		}
+	/*
 		if(player.getX() < lastX - 65){
 			player.setX(player.getX() + 5);
 			camera.translate(5,0);
@@ -187,7 +202,7 @@ public class TonposeGame extends ApplicationAdapter {
 		else if(player.getY() > lastY - 60){
 			player.setY(player.getY() - 5);
 			camera.translate(0,-5);
-		}
+		}*/
 		if(touchedEnemy==false) {
 			bucket.x = player.getX() + 32;
 			bucket.y = player.getY();
@@ -222,18 +237,7 @@ public class TonposeGame extends ApplicationAdapter {
 	}
 
 	private void moveEnemy(){ // called whenever a raindrop spawns
-		if(player.getX() > enemy.getX()){
-			enemy.x += 5;
-		}
-		else if(player.getX() < enemy.getX() - 10){
-			enemy.x -= 5;
-		}
-		if(player.getY() > enemy.getY()){
-			enemy.y += 5;
-		}
-		else if(player.getY() < enemy.getY() - 10){
-			enemy.y -= 5;
-		}
+		AI.direct(player, enemy);
 		lastNpc =  TimeUtils.nanoTime();
 		//enemy.x=MathUtils.random(0, 800 - 64);
 		//enemy.y=MathUtils.random(0, 480 - 64);
