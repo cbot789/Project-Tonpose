@@ -8,7 +8,7 @@ import java.util.List;
 public class Entity {
     protected int locationX;
     protected int locationY;
-
+    protected int id;                                                                               //TODO determine if id is needed for all entities, or just for items
     protected int currentHp;
     protected int maxHp;
     protected boolean killable;
@@ -25,6 +25,23 @@ public class Entity {
 
     protected int invSize;
     protected List<Item> inventory;
+
+
+    public Entity(){ //default constructor
+
+    }
+
+    public Entity(int locationX, int locationY, int id, int maxHp, int size, int mass, int invSize, boolean killable){
+       this.locationX=locationX;
+        this.locationY=locationY;
+        this.id=id;
+        this.currentHp=maxHp;
+        this.maxHp=maxHp;
+        this.size=size;
+        this.mass=mass;
+        this.invSize=invSize;
+        this.killable=killable;
+    }
 
     public void setInventory(){
 

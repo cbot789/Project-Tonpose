@@ -24,6 +24,7 @@ public class TonposeGame extends ApplicationAdapter {
 
 	static AndroidMethods androidMethod; 															//used for android methods such as toasts or intent usage
 	private Texture dropImage;
+	private Texture tree;
 	private Map Map;
 	private Texture bucketImage;
 	private Sound dropSound;
@@ -61,6 +62,8 @@ public class TonposeGame extends ApplicationAdapter {
 		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
 		playerImage= new Texture(Gdx.files.internal("mainbase.png"));
 		enemyImage= new Texture(Gdx.files.internal("player2base.png"));
+		tree= new Texture(Gdx.files.internal("treeStill.png"));
+
 		dropsLost=0;
 		touchedEnemy=false;
 
@@ -77,6 +80,8 @@ public class TonposeGame extends ApplicationAdapter {
 		camera.setToOrtho(false, 800, 480);
 
 		batch = new SpriteBatch();
+
+		Map=new Map(1000,1000, 10, 0);																		//TODO retrieve map from server instead of making one here
 
 		// initialize the bucket
 		bucket = new Rectangle();
@@ -121,6 +126,10 @@ public class TonposeGame extends ApplicationAdapter {
 		for(Rectangle raindrop: raindrops){
 			batch.draw(dropImage, raindrop.x, raindrop.y);
 		}
+		for(Entity entity:Map.getEntities()){ //draws terrain
+			batch.draw(tree,entity.locationX,entity.locationY);
+		}
+
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 
 		// make bucket move on touch
@@ -173,8 +182,7 @@ public class TonposeGame extends ApplicationAdapter {
 			spawnRaindrop();
 	}
 
-	public void movePlayer(){																		//TODO have camera follow player in this method?
-
+	public void movePlayer(){
 		float x = lastX - player.getX();
 		float y = lastY - player.getY();
 		float sum = abs(x) + abs(y);
