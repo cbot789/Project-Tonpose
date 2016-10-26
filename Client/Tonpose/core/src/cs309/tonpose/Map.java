@@ -29,7 +29,7 @@ public class Map {
     private Entity generateTerrain(){                                                                 //TODO add chance to generate other objects besides trees
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
-        return new Terrain(x,y,1,100,100,1000,0,true); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
+        return new Terrain(x,y,1,100,100,50,1000,0,true); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
 
     }
 

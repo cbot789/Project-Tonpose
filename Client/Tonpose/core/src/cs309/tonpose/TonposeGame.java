@@ -35,7 +35,7 @@ public class TonposeGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Rectangle bucket,player,enemy;
 
-	private Array<Rectangle> raindrops;
+	private Array<Rectangle> raindrops, terrain;
 	private long lastDrop = 0; //time in ns
 	private long lastMove = 0;
 	private long lastNpc  =	0;
@@ -107,6 +107,11 @@ public class TonposeGame extends ApplicationAdapter {
 		raindrops = new Array<Rectangle>();
 		spawnRaindrop();
 
+		terrain=new Array<Rectangle>(); //the array for terrain
+		for(Entity entity:Map.getEntities()){
+			terrain.add(new Rectangle(entity.locationX,entity.locationY,entity.width,entity.height));
+		}
+
 	}
 
 	@Override
@@ -127,6 +132,7 @@ public class TonposeGame extends ApplicationAdapter {
 			batch.draw(dropImage, raindrop.x, raindrop.y);
 		}
 		for(Entity entity:Map.getEntities()){ //draws terrain
+			if(entity.id==1) //checks if it is a standard tree
 			batch.draw(tree,entity.locationX,entity.locationY);
 		}
 
@@ -181,6 +187,8 @@ public class TonposeGame extends ApplicationAdapter {
 		if(TimeUtils.nanoTime() > lastDrop + DROPDELAY)
 			spawnRaindrop();
 	}
+
+
 
 	public void movePlayer(){
 		float x = lastX - player.getX();

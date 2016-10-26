@@ -13,7 +13,7 @@ public class Entity {
     protected int maxHp;
     protected boolean killable;
     protected boolean collision;
-    protected int size;
+    protected int width,height;
     //sprite
 
     protected int currentSpeed;
@@ -31,13 +31,14 @@ public class Entity {
 
     }
 
-    public Entity(int locationX, int locationY, int id, int maxHp, int size, int mass, int invSize, boolean killable){
+    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
        this.locationX=locationX;
         this.locationY=locationY;
         this.id=id;
         this.currentHp=maxHp;
         this.maxHp=maxHp;
-        this.size=size;
+        this.height=height;
+        this.width=width;
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
