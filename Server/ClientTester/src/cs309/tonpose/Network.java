@@ -19,6 +19,7 @@ public class Network {
 		kryo.register(MovePlayer.class);
 	}
 
+
 	static public class CheckUsername {
 		public String name;
 		public boolean status;

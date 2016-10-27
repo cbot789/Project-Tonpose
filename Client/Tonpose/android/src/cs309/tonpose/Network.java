@@ -23,17 +23,17 @@ public class Network {
 		public String name;
 		public boolean status;
 	}
-	
+
 	static public class CheckUser {
 		public String name, password;
 		public boolean status;
 	}
-	
+
 	static public class NewUser {
 		public String name, password;
 		public boolean status;
 	}
-	
+
 	static public class PlayerConnect {
 		public String name;
 	}
@@ -41,11 +41,11 @@ public class Network {
 	static public class UpdatePlayerList {
 		public String[] names;
 	}
-	
+
 	static public class PlayerDisconnect {
 		public String name;
 	}
-	
+
 	static public class MovePlayer {
 		public String name;
 		public int x, y;

@@ -1,7 +1,5 @@
 package cs309.tonpose;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,9 +8,8 @@ import java.util.HashMap;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
+//import com.esotericsoftware.minlog.Log;
 
-import cs309.tonpose.Network.Status;
 import cs309.tonpose.Network.CheckUser;
 import cs309.tonpose.Network.CheckUsername;
 import cs309.tonpose.Network.MovePlayer;
@@ -48,7 +45,7 @@ public class tonpose_server {
 				if (object instanceof CheckUsername) {
 
 					// Status object to be sent back to the client
-					Status returnStatus = new Status();
+					CheckUsername returnStatus = new CheckUsername();
 					
 					// Send back 'false' if username is invalid
 					String name = ((CheckUsername)object).name;
@@ -89,7 +86,7 @@ public class tonpose_server {
 				if (object instanceof CheckUser) {
 
 					// Status object to be sent back to the client
-					Status returnStatus = new Status();
+					CheckUser returnStatus = new CheckUser();
 					
 					// Send back 'false' if username or password is invalid
 					String name = ((CheckUser)object).name;
@@ -132,11 +129,11 @@ public class tonpose_server {
 				if (object instanceof NewUser) {
 
 					// Status object to be sent back to the client
-					Status returnStatus = new Status();
+					NewUser returnStatus = new NewUser();
 					
 					// Send back 'false' if username or password is invalid
-					String name = ((CheckUser)object).name;
-					String password = ((CheckUser)object).password;
+					String name = ((NewUser)object).name;
+					String password = ((NewUser)object).password;
 					if (name == null || password == null) {
 						returnStatus.status = false;
 						server.sendToTCP(connection.getID(), returnStatus);

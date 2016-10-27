@@ -30,9 +30,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.minlog.Log;
+
+import cs309.tonpose.Network.CheckUser;
+import cs309.tonpose.Network.CheckUsername;
+import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.Network.NewUser;
+import cs309.tonpose.Network.PlayerConnect;
+import cs309.tonpose.Network.PlayerDisconnect;
+import cs309.tonpose.Network.UpdatePlayerList;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,6 +71,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private String email;
+    private String password;
+    private Client client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,8 +175,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        email = mEmailView.getText().toString();
+        password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -193,8 +207,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            //mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
+            connectToServer();
         }
     }
 
@@ -302,24 +317,74 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+    public void connectToServer(){
+        client = new Client();
+        client.start();
+
+        //Register the client and packet classes
+        Network.register(client);
+
+        Listener clientListener = new Listener() {
+            public void received(Connection connection, Object object) {
+                if (object instanceof CheckUsername) {
+                    CheckUsername check = (CheckUsername)object;
+                    if(check.status){
+                        CheckUser check_user = new CheckUser();
+                        check_user.name = email;
+                        check_user.password = password;
+                        client.sendTCP(check_user);
+                    }
+                    else{
+                        NewUser new_user = new NewUser();
+                        new_user.name = email;
+                        new_user.password = password;
+                        client.sendTCP(new_user);
+                    }
+                }
+                if (object instanceof CheckUser) {
+                    CheckUser check = (CheckUser)object;
+                    if(check.status){
+                        System.out.println("Username and password are valid");
+                        Intent intent = new Intent(LoginActivity.this, MainMenu.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        System.out.println("Password invalid");
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                }
+                if (object instanceof NewUser) {
+                    NewUser new_user = (NewUser)object;
+                    if(new_user.status){
+                        System.out.println("User added to database");
+                        Intent intent = new Intent(LoginActivity.this, MainMenu.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        System.out.println("Error adding user");
+                    }
+                }
+            }
+        };
+
+        client.addListener(clientListener);
+        mAuthTask = new UserLoginTask(client);
+        mAuthTask.execute((Void) null);
+    }
+
+
+
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private Client client;
         private String ip = "10.25.70.122";
-        private int port = 8080;
-        private Socket socket = null;
-        private ObjectOutputStream streamOut = null;
-        private ObjectInputStream streamIn = null;
-        private Message response;
+        private int port = Network.port;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        UserLoginTask(Client client) {
+            this.client = client;
         }
 
         @Override
@@ -327,97 +392,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                socket = new Socket(ip, port);
-                streamIn = new ObjectInputStream(socket.getInputStream());
-                streamOut = new ObjectOutputStream(socket.getOutputStream());
-                //Thread.sleep(2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+                client.connect(5000, ip, port);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+            CheckUsername check = new CheckUsername();
+            check.name = email;
+            client.sendTCP(check);
+            return true;
 
-            //for (String credential : DUMMY_CREDENTIALS) {
-                //String[] pieces = credential.split(":");
-            Message msg = new Message("checkUsername");
-            msg.setData1(mEmail);
-            try {
-                streamOut.writeObject(msg);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            try {
-                System.out.println("before read");
-                response = (Message)streamIn.readObject();
-                System.out.println("after read");
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            if (response.getData1().equals("true")) {
-                // Account exists, return true if the password matches.
-                msg = new Message("checkUser");
-                msg.setData1(mEmail);
-                msg.setData2(mPassword);
-                try {
-                    streamOut.writeObject(msg);
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                    return false;
-                }
-                try {
-                    response = (Message)streamIn.readObject();
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                return response.getData1().equals("true");
-            }
-
-            // TODO: register the new account here.
-            msg = new Message("newUser");
-            msg.setData1(mEmail);
-            msg.setData2(mPassword);
-            try {
-                streamOut.writeObject(msg);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            try {
-                response = (Message)streamIn.readObject();
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            return response.getData1().equals("true");
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            /*                                                                          //TODO readd to close socket
-            try{
-                socket.close();
-            }catch (Exception e){
-
-            }*/
-            if (success) {
-                Intent intent = new Intent(LoginActivity.this, MainMenu.class);
-                startActivity(intent);
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
         }
 
         @Override
