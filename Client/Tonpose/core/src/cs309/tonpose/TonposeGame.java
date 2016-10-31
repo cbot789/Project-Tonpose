@@ -23,30 +23,25 @@ import static java.lang.Math.abs;
 public class TonposeGame extends ApplicationAdapter {
 
 	static AndroidMethods androidMethod; 															//used for android methods such as toasts or intent usage
-	private Texture dropImage;
-	private Texture tree;
+	private Texture treeImage;
 	private Map Map;
-	private Texture bucketImage;
-	private Sound dropSound;
-	private Music rainMusic;
+	private Music music;
 	private Texture playerImage, enemyImage;
 
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Rectangle bucket,player,enemy;
+	private Rectangle player,enemy;
 
 	private Array<Rectangle> raindrops, terrain;
-	private long lastDrop = 0; //time in ns
-	private long lastMove = 0;
+
 	private long lastNpc  =	0;
 	private long lastHit = 0;
-	private int dropsLost;
 	private boolean touchedEnemy;
 	private float lastX = 400;
 	private float lastY = 240;
 	private long lastTick = 0;
+	private long lastMove;
 	private final int TICKDELAY = 1000000;
-	private final int DROPDELAY = 1000000000;
 	private final int NPCDELAY =    40000000;
 	private final int MOVEDELAY =   10000000;
 
@@ -58,22 +53,18 @@ public class TonposeGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		// load images for droplet and bucket
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
-		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
 		playerImage= new Texture(Gdx.files.internal("mainbase.png"));
 		enemyImage= new Texture(Gdx.files.internal("player2base.png"));
-		tree= new Texture(Gdx.files.internal("treeStill.png"));
+		treeImage= new Texture(Gdx.files.internal("treeStill.png"));
 
-		dropsLost=0;
 		touchedEnemy=false;
 
-		// load drop sound and rain music
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+		// load music
+		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 
 		// start music
-		rainMusic.setLooping(true);
-		rainMusic.play();
+		music.setLooping(true);
+		music.play();
 
 		// new camera
 		camera = new OrthographicCamera();
@@ -81,14 +72,8 @@ public class TonposeGame extends ApplicationAdapter {
 
 		batch = new SpriteBatch();
 
-		Map=new Map(1000,1000, 10, 0);																		//TODO retrieve map from server instead of making one here
+		Map=new Map(1000,1000, 10, 0);		//TODO retrieve map from server instead of making one here
 
-		// initialize the bucket
-		bucket = new Rectangle();
-		bucket.x = 800 / 2 - 64 / 2;
-		bucket.y = 20;
-		bucket.width = 64;
-		bucket.height = 64;
 
 		//initialize main character
 		player = new Rectangle();
@@ -103,10 +88,7 @@ public class TonposeGame extends ApplicationAdapter {
 		enemy.x=500;
 		enemy.y=400;
 
-		// add raindrops
-		raindrops = new Array<Rectangle>();
-		spawnRaindrop();
-
+		//add terrain to map
 		terrain=new Array<Rectangle>(); //the array for terrain
 		for(Entity entity:Map.getEntities()){
 			terrain.add(new Rectangle(entity.locationX,entity.locationY,entity.width,entity.height));
@@ -121,24 +103,19 @@ public class TonposeGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
 
-		// render bucket and raindrops
+		// render player and enemy
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
-		if(touchedEnemy==false)
-			batch.draw(bucketImage, bucket.x, bucket.y);
 		batch.draw(playerImage, player.x, player.y);
 		batch.draw(enemyImage,enemy.x,enemy.y);
-		for(Rectangle raindrop: raindrops){
-			batch.draw(dropImage, raindrop.x, raindrop.y);
-		}
 		for(Entity entity:Map.getEntities()){ //draws terrain
 			if(entity.id==1) //checks if it is a standard tree
-			batch.draw(tree,entity.locationX,entity.locationY);
+			batch.draw(treeImage,entity.locationX,entity.locationY);
 		}
 
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 
-		// make bucket move on touch
+		// make player move on touch
 		if(Gdx.input.isTouched()){
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -151,23 +128,6 @@ public class TonposeGame extends ApplicationAdapter {
 		if(TimeUtils.nanoTime() > lastTick + TICKDELAY){
 			tick();
 		}
-		// move raindrops, remove if below screen or in bucket
-		Iterator<Rectangle> iter = raindrops.iterator();
-		while(iter.hasNext()){
-			Rectangle raindrop = iter.next();
-			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-			if(raindrop.overlaps(bucket)){
-				dropSound.play();
-				iter.remove();
-			}
-			if(raindrop.y + 20 < 0) {
-				iter.remove();
-				dropSound.play();
-				dropsLost++;
-			}
-
-		}
-
 	}
 
 	private void tick(){
@@ -183,9 +143,6 @@ public class TonposeGame extends ApplicationAdapter {
 			touchedEnemy=true;
 			Toast("ouch!");
 		}
-		// spawn raindrop if enough time has passed
-		if(TimeUtils.nanoTime() > lastDrop + DROPDELAY)
-			spawnRaindrop();
 	}
 
 
@@ -219,10 +176,6 @@ public class TonposeGame extends ApplicationAdapter {
 			player.setY(player.getY() - 5);
 			camera.translate(0,-5);
 		}*/
-		if(touchedEnemy==false) {
-			bucket.x = player.getX() + 32;
-			bucket.y = player.getY();
-		}
 
 		// make sure bucket and player stays in screen					//TODO change to edit lastX and lastY
 	/*	if(bucket.x < 0)
@@ -242,16 +195,6 @@ public class TonposeGame extends ApplicationAdapter {
 		TonposeGame.androidMethod.Toast(text);
 	}
 
-	private void spawnRaindrop(){
-		Rectangle raindrop = new Rectangle();
-		raindrop.x = MathUtils.random(0, 800 - 64);
-		raindrop.y = 480;
-		raindrop.width = 64;
-		raindrop.height = 64;
-		raindrops.add(raindrop);
-		lastDrop =  TimeUtils.nanoTime();
-	}
-
 	private void moveEnemy(){ // called whenever a raindrop spawns
 		AI.direct(player, enemy);
 		lastNpc =  TimeUtils.nanoTime();
@@ -268,10 +211,9 @@ public class TonposeGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		//dispose assets
-		dropImage.dispose();
-		bucketImage.dispose();
-		dropSound.dispose();
-		rainMusic.dispose();
+		playerImage.dispose();
+		enemyImage.dispose();
+		treeImage.dispose();
 		batch.dispose();
 	}
 }

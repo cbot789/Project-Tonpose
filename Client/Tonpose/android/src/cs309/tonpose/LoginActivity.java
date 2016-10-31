@@ -318,10 +318,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void connectToServer(){
+        //create new Kryonet client
         client = new Client();
+        //start client thread
         client.start();
 
-        //Register the client and packet classes
+        //Register the client and packet classes with Kryo
         Network.register(client);
 
         Listener clientListener = new Listener() {
@@ -345,6 +347,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     CheckUser check = (CheckUser)object;
                     if(check.status){
                         System.out.println("Username and password are valid");
+                        client.close();
                         Intent intent = new Intent(LoginActivity.this, MainMenu.class);
                         startActivity(intent);
                         finish();
