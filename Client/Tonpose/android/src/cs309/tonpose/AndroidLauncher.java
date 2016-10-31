@@ -1,5 +1,6 @@
 package cs309.tonpose;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -14,6 +15,8 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		androidMethod=new AndroidMethod(this);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new TonposeGame(androidMethod), config);
+		Intent intent = getIntent();
+		String name = intent.getExtras().getString("name");
+		initialize(new TonposeGame(androidMethod, name), config);
 	}
 }

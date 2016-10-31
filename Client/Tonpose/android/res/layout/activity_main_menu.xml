@@ -35,4 +35,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_above="@+id/play"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/nameField"
+        android:hint="name"
+        tools:hint="Name" />
+
 </RelativeLayout>

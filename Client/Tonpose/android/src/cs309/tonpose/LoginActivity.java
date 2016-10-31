@@ -33,15 +33,10 @@ import android.widget.TextView;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.minlog.Log;
 
 import cs309.tonpose.Network.CheckUser;
 import cs309.tonpose.Network.CheckUsername;
-import cs309.tonpose.Network.MovePlayer;
 import cs309.tonpose.Network.NewUser;
-import cs309.tonpose.Network.PlayerConnect;
-import cs309.tonpose.Network.PlayerDisconnect;
-import cs309.tonpose.Network.UpdatePlayerList;
 
 import java.io.IOException;
 import java.util.ArrayList;

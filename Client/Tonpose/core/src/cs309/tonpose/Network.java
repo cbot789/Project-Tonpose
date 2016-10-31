@@ -3,6 +3,7 @@ package cs309.tonpose;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+//Core game packet classes
 public class Network {
 	static public final int port = 8080;
 
@@ -18,7 +19,6 @@ public class Network {
 		kryo.register(PlayerDisconnect.class);
 		kryo.register(MovePlayer.class);
 	}
-
 	static public class CheckUsername {
 		public String name;
 		public boolean status;

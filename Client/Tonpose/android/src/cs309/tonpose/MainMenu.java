@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.text.TextUtils;
+import android.widget.EditText;
 
 import cs309.tonpose.R;
 
@@ -42,11 +44,18 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        buttonPlay.setOnClickListener(new View.OnClickListener() {                                  //button to enter game
+        buttonPlay.setOnClickListener(new View.OnClickListener() {               //button to enter game
             @Override
             public void onClick(View v) {
+
+                EditText nameView = (EditText)findViewById(R.id.nameField);
+                String name = nameView.getText().toString();
+                if (TextUtils.isEmpty(name)) {
+                    nameView.setError("Please enter a name");
+                    return;
+                }
                 Music.playSFX(MainMenu.this, Music.SFX.pop);
-                goToGame();
+                goToGame(name);
             }
         });
     }
@@ -56,10 +65,11 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToGame(){
+    private void goToGame(String name){
         Music.playSFX(this, Music.SFX.pop);
         Music.pause();
-        Intent intent = new Intent(this, AndroidLauncher.class);                                    //starts the libGDX game
+        Intent intent = new Intent(this, AndroidLauncher.class);            //starts the libGDX game
+        intent.putExtra("name", name);
         startActivity(intent);
     }
 

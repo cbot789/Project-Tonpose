@@ -14,6 +14,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.Network.PlayerDisconnect;
+import cs309.tonpose.Network.UpdatePlayerList;
+
 import org.w3c.dom.css.Rect;
 
 import java.util.Iterator;
@@ -44,9 +51,11 @@ public class TonposeGame extends ApplicationAdapter {
 	private final int TICKDELAY = 1000000;
 	private final int NPCDELAY =    40000000;
 	private final int MOVEDELAY =   10000000;
+	private String username;
 
-	public TonposeGame(AndroidMethods androidMethod) {
+	public TonposeGame(AndroidMethods androidMethod, String name) {
 		this.androidMethod=androidMethod;
+		this.username = name;
 	}
 
 
