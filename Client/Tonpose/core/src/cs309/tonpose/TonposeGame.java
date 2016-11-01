@@ -34,7 +34,7 @@ import static java.lang.Math.abs;
 public class TonposeGame extends ApplicationAdapter {
 
 	static AndroidMethods androidMethod;                                                            //used for android methods such as toasts or intent usage
-	private Texture treeImage;
+	private Texture treeImage,cabbageImage;
 	private Map Map;
 	private Music music;
 	private Texture playerImage, enemyImage;
@@ -81,6 +81,7 @@ public class TonposeGame extends ApplicationAdapter {
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
 		enemyImage = new Texture(Gdx.files.internal("player2base.png"));
 		treeImage = new Texture(Gdx.files.internal("treeStill.png"));
+		cabbageImage=new Texture(Gdx.files.internal("cabbage.png"));
 
 		touchedEnemy = false;
 
@@ -136,6 +137,9 @@ public class TonposeGame extends ApplicationAdapter {
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			if (entity.id == 1) //checks if it is a standard tree
 				batch.draw(treeImage, entity.locationX, entity.locationY);
+			else if(entity.id==0){
+				batch.draw(cabbageImage,entity.locationX,entity.locationY);
+			}
 		}
 		if(!Name.equals("offline")) {
 			for (User value : users.values()) {
@@ -148,7 +152,7 @@ public class TonposeGame extends ApplicationAdapter {
 		// make player move on touch
 		if (Gdx.input.isTouched()) {
 			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
 			camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
 			lastX = touchPos.x;
 			lastY = touchPos.y;
@@ -187,7 +191,7 @@ public class TonposeGame extends ApplicationAdapter {
 		float y = lastY - player.getY();
 		float sum = abs(x) + abs(y);
 
-		if (sum > 3) {
+		if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
 			float xMove = 5 * (x/sum);
 			float yMove = 5 * (y/sum);
 
@@ -211,9 +215,9 @@ public class TonposeGame extends ApplicationAdapter {
 				player.y=0;
 
 			}
-			else if(player.y+xMove>Map.getHeight()){
+			else if(player.y+yMove>Map.getHeight()){
 				yMove=Map.getHeight()-player.y;
-				player.x=Map.getHeight();
+				player.y=Map.getHeight();
 
 			}else {
 				player.y += yMove;

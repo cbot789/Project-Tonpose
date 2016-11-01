@@ -29,8 +29,13 @@ public class Map {
     private Entity generateTerrain(){                                                                 //TODO add chance to generate other objects besides trees
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
-        return new Terrain(x,y,1,100,100,50,1000,0,true); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
-
+        int id=MathUtils.random(0,1);
+        if(id==0){
+            return new Cabbage(x, y, id, 10, 10, 10, 5, 0, true);
+        }
+        else {
+            return new Tree(x, y, id, 100, 100, 50, 1000, 0, true); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
+        }
     }
 
     public ArrayList<Entity> getEntities() {                                                            //TODO move map generation function here?
