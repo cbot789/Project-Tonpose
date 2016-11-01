@@ -10,8 +10,7 @@ public class Item {
     protected float locationX;
     protected float locationY;
     protected boolean equippable;
-    protected boolean pickUpable;
-    protected boolean interactable;
+    protected boolean hasAction;
     protected boolean inInventory;
 
     public Item(int number, float x, float y, int id){
@@ -21,18 +20,30 @@ public class Item {
         itemID = id;
     }
     public void action(){
-        if(!inInventory){
-            if(pickUpable){
-
+            if(!hasAction){
+                return;
             }
-            if(interactable){
-
-            }
-        }
-        else{
-            if(equippable){
-
-            }
-        }
+    }
+    public void toggleInventory(){
+        inInventory = !inInventory;
+    }
+    public float getX(){
+        return locationX;
+    }
+    public float getY(){
+        return locationY;
+    }
+    public void setLocation(float x, float y){
+        locationX = x;
+        locationY = y;
+    }
+    public boolean getEquippable(){
+        return equippable;
+    }
+    public int getID(){
+        return itemID;
+    }
+    public int getCount(){
+        return count;
     }
 }

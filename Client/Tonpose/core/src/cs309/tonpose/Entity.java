@@ -46,22 +46,32 @@ public class Entity {
         this.killable=killable;
     }
 
+    //initilizes what items the entity carries and will drop on death
     public void setInventory(){
 
     }
+
+    //removes item from inventory and spawns it on the map
     public void dropItem(Item toDrop){
         inventory.remove(toDrop);
+        toDrop.toggleInventory();
+        toDrop.setLocation(locationX, locationY);
         //create world object
     }
+
+    //adds an item to the inventory and deletes it from the map if there is room in inventory
     public void addInventory(Item toAdd){
         if(inventory.size() < invSize){
             inventory.add(toAdd);
+            toAdd.toggleInventory();
             //remove world object
         }
         else{
             //display "inv full"
         }
     }
+
+    //heals or damages the entity by "mod" amount
     public void changeHp(int mod){
         currentHp += mod;
         if (currentHp > maxHp){
@@ -72,13 +82,19 @@ public class Entity {
             kill();
         }
     }
+
+    //pushes entity
     public void addForce(int x, int y){
         forceX += x;
         forceY += y;
     }
+
+    //deletes entity from the map
     public void kill(){
 
     }
+
+    //returns the body of the entity
     public Rectangle getRectangle(){
         return body;
     }

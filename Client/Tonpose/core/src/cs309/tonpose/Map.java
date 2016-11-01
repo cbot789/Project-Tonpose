@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Map {
     private int height,width;
     private ArrayList<Entity> entities;
-
+    private ArrayList<Item> items;
 
 
     public Map(int height, int width, int terrain, int difficulty){
@@ -33,7 +33,17 @@ public class Map {
 
     }
 
-    public ArrayList<Entity> getEntities() {
-        return entities;
+    public ArrayList<Entity> getEntities() {                                                            //TODO move map generation function here?
+        return entities;                                                                                //TODO fully add item support
+    }
+
+    //adds an item to appear on the map
+    public void addToMap(Item item){
+        items.add(item);
+    }
+
+    //removes an item so it no longer shows on the map
+    public void removeFromMap(Item item){
+        items.remove(item);
     }
 }

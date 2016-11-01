@@ -11,7 +11,7 @@ import static java.lang.Math.tan;
  * Created by Quade Spellman on 10/23/2016.
  */
 
-public class AI {
+public class AI {           //TODO move to living?
     public static void basic(Rectangle target, Rectangle npc){      //unused    //TODO delete
         if(target.getX() > npc.getX()){
             npc.x += 5;
@@ -26,6 +26,8 @@ public class AI {
             npc.y -= 5;
         }
     }
+
+    //moves npc towards target
     public static void direct(Rectangle target, Rectangle npc){
         float x = target.getX() - npc.getX();
         float y = target.getY() - npc.getY();
@@ -37,6 +39,7 @@ public class AI {
 
     }
 
+    //moves npc to point x,y
     public static void direct(float targetX, float targetY, Rectangle npc){
         float x = targetX - npc.getX();
         float y = targetY - npc.getY();
@@ -47,6 +50,8 @@ public class AI {
         }
 
     }
+
+    //npc moves around target   //FIXME
     public static void circle(Rectangle target, Rectangle npc, Boolean clockwise){
         float x = target.getX() - npc.getX();
         float y = target.getY() - npc.getY();
