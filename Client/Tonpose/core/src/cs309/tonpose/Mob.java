@@ -5,6 +5,10 @@ package cs309.tonpose;
  */
 public class Mob extends Living {
 
+    public Mob(){
+
+    }
+
     private void setTarget(int x, int y){
 
     }

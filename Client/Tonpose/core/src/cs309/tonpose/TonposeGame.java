@@ -54,7 +54,7 @@ public class TonposeGame extends ApplicationAdapter {
 	private long lastMove;
 	private long lastUpdate;
 	private final int TICKDELAY = 1000000;
-	private final int NPCDELAY = 400000000;
+	private final int NPCDELAY =  30000000;
 	private final int MOVEDELAY = 10000000;
 	private final int UPDATEDELAY = 10000000;
 	private String Name;
@@ -73,7 +73,9 @@ public class TonposeGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 
-		connectToServer();
+		if(!Name.equals("offline")){
+			connectToServer();
+		}
 
 		// load textures
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
@@ -135,8 +137,10 @@ public class TonposeGame extends ApplicationAdapter {
 			if (entity.id == 1) //checks if it is a standard tree
 				batch.draw(treeImage, entity.locationX, entity.locationY);
 		}
-		for (User value: users.values()) {
-			batch.draw(playerImage, value.x, value.y);
+		if(!Name.equals("offline")) {
+			for (User value : users.values()) {
+				batch.draw(playerImage, value.x, value.y);
+			}
 		}
 
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
@@ -150,6 +154,9 @@ public class TonposeGame extends ApplicationAdapter {
 			lastY = touchPos.y;
 			//player.x= touchPos.x-64;
 			//player.y= touchPos.y-64/2;
+		}else{
+			lastX = player.getX();
+			lastY = player.getY();
 		}
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick();
@@ -180,41 +187,13 @@ public class TonposeGame extends ApplicationAdapter {
 		float y = lastY - player.getY();
 		float sum = abs(x) + abs(y);
 
-		if (sum != 0) {
+		if (sum > 3) {
 			float xMove = 5 * (x / sum);
 			float yMove = 5 * (y / sum);
 			player.x += xMove;
 			player.y += yMove;
 			camera.translate(xMove, yMove);
 		}
-	/*
-		if(player.getX() < lastX - 65){
-			player.setX(player.getX() + 5);
-			camera.translate(5,0);
-		}
-		else if(player.getX() > lastX - 60){
-			player.setX(player.getX() - 5);
-			camera.translate(-5,0);
-		}
-		if(player.getY() < lastY - 65){
-			player.setY(player.getY() + 5);
-			camera.translate(0,5);
-		}
-		else if(player.getY() > lastY - 60){
-			player.setY(player.getY() - 5);
-			camera.translate(0,-5);
-		}*/
-
-		// make sure bucket and player stays in screen					//TODO change to edit lastX and lastY
-	/*	if(bucket.x < 0)
-			bucket.x = 0;
-		if(bucket.y > 800 - 64)
-			bucket.y = 800 - 64;
-
-		if(player.x < 0)
-			player.x = 0;
-		if(player.y > 800 - 64)
-			player.y = 800 - 64;*/
 
 		lastMove = TimeUtils.nanoTime();
 	}
@@ -226,8 +205,6 @@ public class TonposeGame extends ApplicationAdapter {
 	private void moveEnemy() { // called whenever a raindrop spawns
 		AI.direct(player, enemy);
 		lastNpc = TimeUtils.nanoTime();
-		//enemy.x=MathUtils.random(0, 800 - 64);
-		//enemy.y=MathUtils.random(0, 480 - 64);
 	}
 
 	/*public void goToMenu(){
@@ -240,7 +217,9 @@ public class TonposeGame extends ApplicationAdapter {
 		MovePlayer move = new MovePlayer();
 		move.x = player.x;
 		move.y = player.y;
-		client.sendTCP(move);
+		if(!Name.equals("offline")) {
+			client.sendTCP(move);
+		}
 		lastUpdate = TimeUtils.nanoTime();
 	}
 

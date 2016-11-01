@@ -24,7 +24,7 @@ public class Player extends Living{
         score += points;
     }
     public void equipItem(Item toEquip){
-
+            equiped = toEquip;
     }
     public void gainXp(int gain){
         xp += gain;

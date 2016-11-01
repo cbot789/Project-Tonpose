@@ -12,7 +12,7 @@ import static java.lang.Math.tan;
  */
 
 public class AI {
-    public static void basic(Rectangle target, Rectangle npc){
+    public static void basic(Rectangle target, Rectangle npc){      //unused    //TODO delete
         if(target.getX() > npc.getX()){
             npc.x += 5;
         }
@@ -30,28 +30,30 @@ public class AI {
         float x = target.getX() - npc.getX();
         float y = target.getY() - npc.getY();
         float sum = abs(x) + abs(y);
-        if(sum != 0){
+        if(sum > 1){
+            npc.x += 5 * (x/sum);
+            npc.y += 5 * (y/sum);
+        }
+
+    }
+
+    public static void direct(float targetX, float targetY, Rectangle npc){
+        float x = targetX - npc.getX();
+        float y = targetY - npc.getY();
+        float sum = abs(x) + abs(y);
+        if(sum > 1){
             npc.x += 5 * (x/sum);
             npc.y += 5 * (y/sum);
         }
 
     }
     public static void circle(Rectangle target, Rectangle npc, Boolean clockwise){
-        float y = abs(target.getX() - npc.getX());
-        float x = abs(target.getY() - npc.getY());
-        float radius = x*x + y * y;
-        if(radius > 40){
-            direct(target, npc);
-        }else{
-            int moveX = (int) (0.5 * (sqrt(radius * radius + 5 * 10) - radius));
-            int moveY = (int) (moveX * tan(acos(moveX / 5)));
-            if(clockwise){
-                npc.x += moveX;
-                npc.y += moveY;
-            }else{
-                npc.x -= moveX;
-                npc.y -= moveY;
-            }
+        float x = target.getX() - npc.getX();
+        float y = target.getY() - npc.getY();
+        float sum = abs(x) + abs(y);
+        if(sum > 1){
+            npc.x += 5 * (x/sum);
+            npc.y += 5 * (y/sum);
         }
     }
 }

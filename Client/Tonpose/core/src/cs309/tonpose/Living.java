@@ -8,8 +8,11 @@ public class Living extends Entity {
     protected boolean destory;
     protected int lvl;
 
-    public void move(int x, int y){
-
+    public void move(float x, float y){
+        AI.direct(x, y, this.getRectangle());
+    }
+    public void move(Entity target){
+        AI.direct(target.getRectangle(), this.getRectangle());
     }
     public void attack(int x, int y) {
 

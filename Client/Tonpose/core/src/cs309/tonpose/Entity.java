@@ -1,5 +1,6 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.math.Rectangle;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class Entity {
     protected boolean killable;
     protected boolean collision;
     protected int width,height;
+    Rectangle body;
     //sprite
 
     protected int currentSpeed;
@@ -76,5 +78,8 @@ public class Entity {
     }
     public void kill(){
 
+    }
+    public Rectangle getRectangle(){
+        return body;
     }
 }
