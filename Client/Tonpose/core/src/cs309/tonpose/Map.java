@@ -42,6 +42,14 @@ public class Map {
         items.add(item);
     }
 
+    public int getWidth(){
+        return width;
+    }
+    public int getHeight(){
+        return height;
+    }
+
+
     //removes an item so it no longer shows on the map
     public void removeFromMap(Item item){
         items.remove(item);

@@ -188,11 +188,38 @@ public class TonposeGame extends ApplicationAdapter {
 		float sum = abs(x) + abs(y);
 
 		if (sum > 3) {
-			float xMove = 5 * (x / sum);
-			float yMove = 5 * (y / sum);
-			player.x += xMove;
-			player.y += yMove;
-			camera.translate(xMove, yMove);
+			float xMove = 5 * (x/sum);
+			float yMove = 5 * (y/sum);
+
+			if(player.x+xMove<0){
+				xMove=-player.getX();
+				player.x=0;
+
+			}
+			else if(player.x+xMove>Map.getWidth()){
+				xMove=Map.getWidth()-player.x;
+				player.x=Map.getWidth();
+
+			}else {
+				player.x += xMove;
+			}
+			camera.translate(xMove, 0);
+			//cameraX+=xMove;
+
+			if(player.y+yMove<0){
+				yMove=-player.getY();
+				player.y=0;
+
+			}
+			else if(player.y+xMove>Map.getHeight()){
+				yMove=Map.getHeight()-player.y;
+				player.x=Map.getHeight();
+
+			}else {
+				player.y += yMove;
+			}
+			//cameraY+=yMove;
+			camera.translate(0, yMove);//keeps camera within the map's bounds
 		}
 
 		lastMove = TimeUtils.nanoTime();
