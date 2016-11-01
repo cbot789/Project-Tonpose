@@ -198,6 +198,19 @@ public class tonpose_server {
 		//server.sendToAllTCP(updatePlayers);
 	}
 
+public static void closeConnection(Connection conn){
+	if (conn!=null){
+		try{
+			conn.close();
+			}
+catch(SQLException e){
+
+			}
+		}
+
+}
+
+
 	//holds connection state
 	static class tonpose_connection extends Connection {
 		public String name;
