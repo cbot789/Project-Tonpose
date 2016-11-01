@@ -2,33 +2,32 @@ package cs309.tonpose;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-//import com.esotericsoftware.minlog.Log;
+import com.esotericsoftware.minlog.Log;
 
 import cs309.tonpose.Network.CheckUser;
 import cs309.tonpose.Network.CheckUsername;
-import cs309.tonpose.Network.MovePlayer;
 import cs309.tonpose.Network.NewUser;
-import cs309.tonpose.Network.PlayerConnect;
-import cs309.tonpose.Network.PlayerDisconnect;
-import cs309.tonpose.Network.UpdatePlayerList;
+import cs309.tonpose.Network.ClientConnect;
+import cs309.tonpose.Network.AddUser;
+import cs309.tonpose.Network.UpdateUser;
+import cs309.tonpose.Network.RemoveUser;
+import cs309.tonpose.Network.MovePlayer;
 
 
 public class tonpose_server {
 	
 	Server server;
 	java.sql.Connection db_connection;
+	HashSet<User> users = new HashSet();
 
 	public tonpose_server () throws IOException {
 		server = new Server() {
 			protected Connection newConnection () {
-				// By providing our own connection implementation, we can store per
-				// connection state without a connection ID to state look up.
 				return new tonpose_connection();
 			}
 		};
@@ -40,6 +39,7 @@ public class tonpose_server {
 			public void received (Connection c, Object object) {
 
 				tonpose_connection connection = (tonpose_connection)c;
+				User user = connection.user;
 
 				// Search for username in database
 				if (object instanceof CheckUsername) {
@@ -141,6 +141,7 @@ public class tonpose_server {
 					}
 					name = name.trim();
 					password = password.trim();
+					//check if username or password are empty
 					if (name.length() == 0 || password.length() == 0) {
 						returnStatus.status = false;
 						server.sendToTCP(connection.getID(), returnStatus);
@@ -166,54 +167,72 @@ public class tonpose_server {
 					server.sendToTCP(connection.getID(), returnStatus);
 					return;
 				}
-				
-				if (object instanceof MovePlayer) {
-
+				if (object instanceof ClientConnect) {
+					if (user != null) return;	//ignore if user already exists
+					ClientConnect connect = (ClientConnect)object;
 					
+					//create new user object
+					user = new User();
+					user.name = connect.name;
+					user.id = connection.getID();
+					user.x = connect.x;
+					user.y = connect.y;
+					
+					//set the connection state user to the new user object
+					connection.user = user;
+					
+					//send all current users to the new user
+					for (User other : users) {
+						AddUser add = new AddUser();
+						add.user = other;
+						connection.sendTCP(add);
+					}
+					//add new user to the hashmap
+					users.add(user);
+					AddUser add = new AddUser();
+					add.user = user;
+					//send new user to all existing users
+					server.sendToAllTCP(add);
 				}
-				
+				if (object instanceof MovePlayer) {
+					if (user == null) return;	//if user doesn't exist, ignore
+					MovePlayer move = (MovePlayer)object;
+					
+					//set the current user coordinates to the new move coordinates
+					user.x = move.x;
+					user.y = move.y;
+					
+					//create updateUser object to update the user on all clients
+					UpdateUser update = new UpdateUser();
+					update.id = user.id;
+					update.x = user.x;
+					update.y = user.y;
+					server.sendToAllTCP(update);
+				}
 			}
 
 			public void disconnected (Connection c) {
-				//tonpose_connection connection = (tonpose_connection)c;
-				updatePlayers();
+				tonpose_connection connection = (tonpose_connection)c;
+				if (connection.user != null) {
+					//remove the current user from the hashmap
+					users.remove(connection.user);
+					
+					//send a removeUser object to all clients
+					RemoveUser r = new RemoveUser();
+					r.id = connection.user.id;
+					server.sendToAllTCP(r);
+				}
 			}
 		});
 		server.bind(Network.port);
 		server.start();
 
-		System.out.println("Server started on port " + Network.port);
+		System.out.println("Tonpose Server started on port " + Network.port);
 	}
 
-	void updatePlayers () {
-		// Collect the names for each connection.
-		Connection[] connections = server.getConnections();
-		ArrayList<String> names = new ArrayList<String>(connections.length);
-		for (int i = connections.length - 1; i >= 0; i--) {
-			tonpose_connection connection = (tonpose_connection)connections[i];
-			names.add(connection.name);
-		}
-		UpdatePlayerList updatePlayers = new UpdatePlayerList();
-		updatePlayers.names = (String[])names.toArray(new String[names.size()]);
-		//server.sendToAllTCP(updatePlayers);
-	}
-
-public static void closeConnection(Connection conn){
-	if (conn!=null){
-		try{
-			conn.close();
-			}
-catch(SQLException e){
-
-			}
-		}
-
-}
-
-
-	//holds connection state
+	//holds connection state with user object
 	static class tonpose_connection extends Connection {
-		public String name;
+		public User user;
 	}
 
 	public static void main (String[] args) throws IOException {

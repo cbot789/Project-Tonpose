@@ -3,6 +3,7 @@ package cs309.tonpose;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+//Server packet classes
 public class Network {
 	static public final int port = 8080;
 
@@ -13,41 +14,57 @@ public class Network {
 		kryo.register(CheckUsername.class);
 		kryo.register(CheckUser.class);
 		kryo.register(NewUser.class);
-		kryo.register(PlayerConnect.class);
-		kryo.register(UpdatePlayerList.class);
-		kryo.register(PlayerDisconnect.class);
+		kryo.register(ClientConnect.class);
+		kryo.register(AddUser.class);
+		kryo.register(UpdateUser.class);
+		kryo.register(RemoveUser.class);
 		kryo.register(MovePlayer.class);
+		kryo.register(User.class);
 	}
-
+	
+	// For checking if username is in database
 	static public class CheckUsername {
 		public String name;
 		public boolean status;
 	}
-	
+
+	// For checking if Username and Password match in database
 	static public class CheckUser {
 		public String name, password;
 		public boolean status;
 	}
-	
+
+	// For creating a new account in database
 	static public class NewUser {
 		public String name, password;
 		public boolean status;
 	}
-	
-	static public class PlayerConnect {
+
+	// For Connecting a client to the game
+	static public class ClientConnect {
 		public String name;
+		public int id;
+		public float x, y;
 	}
 
-	static public class UpdatePlayerList {
-		public String[] names;
+	// For adding a new user to all clients' games
+	static public class AddUser {
+		public User user;
+	}
+
+	// For updating the location of a user
+	static public class UpdateUser {
+		public int id;
+		public float x, y;
+	}
+
+	// For removing a user from the game when they disconnect
+	static public class RemoveUser {
+		public int id;
 	}
 	
-	static public class PlayerDisconnect {
-		public String name;
-	}
-	
+	// For client to tell the server its player moved
 	static public class MovePlayer {
-		public String name;
-		public int x, y;
+		public float x, y;
 	}
 }
