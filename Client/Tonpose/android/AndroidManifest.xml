@@ -29,7 +29,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Settings" />
-        <activity android:name=".ServerSelect" />
         <activity android:name=".MainMenu">
             android:screenOrientation="landscape"
         </activity>
