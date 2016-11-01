@@ -7,16 +7,7 @@ package cs309.tonpose;
 public class Cabbage extends Terrain { //id is 0
 
 
-    public Cabbage(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
-        this.locationX=locationX;
-        this.locationY=locationY;
-        this.id=id;
-        this.currentHp=maxHp;
-        this.maxHp=maxHp;
-        this.width=width;
-        this.height=height;
-        this.mass=mass;
-        this.invSize=invSize;
-        this.killable=killable;
+    public Cabbage(int locationX, int locationY){
+        super(locationX, locationY, 0, 10, 10, 10, 5, 0, true);
     }
 }

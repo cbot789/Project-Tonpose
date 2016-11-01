@@ -31,10 +31,10 @@ public class Map {
         int y= MathUtils.random(height);
         int id=MathUtils.random(0,1);
         if(id==0){
-            return new Cabbage(x, y, id, 10, 10, 10, 5, 0, true);
+            return new Cabbage(x, y);
         }
         else {
-            return new Tree(x, y, id, 100, 100, 50, 1000, 0, true); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
+            return new Tree(x, y, id); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
         }
     }
 

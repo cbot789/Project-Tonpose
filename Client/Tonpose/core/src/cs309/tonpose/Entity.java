@@ -33,7 +33,7 @@ public class Entity {
 
     }
 
-    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
+    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
        this.locationX=locationX;
         this.locationY=locationY;
         this.id=id;
@@ -44,6 +44,8 @@ public class Entity {
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
+        this.collision = collision;
+        setInventory();
     }
 
     //initilizes what items the entity carries and will drop on death
@@ -91,7 +93,10 @@ public class Entity {
 
     //deletes entity from the map
     public void kill(){
-
+        for (Item item:inventory) {
+            dropItem(item);
+        }
+        //TODO remove from map
     }
 
     //returns the body of the entity

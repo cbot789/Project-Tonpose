@@ -5,22 +5,10 @@ package cs309.tonpose;
  */
 
 public class Terrain extends Entity {
-
-
-
-
+//TODO no purpose? Delete?
 
     public Terrain(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
-        this.locationX=locationX;
-        this.locationY=locationY;
-        this.id=id;
-        this.currentHp=maxHp;
-        this.maxHp=maxHp;
-        this.width=width;
-        this.height=height;
-        this.mass=mass;
-        this.invSize=invSize;
-        this.killable=killable;
+        super(locationX, locationY, id, maxHp, height, width, mass, invSize, killable, false);
     }
 
     public Terrain(){}

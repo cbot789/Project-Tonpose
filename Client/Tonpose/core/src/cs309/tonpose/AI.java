@@ -36,7 +36,7 @@ public class AI {           //TODO move to living?
             npc.x += 5 * (x/sum);
             npc.y += 5 * (y/sum);
         }
-
+        
     }
 
     //moves npc to point x,y
