@@ -33,7 +33,7 @@ public class TonposeScreen implements Screen {
 	final Tonpose tonpose;
 	private Map Map;
 	private Music music;
-	private Texture playerImage, buttonImage;
+	private Texture playerImage, buttonImage,healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
@@ -63,14 +63,15 @@ public class TonposeScreen implements Screen {
 	private BitmapFont font = new BitmapFont();
 	private Table table;
 	private TextButton.TextButtonStyle textButtonStyle;
-
+	private float playerHealthX=1;
+	private float playerHealthY=416;
 
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
 
 		// load textures TODO remove
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
-
+		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		touchedEnemy = false;
 
 		// load music
@@ -104,7 +105,7 @@ public class TonposeScreen implements Screen {
 
 		batch = new SpriteBatch();
 
-		Map = new Map(1000, 1000, 40, 0);        //TODO retrieve map from server instead of making one here
+		Map = new Map(1000, 1000, 20, 0);        //TODO retrieve map from server instead of making one here
 
 
 		//initialize main character
@@ -136,6 +137,7 @@ public class TonposeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
 		batch.draw(playerImage, player.x, player.y);
+		batch.draw(healthImage,playerHealthX,playerHealthY);
 		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
 				batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
@@ -218,6 +220,7 @@ public class TonposeScreen implements Screen {
 					player.x += xMove;
 				}
 				camera.translate(xMove, 0);
+				playerHealthX+=xMove;
 				//cameraX+=xMove;
 			}
 			if(!collidedY){
@@ -234,7 +237,7 @@ public class TonposeScreen implements Screen {
 				}
 				//cameraY+=yMove;
 				camera.translate(0, yMove);//keeps camera within the map's bounds
-
+				playerHealthY+=yMove;
 			}
 
 		}
