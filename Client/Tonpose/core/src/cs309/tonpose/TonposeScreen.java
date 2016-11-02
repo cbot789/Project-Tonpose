@@ -104,7 +104,7 @@ public class TonposeScreen implements Screen {
 
 		batch = new SpriteBatch();
 
-		Map = new Map(1000, 1000, 10, 0);        //TODO retrieve map from server instead of making one here
+		Map = new Map(1000, 1000, 40, 0);        //TODO retrieve map from server instead of making one here
 
 
 		//initialize main character

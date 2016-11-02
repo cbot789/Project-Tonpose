@@ -3,6 +3,9 @@ package cs309.tonpose;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+
+import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
 
@@ -30,14 +33,37 @@ public class Map {
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
         int id=MathUtils.random(0,3);
+        Rectangle playerRectangle= new Rectangle(400,240,45,64);
         if(id==0){
+            Cabbage cabbage = new Cabbage(x,y);
+            if(cabbage.body.overlaps(playerRectangle)){
+                return generateTerrain(); //try again for a valid position
+            }
+            for(Entity enitity:entities){ //check for overlap
+                if(cabbage.body.overlaps(enitity.getRectangle())){
+                    return generateTerrain();
+                }
+            }
             return new Cabbage(x, y);
         }
         else if(id == 1){
+            Mob mob=new Mob(x,y);
+            for(Entity enitity:entities){ //check for overlap
+
+            }
             return new Mob(x, y);
         }
         else {
-            return new Tree(x, y); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
+            Tree tree=new Tree(x,y);
+            if(tree.body.overlaps(playerRectangle)){
+                return generateTerrain();
+            }
+            for(Entity enitity:entities){ //check for overlap
+            if(tree.body.overlaps(enitity.getRectangle())){
+                return generateTerrain();
+            }
+            }
+            return tree;                                                             //TODO make an id list for all entities, tree is currently 1
         }
     }
 
