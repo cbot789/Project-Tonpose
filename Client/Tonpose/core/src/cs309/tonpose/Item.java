@@ -24,9 +24,12 @@ public class Item {
         locationY = y;
         itemID = id;
     }
-    public void action(){
+    public void action(Rectangle player){
             if(!hasAction){
                 return;
+            }
+            else{
+                count--;
             }
     }
     public void toggleInventory(){

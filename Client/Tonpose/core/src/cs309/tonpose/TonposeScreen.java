@@ -31,7 +31,7 @@ import static java.lang.Math.abs;
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	private Map Map;
+	public static Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage,healthImage;
 	private Stage stage;
@@ -39,9 +39,9 @@ public class TonposeScreen implements Screen {
 	private TextureRegionDrawable buttonRegionDrawable;
 	private ImageButton playersButton;
 
-	private OrthographicCamera camera;
+	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Rectangle player;
+	private Player player;
 
 	private Array<Rectangle> terrain;
 
@@ -60,11 +60,12 @@ public class TonposeScreen implements Screen {
 	private TextureAtlas atlas;
 	private Skin skin;
 	private TextButton inv;
+	private TextButton actionButton;
 	private BitmapFont font = new BitmapFont();
 	private Table table;
 	private TextButton.TextButtonStyle textButtonStyle;
-	private float playerHealthX=1;
-	private float playerHealthY=416;
+	public static float playerHealthX=1;
+	public static float playerHealthY=416;
 
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
@@ -81,24 +82,6 @@ public class TonposeScreen implements Screen {
 		music.setLooping(true);
 		music.play();
 
-		/*//add stage and players button
-		buttonImage = new Texture(Gdx.files.internal("playersButton.png"));
-		buttonRegion = new TextureRegion(buttonImage, 0, 0, 200, 400);
-		buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
-		playersButton = new ImageButton(buttonRegionDrawable);
-		playersButton.addListener(new EventListener()
-		{
-			@Override
-			public boolean handle(Event event)
-			{
-				tonpose.setScreen(tonpose.playersScreen);
-				return true;
-			}
-		});
-		stage = new Stage();
-		stage.addActor(playersButton);
-		Gdx.input.setInputProcessor(stage);*/
-
 		// new camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
@@ -109,11 +92,17 @@ public class TonposeScreen implements Screen {
 
 
 		//initialize main character
+		/*
 		player = new Rectangle();
 		player.width = 45;  //player image dimensions are 45X64 if measuring to the hat
 		player.height = 64;
 		player.x = tonpose.lastX;
 		player.y = tonpose.lastY;
+		*/
+
+		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name);
+
+
 
 		//add terrain to map
 		terrain = new Array<Rectangle>(); //the array for terrain
@@ -129,18 +118,14 @@ public class TonposeScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
 
-		//render stage
-		stage.act(delta);
-		stage.draw();
-
 		// render player and enemy
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
-		batch.draw(playerImage, player.x, player.y);
+		batch.draw(player.texture, player.getX(), player.getY());
 		batch.draw(healthImage,playerHealthX,playerHealthY);
 		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
-				batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+			batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
 		}
 		if(!tonpose.Name.equals("offline")) {
 			for (User value : tonpose.users.values()) {
@@ -157,8 +142,6 @@ public class TonposeScreen implements Screen {
 			camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
 			tonpose.lastX = touchPos.x;
 			tonpose.lastY = touchPos.y;
-			//player.x= touchPos.x-64;
-			//player.y= touchPos.y-64/2;
 		}else{
 			tonpose.lastX = player.getX();
 			tonpose.lastY = player.getY();
@@ -166,6 +149,11 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick();
 		}
+
+
+		//render stage
+		stage.act(delta);
+		stage.draw();
 	}
 
 	private void tick() {
@@ -184,63 +172,7 @@ public class TonposeScreen implements Screen {
 
 
 	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
-		float prevX=player.getX();
-		float prevY=player.getY();
-		float x = tonpose.lastX - player.getX();
-		float y = tonpose.lastY - player.getY();
-		float sum = abs(x) + abs(y);
-		boolean collidedX=false;
-		boolean collidedY=false;
-		if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
-			float xMove = 5 * (x / sum);
-			float yMove = 5 * (y / sum);
-			Rectangle newPositionX = new Rectangle(player.getX() + xMove, player.getY(), player.getWidth(), player.getHeight());
-			Rectangle newPositionY = new Rectangle(player.getX(), player.getY() + yMove, player.getWidth(), player.getHeight());
-			for (Entity entity : Map.getEntities()) { //checks if the player is going to collide with any entities
-				if(entity.collision == true){
-					if (newPositionX.overlaps(entity.getRectangle())) {
-						collidedX = true;
-					}
-					if(newPositionY.overlaps(entity.getRectangle())){
-
-						collidedY=true;
-					}
-				}
-			}
-			if (!collidedX) {
-				if (player.x + xMove < 0) {  //this section assumes no collisions with objects after xmove and ymove are added
-					xMove = -player.getX();
-					player.x = 0;
-
-				} else if (player.x + xMove > Map.getWidth()) {
-					xMove = Map.getWidth() - player.x;
-					player.x = Map.getWidth();
-
-				} else {
-					player.x += xMove;
-				}
-				camera.translate(xMove, 0);
-				playerHealthX+=xMove;
-				//cameraX+=xMove;
-			}
-			if(!collidedY){
-				if (player.y + yMove < 0) {
-					yMove = -player.getY();
-					player.y = 0;
-
-				} else if (player.y + yMove > Map.getHeight()) {
-					yMove = Map.getHeight() - player.y;
-					player.y = Map.getHeight();
-
-				} else {
-					player.y += yMove;
-				}
-				//cameraY+=yMove;
-				camera.translate(0, yMove);//keeps camera within the map's bounds
-				playerHealthY+=yMove;
-			}
-
-		}
+		player.move(tonpose.lastX, tonpose.lastY);
 
 		lastMove = TimeUtils.nanoTime();
 	}
@@ -256,7 +188,7 @@ public class TonposeScreen implements Screen {
 				if(sum > 4){
 					entity.locationX += 5 * (x/sum);
 					entity.locationY += 5 * (y/sum);
-					entity.setBody(entity.locationX+5*(x/sum),entity.locationY+5*(y/sum),entity.width,entity.height);
+					entity.setBody(entity.locationX,entity.locationY);
 				}
 				//AI.direct(player.getX(), player.getY(), entity.getRectangle());
 				//((Mob) entity).move(player.getX(), player.getY());
@@ -274,8 +206,8 @@ public class TonposeScreen implements Screen {
 	//updates the player location through the network
 	public void updatePlayer(){
 		MovePlayer move = new MovePlayer();
-		move.x = player.x;
-		move.y = player.y;
+		move.x = player.getX();
+		move.y = player.getY();
 		if(!tonpose.Name.equals("offline")) {
 			tonpose.client.sendTCP(move);
 		}
@@ -303,15 +235,14 @@ public class TonposeScreen implements Screen {
 			}
 		});
 		stage = new Stage();
-		stage.addActor(playersButton);
 		Gdx.input.setInputProcessor(stage);
 
 		//new below
 		Table table = new Table();
-		table.setBounds(0,0, Gdx.graphics.getWidth(), 30);
-		table.right();
+		table.setBounds(0,0, Gdx.graphics.getWidth(), 120);
+		table.left();
 		stage.addActor(table);
-
+		table.add(playersButton);
 		font = new BitmapFont();
 		textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.font = font;
@@ -328,6 +259,21 @@ public class TonposeScreen implements Screen {
 		});
 		table.add(inv);
 
+		actionButton = new TextButton("Action", textButtonStyle);
+		actionButton.getLabel().setFontScale(5,5);
+		actionButton.addListener(new EventListener()
+		{
+			@Override
+			public boolean handle(Event event)
+			{
+				/*
+				Tree tree = new Tree((int)player.getX() + 40, (int) player.getY());
+				Map.addToMap(tree);
+				*/
+				return true;
+			}
+		});
+		table.add(actionButton);
 	}
 
 	@Override

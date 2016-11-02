@@ -39,18 +39,14 @@ public class Map {
             if(cabbage.body.overlaps(playerRectangle)){
                 return generateTerrain(); //try again for a valid position
             }
-            for(Entity enitity:entities){ //check for overlap
+            /*for(Entity enitity:entities){ //check for overlap
                 if(cabbage.body.overlaps(enitity.getRectangle())){
                     return generateTerrain();
                 }
-            }
+            }*/
             return new Cabbage(x, y);
         }
         else if(id == 1){
-            Mob mob=new Mob(x,y);
-            for(Entity enitity:entities){ //check for overlap
-
-            }
             return new Mob(x, y);
         }
         else {
@@ -58,11 +54,11 @@ public class Map {
             if(tree.body.overlaps(playerRectangle)){
                 return generateTerrain();
             }
-            for(Entity enitity:entities){ //check for overlap
-            if(tree.body.overlaps(enitity.getRectangle())){
-                return generateTerrain();
-            }
-            }
+            /*for(Entity enitity:entities){ //check for overlap
+                if(tree.body.overlaps(enitity.getRectangle())){
+                    return generateTerrain();
+                }
+            }*/
             return tree;                                                             //TODO make an id list for all entities, tree is currently 1
         }
     }
@@ -76,9 +72,14 @@ public class Map {
         items.add(item);
     }
 
+    public void addToMap(Entity entity){
+        entities.add(entity);
+    }
+
     public int getWidth(){
         return width;
     }
+
     public int getHeight(){
         return height;
     }
@@ -89,5 +90,7 @@ public class Map {
         items.remove(item);
     }
 
-    public void removeEntity(Entity entity){ entities.remove(entity);}
+    public void removeFromMap(Entity entity){
+        entities.remove(entity);
+    }
 }

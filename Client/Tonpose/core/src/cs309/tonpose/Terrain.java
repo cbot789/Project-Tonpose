@@ -13,7 +13,4 @@ public class Terrain extends Entity {
 
         super(locationX, locationY, id, maxHp, height, width, mass, invSize, killable, false);
     }
-
-    public Terrain(){}
-
 }

@@ -2,6 +2,8 @@ package cs309.tonpose;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.Gdx;
 
@@ -9,8 +11,8 @@ import com.badlogic.gdx.Gdx;
  * Created by Quade Spellman on 9/27/2016.
  */
 public class Entity {
-    protected int locationX;
-    protected int locationY;
+    protected float locationX;
+    protected float locationY;
     protected int id;                                                                               //TODO determine if id is needed for all entities, or just for items
     protected int currentHp;
     protected int maxHp;
@@ -30,13 +32,13 @@ public class Entity {
     protected int acceleration;
 
     protected int invSize;
-    protected List<Item> inventory;
+    protected ArrayList<Item> inventory;
 
     public Entity(){
 
     }
 
-    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
+    public Entity(float locationX, float locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
        this.locationX=locationX;
         this.locationY=locationY;
         this.id=id;
@@ -63,7 +65,7 @@ public class Entity {
 
     //initilizes what items the entity carries and will drop on death
     public void setInventory(){
-
+        inventory = new ArrayList<Item>();
     }
 
     //removes item from inventory and spawns it on the map
@@ -71,6 +73,7 @@ public class Entity {
         inventory.remove(toDrop);
         toDrop.toggleInventory();
         toDrop.setLocation(locationX, locationY);
+        TonposeScreen.Map.addToMap(toDrop);
         //create world object
     }
 
@@ -103,7 +106,7 @@ public class Entity {
         forceX += x;
         forceY += y;
     }
-    public void setBody(float x,float y,int width,int height){
+    public void setBody(float x,float y){
         body.set(x,y,width,height);
     }
 
@@ -112,7 +115,7 @@ public class Entity {
         for (Item item:inventory) {
             dropItem(item);
         }
-        //TODO remove from map
+        TonposeScreen.Map.removeFromMap(this);
     }
 
     public Texture getTexture(){
@@ -122,5 +125,18 @@ public class Entity {
     //returns the body of the entity
     public Rectangle getRectangle(){
         return body;
+    }
+
+    public float getX(){
+        return locationX;
+    }
+    public float getY(){
+        return locationY;
+    }
+    public float getWidth(){
+        return width;
+    }
+    public float getHeight(){
+        return height;
     }
 }
