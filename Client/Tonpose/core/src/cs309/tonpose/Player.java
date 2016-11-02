@@ -3,7 +3,7 @@ package cs309.tonpose;
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
-public class Player extends Living{
+public class Player{
     protected int score;
     protected int xp;
     protected int lvl;
@@ -28,6 +28,10 @@ public class Player extends Living{
     }
     public void gainXp(int gain){
         xp += gain;
+        if(xp >= lvl*100){
+            lvl++;
+            xp -= lvl*100;
+        }
     }
     public void login(){
         logged  = true;

@@ -77,7 +77,7 @@ public class TonposeGame extends ApplicationAdapter {
 			connectToServer();
 		}
 
-		// load textures
+		// load textures TODO remove
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
 		enemyImage = new Texture(Gdx.files.internal("player2base.png"));
 		treeImage = new Texture(Gdx.files.internal("treeStill.png"));
@@ -108,6 +108,8 @@ public class TonposeGame extends ApplicationAdapter {
 		player.x = lastX;
 		player.y = lastY;
 
+
+		//TODO remove
 		enemy = new Rectangle();
 		enemy.width = 64;
 		enemy.height = 64;
@@ -133,7 +135,7 @@ public class TonposeGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
 		batch.draw(playerImage, player.x, player.y);
-		batch.draw(enemyImage, enemy.x, enemy.y);
+		batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			if (entity.id == 1) //checks if it is a standard tree
 				batch.draw(treeImage, entity.locationX, entity.locationY);

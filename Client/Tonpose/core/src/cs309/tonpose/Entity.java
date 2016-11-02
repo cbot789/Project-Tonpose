@@ -1,7 +1,9 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import java.util.List;
+import com.badlogic.gdx.Gdx;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
@@ -15,7 +17,9 @@ public class Entity {
     protected boolean killable;
     protected boolean collision;
     protected int width,height;
-    Rectangle body;
+
+    protected Rectangle body;
+    protected Texture texture;
     //sprite
 
     protected int currentSpeed;
@@ -28,12 +32,11 @@ public class Entity {
     protected int invSize;
     protected List<Item> inventory;
 
-
-    public Entity(){ //default constructor
+    public Entity(){
 
     }
 
-    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
+    public Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
        this.locationX=locationX;
         this.locationY=locationY;
         this.id=id;
@@ -44,7 +47,11 @@ public class Entity {
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
-        this.body=new Rectangle(locationX,locationY,width,height);
+
+        this.collision = collision;
+        body = new Rectangle();
+        body.set(locationX,locationY,width,height);
+        setInventory();
     }
 
     //initilizes what items the entity carries and will drop on death
@@ -92,7 +99,14 @@ public class Entity {
 
     //deletes entity from the map
     public void kill(){
+        for (Item item:inventory) {
+            dropItem(item);
+        }
+        //TODO remove from map
+    }
 
+    public Texture getTexture(){
+        return texture;
     }
 
     //returns the body of the entity
