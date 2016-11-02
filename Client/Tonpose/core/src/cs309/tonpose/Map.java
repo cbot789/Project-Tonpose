@@ -59,4 +59,6 @@ public class Map {
     public void removeFromMap(Item item){
         items.remove(item);
     }
+
+    public void removeEntity(Entity entity){ entities.remove(entity);}
 }

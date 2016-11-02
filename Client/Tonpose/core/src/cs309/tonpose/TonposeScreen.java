@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import cs309.tonpose.Network.MovePlayer;
 
@@ -55,7 +54,7 @@ public class TonposeScreen implements Screen {
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
 
-		// load textures
+		// load textures TODO remove
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
 		enemyImage = new Texture(Gdx.files.internal("player2base.png"));
 		treeImage = new Texture(Gdx.files.internal("treeStill.png"));
@@ -104,6 +103,8 @@ public class TonposeScreen implements Screen {
 		player.x = tonpose.lastX;
 		player.y = tonpose.lastY;
 
+
+		//TODO remove
 		enemy = new Rectangle();
 		enemy.width = 64;
 		enemy.height = 64;
@@ -132,7 +133,7 @@ public class TonposeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
 		batch.draw(playerImage, player.x, player.y);
-		batch.draw(enemyImage, enemy.x, enemy.y);
+		batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			if (entity.id == 1) //checks if it is a standard tree
 				batch.draw(treeImage, entity.locationX, entity.locationY);
@@ -194,7 +195,14 @@ public class TonposeScreen implements Screen {
 			float xMove = 5 * (x/sum);
 			float yMove = 5 * (y/sum);
 
-			if(player.x+xMove<0){
+			for(Entity entity:Map.getEntities()){ //checks if the player is going to collide with any entities
+				if(player.overlaps(entity.getRectangle())){
+					
+				}
+
+			}
+
+			if(player.x+xMove<0){  //this section assumes no collisions with objects after xmove and ymove are added
 				xMove=-player.getX();
 				player.x=0;
 

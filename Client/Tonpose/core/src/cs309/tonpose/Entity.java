@@ -1,7 +1,9 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import java.util.List;
+import com.badlogic.gdx.Gdx;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
@@ -15,7 +17,9 @@ public class Entity {
     protected boolean killable;
     protected boolean collision;
     protected int width,height;
-    Rectangle body;
+
+    protected Rectangle body;
+    protected Texture texture;
     //sprite
 
     protected int currentSpeed;
@@ -28,8 +32,7 @@ public class Entity {
     protected int invSize;
     protected List<Item> inventory;
 
-
-    public Entity(){ //default constructor
+    public Entity(){
 
     }
 
@@ -44,7 +47,10 @@ public class Entity {
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
+
         this.collision = collision;
+        body = new Rectangle();
+        body.set(locationX,locationY,width,height);
         setInventory();
     }
 
@@ -97,6 +103,10 @@ public class Entity {
             dropItem(item);
         }
         //TODO remove from map
+    }
+
+    public Texture getTexture(){
+        return texture;
     }
 
     //returns the body of the entity
