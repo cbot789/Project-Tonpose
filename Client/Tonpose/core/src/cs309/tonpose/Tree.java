@@ -12,7 +12,7 @@ public class Tree extends Entity { //id is 1
 
 
     public Tree(int locationX, int locationY){
-        super(locationX, locationY, 9, 100, 50, 25, 1000, 0, true, true);
+        super(locationX, locationY, 9, 100, 50, 20, 1000, 0, true, true); //tree image is 64x128
         texture = new Texture(Gdx.files.internal("treeStill.png"));
     }
 

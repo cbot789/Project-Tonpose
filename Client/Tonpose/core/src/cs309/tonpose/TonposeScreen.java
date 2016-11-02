@@ -109,7 +109,7 @@ public class TonposeScreen implements Screen {
 
 		//initialize main character
 		player = new Rectangle();
-		player.width = 64;
+		player.width = 45;  //player image dimensions are 45X64 if measuring to the hat
 		player.height = 64;
 		player.x = tonpose.lastX;
 		player.y = tonpose.lastY;
@@ -250,7 +250,7 @@ public class TonposeScreen implements Screen {
 				float x = player.getX() - entity.locationX;
 				float y = player.getY() - entity.locationY;
 				float sum = abs(x) + abs(y);
-				if(sum > 1){
+				if(sum > 4){
 					entity.locationX += 5 * (x/sum);
 					entity.locationY += 5 * (y/sum);
 				}

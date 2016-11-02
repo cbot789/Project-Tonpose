@@ -49,8 +49,15 @@ public class Entity {
         this.killable=killable;
 
         this.collision = collision;
-        body = new Rectangle();
-        body.set(locationX,locationY,width,height);
+        if(id==9){ //different rectangle for tree
+            body=new Rectangle();
+            body.set(locationX+20,locationY,width,height);
+        }
+        else{
+            body = new Rectangle();
+            body.set(locationX,locationY,width,height);
+        }
+
         setInventory();
     }
 
