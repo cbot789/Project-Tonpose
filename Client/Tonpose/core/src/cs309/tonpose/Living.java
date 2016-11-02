@@ -14,7 +14,7 @@ public class Living extends Entity {
 
     //Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
     public Living(int x, int y, int hp, int height, int width, int invSize) {
-        super(x, y, 2, hp, height, width, 1, invSize, true, true);
+        super(x, y, 2, hp, height, width, 1, invSize, true, false);
     }
 
     public void move(float x, float y){

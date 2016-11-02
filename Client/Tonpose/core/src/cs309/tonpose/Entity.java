@@ -103,6 +103,9 @@ public class Entity {
         forceX += x;
         forceY += y;
     }
+    public void setBody(float x,float y,int width,int height){
+        body.set(x,y,width,height);
+    }
 
     //deletes entity from the map
     public void kill(){

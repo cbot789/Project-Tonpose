@@ -253,6 +253,7 @@ public class TonposeScreen implements Screen {
 				if(sum > 4){
 					entity.locationX += 5 * (x/sum);
 					entity.locationY += 5 * (y/sum);
+					entity.setBody(entity.locationX+5*(x/sum),entity.locationY+5*(y/sum),entity.width,entity.height);
 				}
 				//AI.direct(player.getX(), player.getY(), entity.getRectangle());
 				//((Mob) entity).move(player.getX(), player.getY());
