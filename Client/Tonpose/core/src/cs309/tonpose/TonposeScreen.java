@@ -186,55 +186,66 @@ public class TonposeScreen implements Screen {
 	}
 
 
-	public void movePlayer() {
+	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
+		float prevX=player.getX();
+		float prevY=player.getY();
 		float x = tonpose.lastX - player.getX();
 		float y = tonpose.lastY - player.getY();
 		float sum = abs(x) + abs(y);
-
+		boolean collidedX=false;
+		boolean collidedY=false;
 		if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
-			float xMove = 5 * (x/sum);
-			float yMove = 5 * (y/sum);
-
-			for(Entity entity:Map.getEntities()){ //checks if the player is going to collide with any entities
-				if(player.overlaps(entity.getRectangle())){
-					
+			float xMove = 5 * (x / sum);
+			float yMove = 5 * (y / sum);
+			Rectangle newPositionX = new Rectangle(player.getX() + xMove, player.getY(), player.getWidth(), player.getHeight());
+			Rectangle newPositionY = new Rectangle(player.getX(), player.getY() + yMove, player.getWidth(), player.getHeight());
+			for (Entity entity : Map.getEntities()) { //checks if the player is going to collide with any entities
+				if (newPositionX.overlaps(entity.getRectangle())) {
+					collidedX = true;
+				}
+				if(newPositionY.overlaps(entity.getRectangle())){
+					collidedY=true;
 				}
 
 			}
+			if (!collidedX) {
+				if (player.x + xMove < 0) {  //this section assumes no collisions with objects after xmove and ymove are added
+					xMove = -player.getX();
+					player.x = 0;
 
-			if(player.x+xMove<0){  //this section assumes no collisions with objects after xmove and ymove are added
-				xMove=-player.getX();
-				player.x=0;
+				} else if (player.x + xMove > Map.getWidth()) {
+					xMove = Map.getWidth() - player.x;
+					player.x = Map.getWidth();
+
+				} else {
+					player.x += xMove;
+				}
+				camera.translate(xMove, 0);
+				//cameraX+=xMove;
+			}
+			if(!collidedY){
+				if (player.y + yMove < 0) {
+					yMove = -player.getY();
+					player.y = 0;
+
+				} else if (player.y + yMove > Map.getHeight()) {
+					yMove = Map.getHeight() - player.y;
+					player.y = Map.getHeight();
+
+				} else {
+					player.y += yMove;
+				}
+				//cameraY+=yMove;
+				camera.translate(0, yMove);//keeps camera within the map's bounds
 
 			}
-			else if(player.x+xMove>Map.getWidth()){
-				xMove=Map.getWidth()-player.x;
-				player.x=Map.getWidth();
 
-			}else {
-				player.x += xMove;
-			}
-			camera.translate(xMove, 0);
-			//cameraX+=xMove;
-
-			if(player.y+yMove<0){
-				yMove=-player.getY();
-				player.y=0;
-
-			}
-			else if(player.y+yMove>Map.getHeight()){
-				yMove=Map.getHeight()-player.y;
-				player.y=Map.getHeight();
-
-			}else {
-				player.y += yMove;
-			}
-			//cameraY+=yMove;
-			camera.translate(0, yMove);//keeps camera within the map's bounds
 		}
 
 		lastMove = TimeUtils.nanoTime();
 	}
+
+
 
 	private void moveEnemy() { // called whenever a raindrop spawns
 		AI.direct(player, enemy);
