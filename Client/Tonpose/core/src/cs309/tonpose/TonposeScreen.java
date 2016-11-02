@@ -1,81 +1,59 @@
 package cs309.tonpose;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import cs309.tonpose.Network.ClientConnect;
-import cs309.tonpose.Network.AddUser;
-import cs309.tonpose.Network.UpdateUser;
-import cs309.tonpose.Network.RemoveUser;
 import cs309.tonpose.Network.MovePlayer;
-
-import org.w3c.dom.css.Rect;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import static java.lang.Math.abs;
 
-public class TonposeGame extends ApplicationAdapter {
+public class TonposeScreen implements Screen {
 
-	static AndroidMethods androidMethod;                                                            //used for android methods such as toasts or intent usage
+	final Tonpose tonpose;
 	private Texture treeImage,cabbageImage;
 	private Map Map;
 	private Music music;
-	private Texture playerImage, enemyImage;
+	private Texture playerImage, enemyImage, buttonImage;
+	private Stage stage;
+	private TextureRegion buttonRegion;
+	private TextureRegionDrawable buttonRegionDrawable;
+	private ImageButton playersButton;
 
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Rectangle player, enemy;
 
-	private Array<Rectangle> raindrops, terrain;
+	private Array<Rectangle> terrain;
 
 	private long lastNpc = 0;
 	private long lastHit = 0;
 	private boolean touchedEnemy;
-	private float lastX = 400;
-	private float lastY = 240;
 	private long lastTick = 0;
 	private long lastMove;
 	private long lastUpdate;
 	private final int TICKDELAY = 1000000;
 	private final int NPCDELAY =  30000000;
 	private final int MOVEDELAY = 10000000;
-	private final int UPDATEDELAY = 10000000;
-	private String Name;
-	private int ID;
-	private String[] players;
-	private Client client;
+	private final int UPDATEDELAY = 20000000;
 
-	HashMap<Integer, User> users = new HashMap();
-
-	public TonposeGame(AndroidMethods androidMethod, String name) {
-		this.androidMethod = androidMethod;
-		this.Name = name;
-	}
-
-
-	@Override
-	public void create() {
-
-		if(!Name.equals("offline")){
-			connectToServer();
-		}
+	public TonposeScreen(Tonpose t) {
+		this.tonpose = t;
 
 		// load textures
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
@@ -92,6 +70,24 @@ public class TonposeGame extends ApplicationAdapter {
 		music.setLooping(true);
 		music.play();
 
+		/*//add stage and players button
+		buttonImage = new Texture(Gdx.files.internal("playersButton.png"));
+		buttonRegion = new TextureRegion(buttonImage, 0, 0, 200, 400);
+		buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
+		playersButton = new ImageButton(buttonRegionDrawable);
+		playersButton.addListener(new EventListener()
+		{
+			@Override
+			public boolean handle(Event event)
+			{
+				tonpose.setScreen(tonpose.playersScreen);
+				return true;
+			}
+		});
+		stage = new Stage();
+		stage.addActor(playersButton);
+		Gdx.input.setInputProcessor(stage);*/
+
 		// new camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
@@ -105,8 +101,8 @@ public class TonposeGame extends ApplicationAdapter {
 		player = new Rectangle();
 		player.width = 64;
 		player.height = 64;
-		player.x = lastX;
-		player.y = lastY;
+		player.x = tonpose.lastX;
+		player.y = tonpose.lastY;
 
 		enemy = new Rectangle();
 		enemy.width = 64;
@@ -119,15 +115,18 @@ public class TonposeGame extends ApplicationAdapter {
 		for (Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
-
 	}
 
 	@Override
-	public void render() {
+	public void render(float delta) {
 		// clear screen to dark blue color
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		camera.update();
+
+		//render stage
+		stage.act(delta);
+		stage.draw();
 
 		// render player and enemy
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
@@ -141,8 +140,8 @@ public class TonposeGame extends ApplicationAdapter {
 				batch.draw(cabbageImage,entity.locationX,entity.locationY);
 			}
 		}
-		if(!Name.equals("offline")) {
-			for (User value : users.values()) {
+		if(!tonpose.Name.equals("offline")) {
+			for (User value : tonpose.users.values()) {
 				batch.draw(playerImage, value.x, value.y);
 			}
 		}
@@ -154,13 +153,13 @@ public class TonposeGame extends ApplicationAdapter {
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
 			camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-			lastX = touchPos.x;
-			lastY = touchPos.y;
+			tonpose.lastX = touchPos.x;
+			tonpose.lastY = touchPos.y;
 			//player.x= touchPos.x-64;
 			//player.y= touchPos.y-64/2;
 		}else{
-			lastX = player.getX();
-			lastY = player.getY();
+			tonpose.lastX = player.getX();
+			tonpose.lastY = player.getY();
 		}
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick();
@@ -178,17 +177,17 @@ public class TonposeGame extends ApplicationAdapter {
 		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
-		if (player.overlaps(enemy)) { //if the player is touching the enemy
+		if (player.overlaps(enemy) && TimeUtils.nanoTime() > lastNpc + 100000000) { //if the player is touching the enemy, temporary toast delay
 			touchedEnemy = true;
-			Toast("ouch!");
+			tonpose.Toast("ouch!");
 		}
 		lastTick = TimeUtils.nanoTime();
 	}
 
 
 	public void movePlayer() {
-		float x = lastX - player.getX();
-		float y = lastY - player.getY();
+		float x = tonpose.lastX - player.getX();
+		float y = tonpose.lastY - player.getY();
 		float sum = abs(x) + abs(y);
 
 		if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
@@ -229,10 +228,6 @@ public class TonposeGame extends ApplicationAdapter {
 		lastMove = TimeUtils.nanoTime();
 	}
 
-	public void Toast(String text) {
-		TonposeGame.androidMethod.Toast(text);
-	}
-
 	private void moveEnemy() { // called whenever a raindrop spawns
 		AI.direct(player, enemy);
 		lastNpc = TimeUtils.nanoTime();
@@ -248,72 +243,47 @@ public class TonposeGame extends ApplicationAdapter {
 		MovePlayer move = new MovePlayer();
 		move.x = player.x;
 		move.y = player.y;
-		if(!Name.equals("offline")) {
-			client.sendTCP(move);
+		if(!tonpose.Name.equals("offline")) {
+			tonpose.client.sendTCP(move);
 		}
 		lastUpdate = TimeUtils.nanoTime();
 	}
 
+	@Override
+	public void resize(int width, int height) {
+	}
 
-	public void connectToServer() {
-		System.out.println("testestewstresdf");
-		client = new Client();
-		client.start();
-
-		Network.register(client);
-
-		client.addListener(new Listener() {
-			public void connected(Connection connection) {
-				ClientConnect player_connect = new ClientConnect();
-				player_connect.name = Name;
-				player_connect.id = 0;
-				player_connect.x = lastX;
-				player_connect.y = lastY;
-				client.sendTCP(player_connect);
-			}
-
-			public void received(Connection connection, Object object) {
-				if (object instanceof AddUser) {
-					AddUser add = (AddUser) object;
-					if (add.user.name.equals(Name)) {
-						//server will immediately send this back after clientConnect, this is how we get ID
-						ID = add.user.id;
-					} else {
-						//add the user to the hashmap
-						users.put(add.user.id, add.user);
-					}
-				}
-				if (object instanceof UpdateUser) {
-					UpdateUser update = (UpdateUser) object;
-					if (update.id != ID) {    //do not update our own player
-						User user = users.get(update.id);
-						user.x = update.x;
-						user.y = update.y;
-						users.put(update.id, user);
-					}
-				}
-				if (object instanceof RemoveUser) {
-					RemoveUser remove = (RemoveUser) object;
-					//remove the user from the hashmap
-					users.remove(remove.id);
-				}
-			}
-
-			public void disconnected(Connection connection) {
-				Toast("Lost Connection to Server");
-				client.close();
+	@Override
+	public void show() {
+		//add stage and players button
+		buttonImage = new Texture(Gdx.files.internal("playersButton.png"));
+		buttonRegion = new TextureRegion(buttonImage);
+		buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
+		playersButton = new ImageButton(buttonRegionDrawable);
+		playersButton.addListener(new EventListener()
+		{
+			@Override
+			public boolean handle(Event event)
+			{
+				tonpose.setScreen(tonpose.playersScreen);
+				return true;
 			}
 		});
-		new Thread("Connect") {
-			public void run () {
-				try {
-					client.connect(5000, "10.25.70.122", Network.port); //10.25.70.122
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					System.exit(1);
-				}
-			}
-		}.start();
+		stage = new Stage();
+		stage.addActor(playersButton);
+		Gdx.input.setInputProcessor(stage);
+	}
+
+	@Override
+	public void hide() {
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
 	}
 
 	@Override
@@ -322,6 +292,7 @@ public class TonposeGame extends ApplicationAdapter {
 		playerImage.dispose();
 		enemyImage.dispose();
 		treeImage.dispose();
+		buttonImage.dispose();
 		batch.dispose();
 	}
 }

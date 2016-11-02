@@ -343,6 +343,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if(check.status){
                         System.out.println("Username and password are valid");
                         client.close();
+                        //showProgress(false);
                         Intent intent = new Intent(LoginActivity.this, MainMenu.class);
                         startActivity(intent);
                         finish();
@@ -357,6 +358,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     NewUser new_user = (NewUser)object;
                     if(new_user.status){
                         System.out.println("User added to database");
+                        //showProgress(false);
                         Intent intent = new Intent(LoginActivity.this, MainMenu.class);
                         startActivity(intent);
                         finish();
@@ -404,7 +406,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
         }
 
         @Override
