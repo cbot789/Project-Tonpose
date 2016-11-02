@@ -29,12 +29,15 @@ public class Map {
     private Entity generateTerrain(){                                                                 //TODO add chance to generate other objects besides trees
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
-        int id=MathUtils.random(0,1);
+        int id=MathUtils.random(0,3);
         if(id==0){
             return new Cabbage(x, y);
         }
+        else if(id == 1){
+            return new Mob(x, y);
+        }
         else {
-            return new Tree(x, y, id); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
+            return new Tree(x, y); //a tree                                                             //TODO make an id list for all entities, tree is currently 1
         }
     }
 

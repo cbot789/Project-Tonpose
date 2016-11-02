@@ -1,5 +1,8 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
@@ -12,6 +15,8 @@ public class Item {
     protected boolean equippable;
     protected boolean hasAction;
     protected boolean inInventory;
+    protected Rectangle body;
+    protected Texture texture;
 
     public Item(int number, float x, float y, int id){
         count = number;

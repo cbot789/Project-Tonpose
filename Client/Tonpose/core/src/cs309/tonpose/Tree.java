@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 public class Tree extends Entity { //id is 1
 
 
-    public Tree(int locationX, int locationY, int id){
-        super(locationX, locationY, id, 100, 50, 25, 1000, 0, true, true);
+    public Tree(int locationX, int locationY){
+        super(locationX, locationY, 9, 100, 50, 25, 1000, 0, true, true);
         texture = new Texture(Gdx.files.internal("treeStill.png"));
     }
 

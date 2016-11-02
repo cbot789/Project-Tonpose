@@ -17,8 +17,7 @@ public class Mob extends Living {
     private void setTarget(int x, int y){
 
     }
-    private void setTarget(Player prey){
-
+    private void setTarget(Entity prey){
+        target = prey;
     }
-
 }

@@ -3,10 +3,13 @@ package cs309.tonpose;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -14,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -25,10 +31,9 @@ import static java.lang.Math.abs;
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	private Texture treeImage,cabbageImage;
 	private Map Map;
 	private Music music;
-	private Texture playerImage, enemyImage, buttonImage;
+	private Texture playerImage, buttonImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
@@ -36,7 +41,7 @@ public class TonposeScreen implements Screen {
 
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Rectangle player, enemy;
+	private Rectangle player;
 
 	private Array<Rectangle> terrain;
 
@@ -51,14 +56,20 @@ public class TonposeScreen implements Screen {
 	private final int MOVEDELAY = 10000000;
 	private final int UPDATEDELAY = 20000000;
 
+	//private Stage stage;
+	private TextureAtlas atlas;
+	private Skin skin;
+	private TextButton inv;
+	private BitmapFont font = new BitmapFont();
+	private Table table;
+	private TextButton.TextButtonStyle textButtonStyle;
+
+
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
 
 		// load textures TODO remove
 		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
-		enemyImage = new Texture(Gdx.files.internal("player2base.png"));
-		treeImage = new Texture(Gdx.files.internal("treeStill.png"));
-		cabbageImage=new Texture(Gdx.files.internal("cabbage.png"));
 
 		touchedEnemy = false;
 
@@ -103,14 +114,6 @@ public class TonposeScreen implements Screen {
 		player.x = tonpose.lastX;
 		player.y = tonpose.lastY;
 
-
-		//TODO remove
-		enemy = new Rectangle();
-		enemy.width = 64;
-		enemy.height = 64;
-		enemy.x = 500;
-		enemy.y = 400;
-
 		//add terrain to map
 		terrain = new Array<Rectangle>(); //the array for terrain
 		for (Entity entity : Map.getEntities()) {
@@ -133,13 +136,9 @@ public class TonposeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
 		batch.draw(playerImage, player.x, player.y);
-		batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
+		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
-			if (entity.id == 1) //checks if it is a standard tree
-				batch.draw(treeImage, entity.locationX, entity.locationY);
-			else if(entity.id==0){
-				batch.draw(cabbageImage,entity.locationX,entity.locationY);
-			}
+				batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
 		}
 		if(!tonpose.Name.equals("offline")) {
 			for (User value : tonpose.users.values()) {
@@ -178,10 +177,6 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
-		if (player.overlaps(enemy) && TimeUtils.nanoTime() > lastNpc + 100000000) { //if the player is touching the enemy, temporary toast delay
-			touchedEnemy = true;
-			tonpose.Toast("ouch!");
-		}
 		lastTick = TimeUtils.nanoTime();
 	}
 
@@ -200,13 +195,15 @@ public class TonposeScreen implements Screen {
 			Rectangle newPositionX = new Rectangle(player.getX() + xMove, player.getY(), player.getWidth(), player.getHeight());
 			Rectangle newPositionY = new Rectangle(player.getX(), player.getY() + yMove, player.getWidth(), player.getHeight());
 			for (Entity entity : Map.getEntities()) { //checks if the player is going to collide with any entities
-				if (newPositionX.overlaps(entity.getRectangle())) {
-					collidedX = true;
-				}
-				if(newPositionY.overlaps(entity.getRectangle())){
-					collidedY=true;
-				}
+				if(entity.collision == true){
+					if (newPositionX.overlaps(entity.getRectangle())) {
+						collidedX = true;
+					}
+					if(newPositionY.overlaps(entity.getRectangle())){
 
+						collidedY=true;
+					}
+				}
 			}
 			if (!collidedX) {
 				if (player.x + xMove < 0) {  //this section assumes no collisions with objects after xmove and ymove are added
@@ -248,7 +245,20 @@ public class TonposeScreen implements Screen {
 
 
 	private void moveEnemy() { // called whenever a raindrop spawns
-		AI.direct(player, enemy);
+		for (Entity entity : Map.getEntities()) {
+			if(entity instanceof Mob){
+				float x = player.getX() - entity.locationX;
+				float y = player.getY() - entity.locationY;
+				float sum = abs(x) + abs(y);
+				if(sum > 1){
+					entity.locationX += 5 * (x/sum);
+					entity.locationY += 5 * (y/sum);
+				}
+				//AI.direct(player.getX(), player.getY(), entity.getRectangle());
+				//((Mob) entity).move(player.getX(), player.getY());
+			}
+		}
+
 		lastNpc = TimeUtils.nanoTime();
 	}
 
@@ -291,6 +301,29 @@ public class TonposeScreen implements Screen {
 		stage = new Stage();
 		stage.addActor(playersButton);
 		Gdx.input.setInputProcessor(stage);
+
+		//new below
+		Table table = new Table();
+		table.setBounds(0,0, Gdx.graphics.getWidth(), 30);
+		table.right();
+		stage.addActor(table);
+
+		font = new BitmapFont();
+		textButtonStyle = new TextButton.TextButtonStyle();
+		textButtonStyle.font = font;
+		inv = new TextButton("inv", textButtonStyle);
+		inv.getLabel().setFontScale(5,5);
+		inv.addListener(new EventListener()
+		{
+			@Override
+			public boolean handle(Event event)
+			{
+				tonpose.setScreen(tonpose.inventoryScreen);
+				return true;
+			}
+		});
+		table.add(inv);
+
 	}
 
 	@Override
@@ -309,8 +342,6 @@ public class TonposeScreen implements Screen {
 	public void dispose() {
 		//dispose assets
 		playerImage.dispose();
-		enemyImage.dispose();
-		treeImage.dispose();
 		buttonImage.dispose();
 		batch.dispose();
 	}

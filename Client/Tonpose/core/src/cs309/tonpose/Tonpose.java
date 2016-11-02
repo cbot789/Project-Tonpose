@@ -17,6 +17,7 @@ public class Tonpose extends Game{
     protected String Name;
     protected TonposeScreen tonposeScreen;
     protected PlayersScreen playersScreen;
+    protected InventoryScreen inventoryScreen;
     protected Client client;
     protected int ID;
     protected float lastX = 400;
@@ -35,6 +36,7 @@ public class Tonpose extends Game{
         }
         tonposeScreen = new TonposeScreen(this);
         playersScreen = new PlayersScreen(this);
+        inventoryScreen = new InventoryScreen(this);
         setScreen(tonposeScreen);
     }
 
