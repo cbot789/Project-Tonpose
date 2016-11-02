@@ -1,5 +1,7 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.math.Rectangle;
+
 /**
  * Created by Caleb on 11/1/2016.
  */
@@ -18,6 +20,7 @@ public class Tree extends Terrain { //id is 1
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
+        this.body=new Rectangle(locationX,locationY,width,height);
     }
 
 }

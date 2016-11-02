@@ -44,6 +44,7 @@ public class Entity {
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
+        this.body=new Rectangle(locationX,locationY,width,height);
     }
 
     //initilizes what items the entity carries and will drop on death

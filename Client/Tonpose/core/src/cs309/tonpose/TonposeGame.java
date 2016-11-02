@@ -33,7 +33,7 @@ import static java.lang.Math.abs;
 
 public class TonposeGame extends ApplicationAdapter {
 
-	static AndroidMethods androidMethod;                                                            //used for android methods such as toasts or intent usage
+	static AndroidMethods androidMethods;                                                            //used for android methods such as toasts or intent usage
 	private Texture treeImage,cabbageImage;
 	private Map Map;
 	private Music music;
@@ -65,7 +65,7 @@ public class TonposeGame extends ApplicationAdapter {
 	HashMap<Integer, User> users = new HashMap();
 
 	public TonposeGame(AndroidMethods androidMethod, String name) {
-		this.androidMethod = androidMethod;
+		this.androidMethods = androidMethod;
 		this.Name = name;
 	}
 
@@ -195,7 +195,14 @@ public class TonposeGame extends ApplicationAdapter {
 			float xMove = 5 * (x/sum);
 			float yMove = 5 * (y/sum);
 
-			if(player.x+xMove<0){
+			for(Entity entity:Map.getEntities()){ //checks if the player is going to collide with any entities
+				if(player.overlaps(entity.getRectangle())){
+					
+				}
+
+			}
+
+			if(player.x+xMove<0){  //this section assumes no collisions with objects after xmove and ymove are added
 				xMove=-player.getX();
 				player.x=0;
 
@@ -230,7 +237,7 @@ public class TonposeGame extends ApplicationAdapter {
 	}
 
 	public void Toast(String text) {
-		TonposeGame.androidMethod.Toast(text);
+		TonposeGame.androidMethods.Toast(text);
 	}
 
 	private void moveEnemy() { // called whenever a raindrop spawns
