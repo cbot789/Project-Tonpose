@@ -178,7 +178,7 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
-		if(player.currentHp < 0)
+		if(player.currentHp < 0&&player.killable)
 			tonpose.setScreen(tonpose.deathScreen);
 
 		Map.updateMap();

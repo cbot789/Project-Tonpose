@@ -185,8 +185,9 @@ public class Player extends Living{
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
                 break;
             default:
-                if(killable)
+               if(killable){
                 kill();
+               }
         }
 
     }
@@ -204,9 +205,9 @@ public class Player extends Living{
 
     @Override
     public void kill() {
-        death.play();
+        /*death.play();
         locationX = -1000;
         locationY = -1000;
-        body.setCenter(-1000, -1000);
+        body.setCenter(-1000, -1000);*/
     }
 }
