@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class TreeSeeds extends Item{
     public TreeSeeds(int number, float x, float y, boolean map) {
         super(number, x, y, 10, map);
-        texture = new Texture(Gdx.files.internal("adventureUnclicked.png"));
+        texture = new Texture(Gdx.files.internal("acorn.png"));
         hasAction = true;
         name = "Tree Seeds";
     }

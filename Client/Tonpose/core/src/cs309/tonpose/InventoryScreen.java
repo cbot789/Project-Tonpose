@@ -39,12 +39,20 @@ public class InventoryScreen implements Screen {
     private SpriteBatch batch;
 
     private TextButton inv;
+    private TextButton base;
+    private TextButton mod;
+    private TextButton craft;
     private Table table = new Table();
+    private Table craftTable = new Table();
     private TextButton.TextButtonStyle textButtonStyle;
+    private enum invMode{
+        equipMode, baseMode, modMode
+    }
+    private invMode currentMode;
 
     public InventoryScreen(Tonpose t){
         this.tonpose = t;
-
+        currentMode = invMode.equipMode;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
@@ -118,16 +126,79 @@ public class InventoryScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    if(item != player.equiped){
-                        player.equipItem(item);
+                    if(currentMode == invMode.equipMode){
+                        if(item != player.equiped){
+                            if(item.hasAction){
+                                player.equipItem(item);
+                            }
+                        }else{
+                            player.equipItem(null);
+                        }
+                    }else if(currentMode == invMode.baseMode){
+                        player.base = item;
+                        currentMode = invMode.equipMode;
                     }else{
-                        player.equipItem(null);
+                        player.mod = item;
+                        currentMode = invMode.equipMode;
                     }
+
                 }
             });
             table.add(inv);
             table.row();
         }
+
+        craftTable.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        craftTable.right();
+        stage.addActor(craftTable);
+        craftTable.clear();
+        if( player.base != null){
+            base = new TextButton("Base: "+ player.base.name, textButtonStyle);
+        }else{
+            base = new TextButton("Base: Nothing", textButtonStyle);
+        }
+        base.getLabel().setFontScale(5,5);
+        base.addListener(new ClickListener()
+        {
+            @Override                                                   //FIXME buttons for crafting updating without refreshing
+            public void clicked(InputEvent event, float x, float y)
+            {
+                currentMode = invMode.baseMode;
+            }
+        });
+        craftTable.add(base);
+        craftTable.row();
+        if( player.base != null) {
+            mod = new TextButton("Mod: " + player.mod.name, textButtonStyle);
+        }else{
+            mod = new TextButton("Mod: Nothing", textButtonStyle);
+        }
+        mod.getLabel().setFontScale(5,5);
+        mod.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                currentMode = invMode.modMode;
+            }
+        });
+        craftTable.add(mod);
+        craftTable.row();
+        craftTable.row();
+
+        craft = new TextButton("Craft!", textButtonStyle);
+
+        craft.getLabel().setFontScale(5,5);
+        craft.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                player.craft();
+            }
+        });
+        craftTable.add(craft);
+
 
     }
 

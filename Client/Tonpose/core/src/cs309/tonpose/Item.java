@@ -16,6 +16,7 @@ public class Item {
     protected boolean inInventory;
     protected Rectangle body;
     protected Texture texture;
+    protected boolean craftingBase;
 
     public Item(int number, float x, float y, int id, boolean map){
         count = number;
@@ -25,6 +26,7 @@ public class Item {
         body = new Rectangle();
         body.set(locationX, locationY, 32, 32);
         inInventory = !map;
+        craftingBase = false;
     }
     public void action(Rectangle player,Player user){
             if(!hasAction){
@@ -56,5 +58,9 @@ public class Item {
     }
     public Rectangle getBody(){
         return body;
+    }
+
+    public Item craft(Item mod){
+        return mod;
     }
 }

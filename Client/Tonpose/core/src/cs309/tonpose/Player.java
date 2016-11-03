@@ -21,6 +21,8 @@ public class Player extends Living{
     protected int userId;
     protected String  userName;
     protected Item equiped;
+    protected Item base;
+    protected Item mod;
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){
@@ -65,6 +67,16 @@ public class Player extends Living{
             }
         } else{
             attack(locationX, locationY,50);
+        }
+    }
+
+    public void craft(){
+        if(base != null){
+            if(mod != null){
+                Item result = base.craft(mod);
+                if (result != null)
+                    addInventory(result);
+            }
         }
     }
 

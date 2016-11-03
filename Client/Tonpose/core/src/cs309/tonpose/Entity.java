@@ -118,9 +118,10 @@ public class Entity {
                 kill();
             }
             lastHit = TimeUtils.nanoTime();
+        if(mod < 0){
             sfx.setPosition(0);
             sfx.play();
-
+        }
     }
 
     //pushes entity
