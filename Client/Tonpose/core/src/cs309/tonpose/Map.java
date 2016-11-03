@@ -99,18 +99,34 @@ public class Map {
         entities.remove(entity);
     }
 
-    public Entity checkMap(float x, float y, float rangeX, float rangeY){
+    public Entity checkMap(float x, float y, float rangeX, float rangeY){ //TODO improve selection method
+        Entity returnEntity=null;
         for (Entity entity:entities) {
             if(entity.getX() < rangeX + x){
-                if(entity.getX() > x) {
+                if(entity.getX() > x-rangeX) {
                     if (entity.getY() < rangeY + y) {
-                        if(entity.getX() > x) {
-                            return entity;
+                        if(entity.getY() > y-rangeY) {
+                            if(returnEntity!=null){
+                                if(getDistance(x,y,entity.getX(),entity.getY())<getDistance(x,y,returnEntity.getX(),returnEntity.getY())){ //checks if object within range is closer than previous
+                                    returnEntity=entity;
+                                }
+                            }else {
+                                returnEntity = entity;
+                            }
                         }
                     }
                 }
             }
         }
+        if(returnEntity!=null){
+            return returnEntity;
+        }
         return null;
+    }
+
+    public double getDistance(float x1, float y1, float x2, float y2){ // returns the distance between two points
+      double distance=Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2)+Math.abs(y1-y2)*Math.abs(y1-y2));
+      return distance;
+
     }
 }

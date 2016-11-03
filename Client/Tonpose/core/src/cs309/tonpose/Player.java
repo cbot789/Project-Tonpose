@@ -50,6 +50,7 @@ public class Player extends Living{
     public void logout(){
         logged = false;
     }
+
     public void action(){
         if(equiped != null){
             if(equiped.hasAction){
@@ -59,7 +60,7 @@ public class Player extends Living{
                 }
             }
         } else{
-            attack(locationX, locationY);
+            attack(locationX, locationY,50);
         }
     }
 

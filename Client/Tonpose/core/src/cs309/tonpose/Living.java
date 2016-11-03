@@ -25,10 +25,11 @@ public class Living extends Entity {
     public void move(Entity target){
         AI.direct(target.getRectangle(), this.getRectangle());
     }
-    public void attack(float x, float y) {
+
+    public void attack(float x, float y,int dmg) {
         Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
         if(hit != null){
-            hit.changeHp(-50);
+            hit.changeHp(-dmg);
         }
     }
 }
