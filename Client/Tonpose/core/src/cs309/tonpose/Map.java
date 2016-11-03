@@ -17,7 +17,7 @@ public class Map {
     private int height,width;
     private ArrayList<Entity> entities;
     private ArrayList<Item> items;
-
+    private int mobCount;
 
 
     public Map(int height, int width, int terrain, int difficulty){
@@ -28,7 +28,7 @@ public class Map {
         for(int i=0; i<terrain; i++){
             entities.add(generateTerrain());
         }
-
+        mobCount = 0;
     }
 
     private Entity generateTerrain(){                                                                 //TODO add chance to generate other objects besides trees
@@ -49,7 +49,10 @@ public class Map {
             return new Cabbage(x, y);
         }
         else if(id == 1){
-            return new Mob(x, y);
+            mobCount++;
+            if(mobCount > 10000)
+                mobCount = 1;
+            return new Mob(x, y, mobCount);
         }
         else {
             Tree tree=new Tree(x,y);
