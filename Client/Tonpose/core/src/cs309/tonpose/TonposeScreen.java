@@ -72,7 +72,7 @@ public class TonposeScreen implements Screen {
 		// load textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		touchedEnemy = false;
-
+		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 
