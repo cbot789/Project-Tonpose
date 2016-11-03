@@ -11,8 +11,8 @@ import static java.lang.Math.tan;
  * Created by Quade Spellman on 10/23/2016.
  */
 
-public class AI {           //TODO move to living?
-    public static void basic(Rectangle target, Rectangle npc){      //unused    //TODO delete
+public class AI {           //TODO delete? unused
+    public static void basic(Rectangle target, Rectangle npc){
         if(target.getX() > npc.getX()){
             npc.x += 5;
         }

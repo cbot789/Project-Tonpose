@@ -139,7 +139,7 @@ public class Player extends Living{
     @Override
     public void changeHp(int mod) {
         if(userName != "God"){
-            if(lastHit + 500000000 < TimeUtils.nanoTime()){
+            if(lastHit + 50000000 < TimeUtils.nanoTime()){
                 super.changeHp(mod);
             }
         }

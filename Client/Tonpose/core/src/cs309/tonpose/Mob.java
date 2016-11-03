@@ -35,41 +35,46 @@ public class Mob extends Living {
     }
 
     @Override
-    public void move(Entity target) {
+    public void move(Entity target) {//FIXME npc shake when colliding
         float x = target.getX() - locationX;
         float y = target.getY() - locationY;
         float sum = abs(x) + abs(y);
-        boolean collidedX=false;
-        boolean collidedY=false;
-        if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
+        boolean collidedX = false;
+        boolean collidedY = false;
+        if (sum > 4) { //stops if within 4 units of target location to prevent "the shakes"
             float xMove = 5 * (x / sum);
             float yMove = 5 * (y / sum);
+            if(flee > 0){
+                xMove = -xMove;
+                yMove = -yMove;
+                flee--;
+            }
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
-            /*for(Item item : TonposeScreen.Map.getItems()){
+            for(Item item : TonposeScreen.Map.getItems()){
                 if(!item.inInventory){
                     if(item.getBody().overlaps(body)){
                         addInventory(item);
                     }
                 }
-            }*/
+            }
             for (Entity entity : TonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
-                if(entity instanceof Mob){
-                    if(((Mob) entity).npcNumber != npcNumber){
+                if (entity instanceof Mob) {
+                    if (((Mob) entity).npcNumber != npcNumber) {
+                        if (newPositionX.overlaps(entity.getRectangle())) {
+                            xMove = - xMove;
+                        }
+                        if (newPositionY.overlaps(entity.getRectangle())) {
+                            yMove = - yMove;
+                        }
+                     }
+                } else {
+                    if (entity.collision == true) {
                         if (newPositionX.overlaps(entity.getRectangle())) {
                             collidedX = true;
                         }
-                        if(newPositionY.overlaps(entity.getRectangle())){
-                            collidedY=true;
-                        }
-                    }
-                }else{
-                    if(entity.collision == true){
-                        if (newPositionX.overlaps(entity.getRectangle())) {
-                            collidedX = true;
-                        }
-                        if(newPositionY.overlaps(entity.getRectangle())){
-                            collidedY=true;
+                        if (newPositionY.overlaps(entity.getRectangle())) {
+                            collidedY = true;
                         }
                     }
                 }
@@ -77,55 +82,42 @@ public class Mob extends Living {
             }
             if (!collidedX) {
                 if (locationX + xMove < 0) {  //this section assumes no collisions with objects after xmove and ymove are added
-                    locationX = 0;
-
+                    xMove = -locationX;
                 } else if (locationX + xMove > TonposeScreen.Map.getWidth()) {
-                    locationX = TonposeScreen.Map.getWidth();
-
-                } else {
-                    locationX += xMove;
+                    xMove = TonposeScreen.Map.getWidth() - locationX;
                 }
-                body.setX(locationX);
             }
-            if(!collidedY){
+            if (!collidedY) {
                 if (locationY + yMove < 0) {
-                    locationY = 0;
+                    yMove = -locationY;
 
                 } else if (locationY + yMove > TonposeScreen.Map.getHeight()) {
-                    locationY = TonposeScreen.Map.getHeight();
-
-                } else {
-                    locationY += yMove;
+                    yMove = TonposeScreen.Map.getHeight() - locationY;
                 }
+            }
+            if(collidedX && collidedY){
+                attack(locationX, locationY, 1);
+            }else{
+                locationX += xMove;
+                locationY += yMove;
+                body.setX(locationX);
                 body.setY(locationY);
             }
+
+            if (body.overlaps(target.getRectangle())) {
+                if (flee < 1) {
+                    scare(20);
+                    target.changeHp(-1);
+                }
+            }
         }
-        /*
-        if(flee < 1){
-            float x = target.getX() - locationX;
-            float y = target.getY() - locationY;
-            float sum = abs(x) + abs(y);
-            if(sum > 4){
-                locationX += 5 * (x/sum);
-                locationY += 5 * (y/sum);
-                setBody(locationX,locationY);
-            }
-        }else{
-            float x = target.getX() - locationX;
-            float y = target.getY() - locationY;
-            float sum = abs(x) + abs(y);
-            if(sum > 4){
-                locationX -= 2 * (x/sum);
-                locationY -= 2 * (y/sum);
-                setBody(locationX,locationY);
-            }
-            flee--;
-        }*/
-        if(body.overlaps(target.getRectangle())){
-            if(flee < 1){
-                scare(20);
-                target.changeHp(-1);
-            }
+    }
+
+    @Override
+    public void attack(float x, float y, int dmg) {
+        Entity hit = TonposeScreen.Map.mobCheckMap(x, y, 100, 100);
+        if(hit != null){
+            hit.changeHp(-dmg);
         }
     }
 }

@@ -69,8 +69,7 @@ public class TonposeScreen implements Screen {
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
 
-		// load textures TODO remove
-		playerImage = new Texture(Gdx.files.internal("mainbase.png"));
+		// load textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		touchedEnemy = false;
 
@@ -121,8 +120,7 @@ public class TonposeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
 		batch.draw(player.texture, player.getX(), player.getY());
-		batch.draw(healthImage,playerHealthX,playerHealthY);
-		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
+		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
 		}
@@ -173,6 +171,9 @@ public class TonposeScreen implements Screen {
 
 		if(player.currentHp < 0)
 			tonpose.setScreen(tonpose.deathScreen);
+
+		Map.updateMap();
+
 		lastTick = TimeUtils.nanoTime();
 	}
 
@@ -205,10 +206,7 @@ public class TonposeScreen implements Screen {
 		lastNpc = TimeUtils.nanoTime();
 	}
 
-	/*public void goToMenu(){
-		Intent intent = new Intent(this, MainMenu.class);	//TODO implement interface to allow activity switching
-		context.startActivity(intent);
-	}*/
+	//TODO add menu button
 
 	//updates the player location through the network
 	public void updatePlayer(){

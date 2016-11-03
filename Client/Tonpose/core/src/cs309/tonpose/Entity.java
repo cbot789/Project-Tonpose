@@ -82,7 +82,7 @@ public class Entity {
     }
 
     //adds an item to the inventory and deletes it from the map if there is room in inventory
-    public void addInventory(Item toAdd){
+    public void addInventory(Item toAdd){//FIXME doesnt add counts correctly or entities dont spawn/drop right ammount of items
         if(toAdd.count > 0){
             if(inventory.size() < invSize){
                 for (Item item:inventory) {
