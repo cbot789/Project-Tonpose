@@ -19,6 +19,7 @@ public class Map {
     private ArrayList<Item> items;
 
 
+
     public Map(int height, int width, int terrain, int difficulty){
         this.height=height;
         this.width=width;

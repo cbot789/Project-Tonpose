@@ -79,6 +79,11 @@ public class tonpose_server {
 					}
 					// Send result of database search back to client
 					server.sendToTCP(connection.getID(), returnStatus);
+					try {
+						DatabaseCommands.userExists(name, db_connection);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 					return;
 				}
 				
@@ -122,6 +127,11 @@ public class tonpose_server {
 					}
 					// Send result of database search back to client
 					server.sendToTCP(connection.getID(), returnStatus);
+					try {
+						DatabaseCommands.userExists(name, db_connection);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 					return;
 				}
 				
@@ -165,6 +175,11 @@ public class tonpose_server {
 					}
 					//send back whether user was successfully added to database
 					server.sendToTCP(connection.getID(), returnStatus);
+					try {
+						DatabaseCommands.userExists(name, db_connection);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 					return;
 				}
 				if (object instanceof ClientConnect) {

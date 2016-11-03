@@ -13,13 +13,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -228,13 +228,12 @@ public class TonposeScreen implements Screen {
 		buttonRegion = new TextureRegion(buttonImage);
 		buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
 		playersButton = new ImageButton(buttonRegionDrawable);
-		playersButton.addListener(new EventListener()
+		playersButton.addListener(new ClickListener()
 		{
 			@Override
-			public boolean handle(Event event)
+			public void clicked(InputEvent event, float x, float y)
 			{
 				tonpose.setScreen(tonpose.playersScreen);
-				return true;
 			}
 		});
 		stage = new Stage();
@@ -251,30 +250,28 @@ public class TonposeScreen implements Screen {
 		textButtonStyle.font = font;
 		inv = new TextButton("inv", textButtonStyle);
 		inv.getLabel().setFontScale(5,5);
-		inv.addListener(new EventListener()
+		inv.addListener(new ClickListener()
 		{
 			@Override
-			public boolean handle(Event event)
+			public void clicked(InputEvent event, float x, float y)
 			{
 				tonpose.setScreen(tonpose.inventoryScreen);
-				return true;
 			}
 		});
 		table.add(inv);
 
 		actionButton = new TextButton("Action", textButtonStyle);
 		actionButton.getLabel().setFontScale(5,5);
-		actionButton.addListener(new EventListener()
+		actionButton.addListener(new ClickListener()
 		{
 			@Override
-			public boolean handle(Event event)
+			public void clicked(InputEvent event, float x, float y)
 			{
 				/*
 				Tree tree = new Tree((int)player.getX() + 40, (int) player.getY());
 				Map.addToMap(tree);
 				*/
 				player.action();
-				return true;
 			}
 		});
 		table.add(actionButton);
