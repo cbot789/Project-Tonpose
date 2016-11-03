@@ -18,7 +18,7 @@ public class CabbageLeaves extends  Item {
     @Override
     public void action(Rectangle player, Player user) {
         if(count > 0){
-            user.changeHp(-1); // heals player by one
+            user.changeHp(1); // heals player by one
             super.action(player, user);
         }
     }

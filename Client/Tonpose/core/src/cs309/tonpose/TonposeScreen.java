@@ -52,9 +52,9 @@ public class TonposeScreen implements Screen {
 	private long lastTick = 0;
 	private long lastMove;
 	private long lastUpdate;
-	private final int TICKDELAY = 1000000;
-	private final int NPCDELAY =  30000000;
-	private final int MOVEDELAY = 10000000;
+	private final int TICKDELAY =    1000000;
+	private final int NPCDELAY =    30000000;
+	private final int MOVEDELAY =   10000000;
 	private final int UPDATEDELAY = 20000000;
 
 	//private Stage stage;
@@ -123,7 +123,7 @@ public class TonposeScreen implements Screen {
 		batch.draw(player.texture, player.getX(), player.getY());
 		batch.draw(healthImage,playerHealthX,playerHealthY);
 		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
-		if(!Map.getToAdd().isEmpty()){
+		if(!Map.getToAdd().isEmpty()){ //merges buffer array into map if necessary
 			Map.mergeItemArrays();
 		}
 		for (Entity entity : Map.getEntities()) { //draws terrain
@@ -136,7 +136,7 @@ public class TonposeScreen implements Screen {
 				}
 			}
 		}
-		if(!Map.getToRemove().isEmpty()){
+		if(!Map.getToRemove().isEmpty()){ //removes items in buffer removal array if necessary
 			Map.removeItems();
 		}
 		for (Item item : Map.getItems()){
@@ -185,6 +185,8 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
+		if(player.currentHp < 0)
+			tonpose.setScreen(tonpose.deathScreen);
 		lastTick = TimeUtils.nanoTime();
 	}
 

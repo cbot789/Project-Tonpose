@@ -18,6 +18,7 @@ public class Tonpose extends Game{
     protected TonposeScreen tonposeScreen;
     protected PlayersScreen playersScreen;
     protected InventoryScreen inventoryScreen;
+    protected DeathScreen deathScreen;
     protected Client client;
     protected int ID;
     protected float lastX = 400;
@@ -28,12 +29,14 @@ public class Tonpose extends Game{
     public Tonpose(AndroidMethods androidMethod, String name) {
         this.androidMethod = androidMethod;
         this.Name = name;
+
     }
     @Override
     public void create(){
         if(!Name.equals("offline")){
             connectToServer();
         }
+        deathScreen = new DeathScreen(this);
         tonposeScreen = new TonposeScreen(this);
         playersScreen = new PlayersScreen(this);
         inventoryScreen = new InventoryScreen(this);
@@ -43,6 +46,10 @@ public class Tonpose extends Game{
 
     public void Toast(String text) {
         androidMethod.Toast(text);
+    }
+
+    public void menu(){
+        androidMethod.menu();
     }
 
     public void connectToServer() {

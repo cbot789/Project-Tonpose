@@ -15,6 +15,7 @@ public class Cabbage extends Terrain { //id is 0
     public Cabbage(int locationX, int locationY){
         super(locationX, locationY, 0, 10, 10, 10, 5, 7, true); //x,y,id,hp,height,width,mass,invsize,killable
         texture=new Texture(Gdx.files.internal("cabbage.png"));
+        sfx = Gdx.audio.newMusic(Gdx.files.internal("logHit.wav")); //TODO find new sound file
     }
 
     @Override

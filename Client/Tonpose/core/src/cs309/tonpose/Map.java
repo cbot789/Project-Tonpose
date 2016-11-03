@@ -19,6 +19,7 @@ public class Map {
     private ArrayList<Item> items;
     private ArrayList<Item> toAdd;
     private ArrayList<Item> toRemove;
+    private int mobCount;
 
     public Map(int height, int width, int terrain, int difficulty){
         this.height=height;
@@ -30,7 +31,7 @@ public class Map {
         for(int i=0; i<terrain; i++){
             entities.add(generateTerrain());
         }
-
+        mobCount = 0;
     }
 
     private Entity generateTerrain(){                                                                 //TODO add chance to generate other objects besides trees
@@ -51,7 +52,10 @@ public class Map {
             return new Cabbage(x, y);
         }
         else if(id == 1){
-            return new Mob(x, y);
+            mobCount++;
+            if(mobCount > 10000)
+                mobCount = 1;
+            return new Mob(x, y, mobCount);
         }
         else {
             Tree tree=new Tree(x,y);
@@ -83,22 +87,22 @@ public class Map {
         entities.add(entity);
     }
 
-    public void prepareAddToMap(Item item){ //temporary array
+    public void prepareAddToMap(Item item){ //adds an item to buffer array, will be added to map later
         toAdd.add(item);
     }
 
-    public void prepareRemove(Item item){
+    public void prepareRemove(Item item){ //adds an item to buffer array, will be removed from map later
         toRemove.add(item);
 
     }
 
-    public void removeItems(){
+    public void removeItems(){ //removes items in the buffer removal array
         for(Item item:toRemove){
             items.remove(item);
         }
     }
 
-    public void mergeItemArrays(){
+    public void mergeItemArrays(){ //adds items in the buffer add array
         for(Item item:toAdd){
             addToMap(item);
         }
