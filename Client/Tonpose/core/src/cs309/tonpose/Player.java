@@ -34,6 +34,7 @@ public class Player extends Living{
         lvl = 1;
         logged = true;
         userId = 0;
+        killable=false; //TODO change back to true, just for testing purposes
         sfx = Gdx.audio.newMusic(Gdx.files.internal("playerHit.wav"));
     }
 
@@ -184,6 +185,7 @@ public class Player extends Living{
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
                 break;
             default:
+                if(killable)
                 kill();
         }
 
