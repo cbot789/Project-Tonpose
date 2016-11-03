@@ -171,10 +171,10 @@ public class Player extends Living{
     }
 
     @Override
-    public void attack(float x, float y) {
+    public void attack(float x, float y, int dmg) {
         Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
         if(hit != null){
-            hit.changeHp(-25);
+            hit.changeHp(-dmg);
             if(hit instanceof Mob){
                 ((Mob) hit).scare(20);
             }
