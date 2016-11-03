@@ -49,6 +49,7 @@ public class Tonpose extends Game{
     }
 
     public void menu(){
+        client.close();
         androidMethod.menu();
     }
 

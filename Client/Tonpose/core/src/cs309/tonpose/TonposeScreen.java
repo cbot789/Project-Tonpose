@@ -195,7 +195,7 @@ public class TonposeScreen implements Screen {
 
 
 
-	private void moveEnemy() { // called whenever a raindrop spawns
+	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
 				/*
