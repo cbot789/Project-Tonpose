@@ -349,9 +349,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         finish();
                     }
                     else{
-                        System.out.println("Password invalid");
-                        mPasswordView.setError(getString(R.string.error_incorrect_password));
-                        mPasswordView.requestFocus();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showProgress(false);
+                                client.close();
+                                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                mPasswordView.requestFocus();
+                            }
+                        });
                     }
                 }
                 if (object instanceof NewUser) {

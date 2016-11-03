@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
@@ -44,13 +44,12 @@ public class InventoryScreen implements Screen {
         buttonRegion = new TextureRegion(buttonImage);
         buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
         backButton = new ImageButton(buttonRegionDrawable);
-        backButton.addListener(new EventListener()
+        backButton.addListener(new ClickListener()
         {
             @Override
-            public boolean handle(Event event)
+            public void clicked(InputEvent event, float x, float y)
             {
                 tonpose.setScreen(tonpose.tonposeScreen);
-                return true;
             }
         });
         stage = new Stage();

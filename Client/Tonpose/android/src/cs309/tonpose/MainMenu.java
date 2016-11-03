@@ -79,4 +79,15 @@ public class MainMenu extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onPause() {
+        Music.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Music.resume();
+        super.onResume();
+    }
 }
