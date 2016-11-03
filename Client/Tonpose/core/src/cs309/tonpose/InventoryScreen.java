@@ -13,7 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+import static cs309.tonpose.TonposeScreen.player;
 
 /**
  * Created by Quade on 11/1/16.
@@ -30,6 +34,11 @@ public class InventoryScreen implements Screen {
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
+
+    private TextButton inv;
+    private TextButton actionButton;
+    private Table table;
+    private TextButton.TextButtonStyle textButtonStyle;
 
     public InventoryScreen(Tonpose t){
         this.tonpose = t;
@@ -74,15 +83,14 @@ public class InventoryScreen implements Screen {
         // show all players
         font.setColor(Color.BLACK);
         font.getData().setScale(4f);
-        font.draw(batch, "Inventory", 200, 450);
-        font.getData().setScale(2f);
-        int x = 300;
-        int y = 350;
-        for (User value : tonpose.users.values()) {
-            font.draw(batch, value.name, x, y);
-            y -= 30;
-        }
+        font.draw(batch, "Inventory", 300, 450);
 
+        font.getData().setScale(2f);
+        if(player.equiped!= null){
+            font.draw(batch, "equipped: " + player.equiped.name, 100, 350);
+        }else{
+            font.draw(batch, "equipped: Nothing", 100, 350);
+        }
         batch.end();
     }
 
@@ -93,6 +101,34 @@ public class InventoryScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        table = new Table();
+        table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        table.center();
+        stage.addActor(table);
+        font = new BitmapFont();
+        textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = font;
+        for (final Item item : player.getInventory()) {
+            inv = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
+            inv.getLabel().setFontScale(5,5);
+            inv.addListener(new EventListener()
+            {
+                @Override
+                public boolean handle(Event event)
+                {
+                    if(item != player.equiped){
+                        player.equipItem(item);
+                    }else{
+                        player.equipItem(null);
+                    }
+                    return true;
+                }
+            });
+            table.add(inv);
+            table.row();
+        }
+
     }
 
     @Override

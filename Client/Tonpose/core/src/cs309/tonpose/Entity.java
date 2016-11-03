@@ -71,7 +71,7 @@ public class Entity {
     //removes item from inventory and spawns it on the map
     public void dropItem(Item toDrop){
         inventory.remove(toDrop);
-        toDrop.toggleInventory();
+        toDrop.inInventory = false;
         toDrop.setLocation(locationX, locationY);
         TonposeScreen.Map.addToMap(toDrop);
         //create world object
@@ -79,14 +79,28 @@ public class Entity {
 
     //adds an item to the inventory and deletes it from the map if there is room in inventory
     public void addInventory(Item toAdd){
-        if(inventory.size() < invSize){
-            inventory.add(toAdd);
-            toAdd.toggleInventory();
-            //remove world object
+        if(toAdd.count > 0){
+            if(inventory.size() < invSize){
+                for (Item item:inventory) {
+                    if(item.name.equals(toAdd.name)){
+                        item.count += toAdd.count;
+                        if(toAdd.inInventory == false){
+                            TonposeScreen.Map.removeFromMap(toAdd);
+                        }
+                        return;
+                    }
+                }
+                inventory.add(toAdd);
+                if(toAdd.inInventory == false){
+                    toAdd.inInventory = true;
+                    TonposeScreen.Map.removeFromMap(toAdd);
+                }
+            }
+            else{
+                //TODO display "inv full"
+            }
         }
-        else{
-            //display "inv full"
-        }
+
     }
 
     //heals or damages the entity by "mod" amount

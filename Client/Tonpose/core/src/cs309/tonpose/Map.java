@@ -23,6 +23,7 @@ public class Map {
         this.height=height;
         this.width=width;
         entities=new ArrayList<Entity>();
+        items = new ArrayList<Item>();
         for(int i=0; i<terrain; i++){
             entities.add(generateTerrain());
         }
@@ -67,6 +68,9 @@ public class Map {
         return entities;                                                                                //TODO fully add item support
     }
 
+    public ArrayList<Item> getItems() {                                                            //TODO move map generation function here?
+        return items;                                                                                //TODO fully add item support
+    }
     //adds an item to appear on the map
     public void addToMap(Item item){
         items.add(item);
@@ -92,5 +96,20 @@ public class Map {
 
     public void removeFromMap(Entity entity){
         entities.remove(entity);
+    }
+
+    public Entity checkMap(float x, float y, float rangeX, float rangeY){
+        for (Entity entity:entities) {
+            if(entity.getX() < rangeX + x){
+                if(entity.getX() > x) {
+                    if (entity.getY() < rangeY + y) {
+                        if(entity.getX() > x) {
+                            return entity;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

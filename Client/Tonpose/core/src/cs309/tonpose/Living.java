@@ -1,6 +1,8 @@
 package cs309.tonpose;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
@@ -24,6 +26,9 @@ public class Living extends Entity {
         AI.direct(target.getRectangle(), this.getRectangle());
     }
     public void attack(float x, float y) {
-
+        Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
+        if(hit != null){
+            hit.changeHp(-50);
+        }
     }
 }

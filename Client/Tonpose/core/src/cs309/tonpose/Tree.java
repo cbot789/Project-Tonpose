@@ -21,6 +21,6 @@ public class Tree extends Entity { //id is 1
     public void setInventory() {
         super.setInventory();
         int number= MathUtils.random(0,2);
-        addInventory(new TreeSeeds(number, locationX, locationY));
+        addInventory(new TreeSeeds(number, locationX, locationY, false));
     }
 }

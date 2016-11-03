@@ -12,17 +12,19 @@ public class Item {
     protected int count;
     protected float locationX;
     protected float locationY;
-    protected boolean equippable;
     protected boolean hasAction;
     protected boolean inInventory;
     protected Rectangle body;
     protected Texture texture;
 
-    public Item(int number, float x, float y, int id){
+    public Item(int number, float x, float y, int id, boolean map){
         count = number;
         locationX = x;
         locationY = y;
         itemID = id;
+        body = new Rectangle();
+        body.set(locationX, locationY, 32, 32);
+        inInventory = !map;
     }
     public void action(Rectangle player){
             if(!hasAction){
@@ -31,9 +33,6 @@ public class Item {
             else{
                 count--;
             }
-    }
-    public void toggleInventory(){
-        inInventory = !inInventory;
     }
     public float getX(){
         return locationX;
@@ -44,14 +43,18 @@ public class Item {
     public void setLocation(float x, float y){
         locationX = x;
         locationY = y;
-    }
-    public boolean getEquippable(){
-        return equippable;
+        body.set(locationX, locationY, 64, 64);
     }
     public int getID(){
         return itemID;
     }
     public int getCount(){
         return count;
+    }
+    public Texture getTexture(){
+        return texture;
+    }
+    public Rectangle getBody(){
+        return body;
     }
 }

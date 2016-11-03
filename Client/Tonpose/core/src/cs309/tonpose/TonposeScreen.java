@@ -41,7 +41,7 @@ public class TonposeScreen implements Screen {
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Player player;
+	public static Player player;
 
 	private Array<Rectangle> terrain;
 
@@ -57,8 +57,6 @@ public class TonposeScreen implements Screen {
 	private final int UPDATEDELAY = 20000000;
 
 	//private Stage stage;
-	private TextureAtlas atlas;
-	private Skin skin;
 	private TextButton inv;
 	private TextButton actionButton;
 	private BitmapFont font = new BitmapFont();
@@ -126,6 +124,11 @@ public class TonposeScreen implements Screen {
 		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+		}
+		for (Item item : Map.getItems()){
+			if(!item.inInventory){
+				batch.draw(item.getTexture(), item.locationX, item.locationY);
+			}
 		}
 		if(!tonpose.Name.equals("offline")) {
 			for (User value : tonpose.users.values()) {
@@ -238,7 +241,7 @@ public class TonposeScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		//new below
-		Table table = new Table();
+		table = new Table();
 		table.setBounds(0,0, Gdx.graphics.getWidth(), 120);
 		table.left();
 		stage.addActor(table);
@@ -270,6 +273,7 @@ public class TonposeScreen implements Screen {
 				Tree tree = new Tree((int)player.getX() + 40, (int) player.getY());
 				Map.addToMap(tree);
 				*/
+				player.action();
 				return true;
 			}
 		});

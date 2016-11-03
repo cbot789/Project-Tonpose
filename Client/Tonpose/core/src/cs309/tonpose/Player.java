@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.abs;
 
 /**
@@ -70,6 +72,13 @@ public class Player extends Living{
             float yMove = 5 * (y / sum);
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
+            for(Item item : TonposeScreen.Map.getItems()){
+               if(!item.inInventory){
+                   if(item.getBody().overlaps(body)){
+                       addInventory(item);
+                   }
+               }
+            }
             for (Entity entity : TonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
                 if(entity.collision == true){
                     if (newPositionX.overlaps(entity.getRectangle())) {
@@ -93,6 +102,7 @@ public class Player extends Living{
                 } else {
                     locationX += xMove;
                 }
+                body.setX(locationX);
                 TonposeScreen.camera.translate(xMove, 0);
                 TonposeScreen.playerHealthX+=xMove;
             }
@@ -108,10 +118,14 @@ public class Player extends Living{
                 } else {
                     locationY += yMove;
                 }
+                body.setY(locationY);
                 TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
                 TonposeScreen.playerHealthY+=yMove;
             }
 
         }
+    }
+    public ArrayList<Item> getInventory(){
+        return inventory;
     }
 }
