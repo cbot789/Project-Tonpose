@@ -2,6 +2,7 @@ package cs309.tonpose;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -10,7 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
  */
 
 public class Tree extends Entity { //id is 1
-
+    private static Music sfx = Gdx.audio.newMusic(Gdx.files.internal("logHit.wav"));
 
     public Tree(int locationX, int locationY){
         super(locationX, locationY, 9, 100, 50, 20, 1000,  4, true, true); //tree image is 64x128
@@ -22,5 +23,13 @@ public class Tree extends Entity { //id is 1
         super.setInventory();
         int number= MathUtils.random(0,3);
         addInventory(new TreeSeeds(number, locationX, locationY, false));
+    }
+
+    @Override
+    public void changeHp(int mod) {
+        super.changeHp(mod);
+
+        sfx.setPosition(0);
+        sfx.play();
     }
 }

@@ -1,6 +1,7 @@
 package cs309.tonpose;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -19,6 +20,7 @@ public class Player extends Living{
     protected int userId;
     protected String  userName;
     protected Item equiped;
+    private static Music sfx = Gdx.audio.newMusic(Gdx.files.internal("playerHit.wav"));
 
     public Player(float x, float y, String name){
         super(x, y, 8, 64, 45, 10);
@@ -163,6 +165,19 @@ public class Player extends Living{
             default:
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
                 break;
+        }
+        sfx.setPosition(0);
+        sfx.play();
+    }
+
+    @Override
+    public void attack(float x, float y) {
+        Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
+        if(hit != null){
+            hit.changeHp(-25);
+            if(hit instanceof Mob){
+                ((Mob) hit).scare(20);
+            }
         }
     }
 }

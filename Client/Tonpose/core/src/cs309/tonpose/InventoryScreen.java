@@ -39,7 +39,7 @@ public class InventoryScreen implements Screen {
     private SpriteBatch batch;
 
     private TextButton inv;
-    private Table table;
+    private Table table = new Table();
     private TextButton.TextButtonStyle textButtonStyle;
 
     public InventoryScreen(Tonpose t){
@@ -103,13 +103,13 @@ public class InventoryScreen implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
-        table = new Table();
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table.center();
         stage.addActor(table);
         font = new BitmapFont();
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
+        table.clear();
         for (final Item item : player.getInventory()) {
             inv = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
             inv.getLabel().setFontScale(5,5);

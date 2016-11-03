@@ -1,6 +1,7 @@
 package cs309.tonpose;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -12,20 +13,22 @@ import static java.lang.Math.abs;
 public class Mob extends Living {
 
     protected int flee;
+    private static Music sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
 
     public Mob(int x, int y){
         super(x, y, 100, 64, 64, 1);
         texture = new Texture(Gdx.files.internal("player2base.png"));
         flee = 0;
+        sfx.setVolume((float) 0.3);
     }
 
-    private void setTarget(int x, int y){
+    public void setTarget(int x, int y){
 
     }
-    private void setTarget(Entity prey){
+    public void setTarget(Entity prey){
         target = prey;
     }
-    private void scare(int duration){
+    public void scare(int duration){
         flee += duration;
     }
 
@@ -52,8 +55,17 @@ public class Mob extends Living {
             flee--;
         }
         if(body.overlaps(target.getRectangle())){
-            scare(10);
-            target.changeHp(-1);
+            if(flee < 1){
+                scare(10);
+                target.changeHp(-1);
+            }
         }
+    }
+
+    @Override
+    public void changeHp(int mod) {
+        super.changeHp(mod);
+        sfx.setPosition(0);
+        sfx.play();
     }
 }
