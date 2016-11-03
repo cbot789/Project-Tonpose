@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class Player extends Living{
     protected int userId;
     protected String  userName;
     protected Item equiped;
-    private static Music sfx = Gdx.audio.newMusic(Gdx.files.internal("playerHit.wav"));
+    Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){
         super(x, y, 8, 64, 45, 10);
@@ -31,6 +32,7 @@ public class Player extends Living{
         lvl = 1;
         logged = true;
         userId = 0;
+        sfx = Gdx.audio.newMusic(Gdx.files.internal("playerHit.wav"));
     }
 
     public void updateScore(int points){
@@ -136,7 +138,11 @@ public class Player extends Living{
 
     @Override
     public void changeHp(int mod) {
-        super.changeHp(mod);
+        if(userName != "God"){
+            if(lastHit + 500000000 < TimeUtils.nanoTime()){
+                super.changeHp(mod);
+            }
+        }
         switch (currentHp){
             case 0:
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza0.png"));
@@ -162,12 +168,13 @@ public class Player extends Living{
             case 7:
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza7.png"));
                 break;
-            default:
+            case 8:
                 TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
                 break;
+            default:
+                kill();
         }
-        sfx.setPosition(0);
-        sfx.play();
+
     }
 
     @Override
@@ -179,5 +186,13 @@ public class Player extends Living{
                 ((Mob) hit).scare(20);
             }
         }
+    }
+
+    @Override
+    public void kill() {
+        death.play();
+        locationX = -1000;
+        locationY = -1000;
+        body.setCenter(-1000, -1000);
     }
 }

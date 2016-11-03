@@ -52,9 +52,9 @@ public class TonposeScreen implements Screen {
 	private long lastTick = 0;
 	private long lastMove;
 	private long lastUpdate;
-	private final int TICKDELAY = 1000000;
-	private final int NPCDELAY =  30000000;
-	private final int MOVEDELAY = 10000000;
+	private final int TICKDELAY =    1000000;
+	private final int NPCDELAY =    30000000;
+	private final int MOVEDELAY =   10000000;
 	private final int UPDATEDELAY = 20000000;
 
 	//private Stage stage;
@@ -171,6 +171,8 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
+		if(player.currentHp < 0)
+			tonpose.setScreen(tonpose.deathScreen);
 		lastTick = TimeUtils.nanoTime();
 	}
 

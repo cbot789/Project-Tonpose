@@ -2,6 +2,7 @@ package cs309.tonpose;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -25,6 +26,17 @@ public class AndroidMethod implements AndroidMethods {
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
         }
     });
+
+    }
+
+    public void menu(){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(context, MainMenu.class);
+                context.startActivity(intent);
+            }
+        });
 
     }
 

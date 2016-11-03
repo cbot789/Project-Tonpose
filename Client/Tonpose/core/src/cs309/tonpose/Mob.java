@@ -13,12 +13,12 @@ import static java.lang.Math.abs;
 public class Mob extends Living {
 
     protected int flee;
-    private static Music sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
 
     public Mob(int x, int y){
         super(x, y, 100, 64, 64, 1);
         texture = new Texture(Gdx.files.internal("player2base.png"));
         flee = 0;
+        sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
         sfx.setVolume((float) 0.3);
     }
 
@@ -48,24 +48,17 @@ public class Mob extends Living {
             float y = target.getY() - locationY;
             float sum = abs(x) + abs(y);
             if(sum > 4){
-                locationX -= 5 * (x/sum);
-                locationY -= 5 * (y/sum);
+                locationX -= 2 * (x/sum);
+                locationY -= 2 * (y/sum);
                 setBody(locationX,locationY);
             }
             flee--;
         }
         if(body.overlaps(target.getRectangle())){
             if(flee < 1){
-                scare(10);
+                scare(20);
                 target.changeHp(-1);
             }
         }
-    }
-
-    @Override
-    public void changeHp(int mod) {
-        super.changeHp(mod);
-        sfx.setPosition(0);
-        sfx.play();
     }
 }

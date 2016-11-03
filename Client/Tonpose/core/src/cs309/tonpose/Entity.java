@@ -1,11 +1,13 @@
 package cs309.tonpose;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
@@ -30,9 +32,11 @@ public class Entity {
     protected int forceX;
     protected int forceY;
     protected int acceleration;
+    protected long lastHit = 0;
 
     protected int invSize;
     protected ArrayList<Item> inventory;
+    protected Music sfx;
 
     public Entity(){
 
@@ -105,14 +109,17 @@ public class Entity {
 
     //heals or damages the entity by "mod" amount
     public void changeHp(int mod){
-        currentHp += mod;
-        if (currentHp > maxHp){
-            currentHp = maxHp;
-        }
-        else if(currentHp < 0){
-            currentHp = 0;
-            kill();
-        }
+            currentHp += mod;
+            if (currentHp > maxHp){
+                currentHp = maxHp;
+            }
+            else if(currentHp < 0){
+                currentHp = -1;
+                kill();
+            }
+            lastHit = TimeUtils.nanoTime();
+            sfx.setPosition(0);
+            sfx.play();
     }
 
     //pushes entity
