@@ -67,7 +67,7 @@ public class Entity {
         setInventory();
     }
 
-    //initilizes what items the entity carries and will drop on death
+    //initializes what items the entity carries and will drop on death
     public void setInventory(){
         inventory = new ArrayList<Item>();
     }
@@ -120,6 +120,7 @@ public class Entity {
             lastHit = TimeUtils.nanoTime();
             sfx.setPosition(0);
             sfx.play();
+
     }
 
     //pushes entity
@@ -133,8 +134,12 @@ public class Entity {
 
     //deletes entity from the map
     public void kill(){
+        int i=0;
         for (Item item:inventory) {
-            dropItem(item);
+            item.inInventory = false;
+            item.setLocation(locationX+i, locationY+i);
+            TonposeScreen.Map.addToMap(item);
+            i+=64;
         }
         TonposeScreen.Map.removeFromMap(this);
     }

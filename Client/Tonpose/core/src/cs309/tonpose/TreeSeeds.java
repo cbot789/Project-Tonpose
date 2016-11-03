@@ -17,11 +17,11 @@ public class TreeSeeds extends Item{
     }
 
     @Override
-    public void action(Rectangle player) {
+    public void action(Rectangle player, Player user) {
         if(count > 0){
             Tree tree = new Tree((int)player.getX()+ 40, (int) player.getY());
             TonposeScreen.Map.addToMap(tree);
-            super.action(player);
+            super.action(player,user);
         }
     }
 }

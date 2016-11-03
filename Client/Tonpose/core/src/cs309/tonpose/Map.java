@@ -23,7 +23,6 @@ public class Map {
     private ArrayList<Item> itemsAdd;
     private int mobCount;
 
-
     public Map(int height, int width, int terrain, int difficulty){
         this.height=height;
         this.width=width;
@@ -33,6 +32,7 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
+
         for(int i=0; i<terrain; i++){
             entities.add(generateTerrain());
         }
@@ -187,14 +187,18 @@ public class Map {
         for (Entity entity: entitiesAdd) {
             entities.add(entity);
         }
+        entitiesAdd.clear();
         for (Entity entity: entitiesDelete) {
             entities.remove(entity);
         }
+        entitiesDelete.clear();
         for (Item item: itemsAdd) {
             items.add(item);
         }
+        itemsAdd.clear();
         for (Item item: itemsDelete) {
             items.remove(item);
         }
+        itemsDelete.clear();
     }
 }

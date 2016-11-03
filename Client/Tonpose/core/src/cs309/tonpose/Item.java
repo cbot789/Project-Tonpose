@@ -26,7 +26,7 @@ public class Item {
         body.set(locationX, locationY, 32, 32);
         inInventory = !map;
     }
-    public void action(Rectangle player){
+    public void action(Rectangle player,Player user){
             if(!hasAction){
                 return;
             }
