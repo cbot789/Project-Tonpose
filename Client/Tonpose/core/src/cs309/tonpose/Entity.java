@@ -135,12 +135,12 @@ public class Entity {
 
     //deletes entity from the map
     public void kill(){
-        int i=0;
+        int i=32;
         for (Item item:inventory) {
             item.inInventory = false;
             item.setLocation(locationX+i, locationY+i);
             TonposeScreen.Map.addToMap(item);
-            i+=64;
+            i+=32;
         }
         TonposeScreen.Map.removeFromMap(this);
     }

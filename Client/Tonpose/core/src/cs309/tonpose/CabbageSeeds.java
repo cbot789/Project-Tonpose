@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class CabbageSeeds extends Item {
     public CabbageSeeds(int number, float x, float y, boolean map) {
         super(number, x, y, 11, map);
-        texture = new Texture(Gdx.files.internal("acorn.png"));
+        texture = new Texture(Gdx.files.internal("cabbage seeds.png"));
         hasAction = true;
         name = "Cabbage Seeds";
     }
