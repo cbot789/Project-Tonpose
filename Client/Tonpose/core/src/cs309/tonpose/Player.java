@@ -24,6 +24,7 @@ public class Player extends Living{
 
     public Player(float x, float y, String name){
         super(x, y, 8, 64, 45, 10);
+        killable=false;
         texture = new Texture(Gdx.files.internal("mainbase.png"));
         userName = name;
         score = 0;
@@ -56,7 +57,7 @@ public class Player extends Living{
     public void action(){
         if(equiped != null){
             if(equiped.hasAction){
-                equiped.action(body);
+                equiped.action(body, this);
                 if(equiped.getCount() < 1){
                     equiped = null;
                 }
@@ -78,13 +79,13 @@ public class Player extends Living{
             float yMove = 5 * (y / sum);
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
-            for(Item item : TonposeScreen.Map.getItems()){
-               if(!item.inInventory){
-                   if(item.getBody().overlaps(body)){
-                       addInventory(item);
-                   }
-               }
-            }
+            /*for(Item item : TonposeScreen.Map.getItems()){
+                if(!item.inInventory){
+                    if(item.getBody().overlaps(body)){
+                        addInventory(item);
+                    }
+                }
+            }*/
             for (Entity entity : TonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
                 if(entity.collision == true){
                     if (newPositionX.overlaps(entity.getRectangle())) {

@@ -17,14 +17,16 @@ public class Map {
     private int height,width;
     private ArrayList<Entity> entities;
     private ArrayList<Item> items;
-
-
+    private ArrayList<Item> toAdd;
+    private ArrayList<Item> toRemove;
 
     public Map(int height, int width, int terrain, int difficulty){
         this.height=height;
         this.width=width;
         entities=new ArrayList<Entity>();
         items = new ArrayList<Item>();
+        toAdd=new ArrayList<Item>();
+        toRemove=new ArrayList<Item>();
         for(int i=0; i<terrain; i++){
             entities.add(generateTerrain());
         }
@@ -80,6 +82,36 @@ public class Map {
     public void addToMap(Entity entity){
         entities.add(entity);
     }
+
+    public void prepareAddToMap(Item item){ //temporary array
+        toAdd.add(item);
+    }
+
+    public void prepareRemove(Item item){
+        toRemove.add(item);
+
+    }
+
+    public void removeItems(){
+        for(Item item:toRemove){
+            items.remove(item);
+        }
+    }
+
+    public void mergeItemArrays(){
+        for(Item item:toAdd){
+            addToMap(item);
+        }
+        toAdd.clear();
+    }
+
+    public ArrayList<Item> getToAdd(){
+        return toAdd;
+    }
+    public ArrayList<Item>getToRemove(){
+        return toRemove;
+    }
+
 
     public int getWidth(){
         return width;

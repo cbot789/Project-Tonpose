@@ -123,8 +123,21 @@ public class TonposeScreen implements Screen {
 		batch.draw(player.texture, player.getX(), player.getY());
 		batch.draw(healthImage,playerHealthX,playerHealthY);
 		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
+		if(!Map.getToAdd().isEmpty()){
+			Map.mergeItemArrays();
+		}
 		for (Entity entity : Map.getEntities()) { //draws terrain
 			batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+		}
+		for(Item item : TonposeScreen.Map.getItems()){
+			if(!item.inInventory){
+				if(item.getBody().overlaps(player.body)){
+					player.addInventory(item);
+				}
+			}
+		}
+		if(!Map.getToRemove().isEmpty()){
+			Map.removeItems();
 		}
 		for (Item item : Map.getItems()){
 			if(!item.inInventory){
@@ -163,6 +176,7 @@ public class TonposeScreen implements Screen {
 	private void tick() {
 
 		if (TimeUtils.nanoTime() > lastMove + MOVEDELAY)
+
 			movePlayer();
 
 		if (TimeUtils.nanoTime() > lastNpc + NPCDELAY)

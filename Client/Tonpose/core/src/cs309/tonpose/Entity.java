@@ -63,7 +63,7 @@ public class Entity {
         setInventory();
     }
 
-    //initilizes what items the entity carries and will drop on death
+    //initializes what items the entity carries and will drop on death
     public void setInventory(){
         inventory = new ArrayList<Item>();
     }
@@ -85,7 +85,7 @@ public class Entity {
                     if(item.name.equals(toAdd.name)){
                         item.count += toAdd.count;
                         if(toAdd.inInventory == false){
-                            TonposeScreen.Map.removeFromMap(toAdd);
+                            TonposeScreen.Map.prepareRemove(toAdd);
                         }
                         return;
                     }
@@ -93,7 +93,7 @@ public class Entity {
                 inventory.add(toAdd);
                 if(toAdd.inInventory == false){
                     toAdd.inInventory = true;
-                    TonposeScreen.Map.removeFromMap(toAdd);
+                    TonposeScreen.Map.prepareRemove(toAdd);
                 }
             }
             else{
@@ -111,6 +111,7 @@ public class Entity {
         }
         else if(currentHp < 0){
             currentHp = 0;
+            if(killable)
             kill();
         }
     }
@@ -126,8 +127,12 @@ public class Entity {
 
     //deletes entity from the map
     public void kill(){
+        int i=0;
         for (Item item:inventory) {
-            dropItem(item);
+            item.inInventory = false;
+            item.setLocation(locationX+i, locationY+i);
+            TonposeScreen.Map.prepareAddToMap(item);
+            i+=64;
         }
         TonposeScreen.Map.removeFromMap(this);
     }

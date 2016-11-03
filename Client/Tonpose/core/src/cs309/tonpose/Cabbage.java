@@ -2,6 +2,7 @@ package cs309.tonpose;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 
 
 /**
@@ -12,7 +13,16 @@ public class Cabbage extends Terrain { //id is 0
 
 
     public Cabbage(int locationX, int locationY){
-        super(locationX, locationY, 0, 10, 10, 10, 5, 0, true);
+        super(locationX, locationY, 0, 10, 10, 10, 5, 7, true); //x,y,id,hp,height,width,mass,invsize,killable
         texture=new Texture(Gdx.files.internal("cabbage.png"));
+    }
+
+    @Override
+    public void setInventory() {
+        super.setInventory();
+        int number= MathUtils.random(0,3);
+        int number2=MathUtils.random(0,3);
+        addInventory(new CabbageLeaves(number, locationX, locationY, false));
+        addInventory((new CabbageSeeds(number2,locationX,locationY,false)));
     }
 }
