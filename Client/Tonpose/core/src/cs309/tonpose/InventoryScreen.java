@@ -39,7 +39,6 @@ public class InventoryScreen implements Screen {
     private SpriteBatch batch;
 
     private TextButton inv;
-    private TextButton actionButton;
     private Table table;
     private TextButton.TextButtonStyle textButtonStyle;
 

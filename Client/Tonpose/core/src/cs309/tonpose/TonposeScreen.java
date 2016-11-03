@@ -33,7 +33,8 @@ public class TonposeScreen implements Screen {
 	final Tonpose tonpose;
 	public static Map Map;
 	private Music music;
-	private Texture playerImage, buttonImage,healthImage;
+	private Texture playerImage, buttonImage;
+	public static Texture	healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
@@ -185,6 +186,7 @@ public class TonposeScreen implements Screen {
 	private void moveEnemy() { // called whenever a raindrop spawns
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
+				/*
 				float x = player.getX() - entity.locationX;
 				float y = player.getY() - entity.locationY;
 				float sum = abs(x) + abs(y);
@@ -193,8 +195,8 @@ public class TonposeScreen implements Screen {
 					entity.locationY += 5 * (y/sum);
 					entity.setBody(entity.locationX,entity.locationY);
 				}
-				//AI.direct(player.getX(), player.getY(), entity.getRectangle());
-				//((Mob) entity).move(player.getX(), player.getY());
+				*/
+				((Mob) entity).move(player);
 			}
 		}
 
@@ -240,11 +242,11 @@ public class TonposeScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		//new below
+		stage.addActor(playersButton);
 		table = new Table();
 		table.setBounds(0,0, Gdx.graphics.getWidth(), 120);
-		table.left();
+		table.center().bottom();
 		stage.addActor(table);
-		table.add(playersButton);
 		font = new BitmapFont();
 		textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.font = font;
@@ -259,6 +261,9 @@ public class TonposeScreen implements Screen {
 			}
 		});
 		table.add(inv);
+		Table tableRight = new Table();
+		tableRight.setBounds(0,0, Gdx.graphics.getWidth(), 120);
+		tableRight.right();
 
 		actionButton = new TextButton("Action", textButtonStyle);
 		actionButton.getLabel().setFontScale(5,5);
@@ -267,14 +272,11 @@ public class TonposeScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				/*
-				Tree tree = new Tree((int)player.getX() + 40, (int) player.getY());
-				Map.addToMap(tree);
-				*/
 				player.action();
 			}
 		});
-		table.add(actionButton);
+		tableRight.add(actionButton);
+		stage.addActor(tableRight);
 	}
 
 	@Override

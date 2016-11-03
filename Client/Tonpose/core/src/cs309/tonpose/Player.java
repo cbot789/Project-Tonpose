@@ -54,6 +54,9 @@ public class Player extends Living{
         if(equiped != null){
             if(equiped.hasAction){
                 equiped.action(body);
+                if(equiped.getCount() < 1){
+                    equiped = null;
+                }
             }
         } else{
             attack(locationX, locationY);
@@ -122,10 +125,43 @@ public class Player extends Living{
                 TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
                 TonposeScreen.playerHealthY+=yMove;
             }
-
         }
     }
     public ArrayList<Item> getInventory(){
         return inventory;
+    }
+
+    @Override
+    public void changeHp(int mod) {
+        super.changeHp(mod);
+        switch (currentHp){
+            case 0:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza0.png"));
+                break;
+            case 1:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza1.png"));
+                break;
+            case 2:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza2.png"));
+                break;
+            case 3:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza3.png"));
+                break;
+            case 4:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza4.png"));
+                break;
+            case 5:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza5.png"));
+                break;
+            case 6:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza6.png"));
+                break;
+            case 7:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza7.png"));
+                break;
+            default:
+                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
+                break;
+        }
     }
 }

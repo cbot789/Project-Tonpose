@@ -19,7 +19,7 @@ public class TreeSeeds extends Item{
     @Override
     public void action(Rectangle player) {
         if(count > 0){
-            Tree tree = new Tree((int)player.getX(), (int) player.getY());
+            Tree tree = new Tree((int)player.getX()+ 40, (int) player.getY());
             TonposeScreen.Map.addToMap(tree);
             super.action(player);
         }

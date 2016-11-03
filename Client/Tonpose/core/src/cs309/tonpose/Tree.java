@@ -20,7 +20,7 @@ public class Tree extends Entity { //id is 1
     @Override
     public void setInventory() {
         super.setInventory();
-        int number= MathUtils.random(0,2);
+        int number= MathUtils.random(0,3);
         addInventory(new TreeSeeds(number, locationX, locationY, false));
     }
 }
