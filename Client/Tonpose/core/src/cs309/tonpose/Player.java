@@ -34,7 +34,7 @@ public class Player extends Living{
         lvl = 1;
         logged = true;
         userId = 0;
-        killable=false; //TODO change back to true, just for testing purposes
+        killable=true;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("playerHit.wav"));
     }
 
@@ -205,9 +205,9 @@ public class Player extends Living{
 
     @Override
     public void kill() {
-        /*death.play();
+        death.play();
         locationX = -1000;
         locationY = -1000;
-        body.setCenter(-1000, -1000);*/
+        body.setCenter(-1000, -1000);
     }
 }
