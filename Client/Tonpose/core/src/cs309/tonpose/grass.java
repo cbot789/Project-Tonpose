@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class grass extends Terrain {
     public grass(int locationX, int locationY) {
-        super(locationX, locationY, 100, 0, 0, 0);
+        super(locationX, locationY, 100, 0, 0, 1);
         texture=new Texture(Gdx.files.internal("grass.png"));
     }
 }

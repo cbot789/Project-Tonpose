@@ -28,7 +28,7 @@ public class Terrain extends Entity {
         return modY;
     }
 
-    public double getScale(){
+    public float getScale(){
         return scale;
     }
 }

@@ -65,7 +65,7 @@ public class TonposeScreen implements Screen {
 	private TextButton.TextButtonStyle textButtonStyle;
 	public static float playerHealthX=1;
 	public static float playerHealthY=416;
-	Terrain terrainMap[][] = Map.getTerrains();
+	Terrain terrainMap[][];
 
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
@@ -90,7 +90,7 @@ public class TonposeScreen implements Screen {
 		batch = new SpriteBatch();
 
 		Map = new Map(1000, 1000, 20, 0);        //TODO retrieve map from server instead of making one here
-
+		terrainMap = Map.getTerrains();
 
 		//initialize main character
 		/*
@@ -229,7 +229,12 @@ public class TonposeScreen implements Screen {
 
 
 	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
-		player.move(tonpose.lastX, tonpose.lastY, 0, 0, 1);
+		int x = (int)player.getX()/20;
+		int y = (int)player.getY()/20;
+		int modX = terrainMap[x][y].getModX();
+		int modY = terrainMap[x][y].getModY();
+		float scale = terrainMap[x][y].getScale();
+		player.move(tonpose.lastX, tonpose.lastY, modX, modY, scale);
 
 		lastMove = TimeUtils.nanoTime();
 	}

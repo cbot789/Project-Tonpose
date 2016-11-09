@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.Texture;
 public class RiverVertical extends Terrain {
     public RiverVertical(int locationX, int locationY, boolean down) {
         super(locationX, locationY, 102, 0, 0, (float) 0.9);
-        int flow = 10;
+        int flow = 3;
         if(down) {
-            flow = -10;
+            flow = -3;
         }
         modY = flow;
         texture=new Texture(Gdx.files.internal("water.png"));
