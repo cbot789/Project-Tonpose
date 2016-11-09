@@ -24,14 +24,10 @@ public class Entity {
 
     protected Rectangle body;
     protected Texture texture;
-    //sprite
 
-    protected int currentSpeed;
-    protected int maxSpeed;
     protected int mass;
     protected int forceX;
     protected int forceY;
-    protected int acceleration;
     protected long lastHit = 0;
 
     protected int invSize;

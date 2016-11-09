@@ -9,8 +9,26 @@ import com.badlogic.gdx.math.Rectangle;
 public class Terrain extends Entity {
 //TODO no purpose? Delete?
 
-    public Terrain(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable){
+    protected int modX;
+    protected int modY;
+    protected float scale;
 
-        super(locationX, locationY, id, maxHp, height, width, mass, invSize, killable, false);
+    public Terrain(int locationX, int locationY, int id, int height, int width, int modX, int modY, float scale){
+        super(locationX, locationY, id, -1, height, width, -1, 0, false, false);
+        this.modX = modX;
+        this.modY = modY;
+        this.scale = scale;
+    }
+
+    public int getModX(){
+        return modX;
+    }
+
+    public int getModY(){
+        return modY;
+    }
+
+    public double getScale(){
+        return scale;
     }
 }

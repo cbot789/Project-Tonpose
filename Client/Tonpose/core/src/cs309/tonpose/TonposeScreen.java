@@ -188,7 +188,7 @@ public class TonposeScreen implements Screen {
 
 
 	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
-		player.move(tonpose.lastX, tonpose.lastY);
+		player.move(tonpose.lastX, tonpose.lastY, 0, 0, 1);
 
 		lastMove = TimeUtils.nanoTime();
 	}
@@ -208,7 +208,7 @@ public class TonposeScreen implements Screen {
 					entity.setBody(entity.locationX,entity.locationY);
 				}
 				*/
-				((Mob) entity).move(player);
+				((Mob) entity).move(player, 0 ,0, 1);
 			}
 		}
 

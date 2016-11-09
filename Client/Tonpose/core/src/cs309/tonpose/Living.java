@@ -10,26 +10,31 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class Living extends Entity {
     protected int power;
-    protected boolean destory;
+    protected int moveSpeed;
     protected int lvl;
     protected Entity target;
+    protected int attackRange;
 
     //Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
-    public Living(float x, float y, int hp, int height, int width, int invSize) {
+    public Living(float x, float y, int hp, int height, int width, int invSize, int moveSpeed, int power, int lvl, int attackRange) {
         super(x, y, 2, hp, height, width, 1, invSize, true, false);
+        this.power = power;
+        this.moveSpeed = moveSpeed;
+        this.lvl = lvl;
+        this.attackRange = attackRange;
     }
 
-    public void move(float targetX, float targetY){
+    public void move(float targetX, float targetY, int modX, int modY, float scale){
         AI.direct(targetX, targetY, this.getRectangle());
     }
-    public void move(Entity target){
+    public void move(Entity target, int modX, int modY, float scale){
         AI.direct(target.getRectangle(), this.getRectangle());
     }
 
-    public void attack(float x, float y,int dmg) {
-        Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
+    public void attack(float x, float y) {
+        Entity hit = TonposeScreen.Map.checkMap(x, y, attackRange, attackRange);
         if(hit != null){
-            hit.changeHp(-dmg);
+            hit.changeHp(-power);
         }
     }
 }

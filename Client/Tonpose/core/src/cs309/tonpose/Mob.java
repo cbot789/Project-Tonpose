@@ -16,7 +16,7 @@ public class Mob extends Living {
     protected int npcNumber;
 
     public Mob(int x, int y, int number){
-        super(x, y, 100, 64, 64, 1);
+        super(x, y, 100, 64, 64, 1, 5, 1, 1, 100);
         texture = new Texture(Gdx.files.internal("player2base.png"));
         flee = 0;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
@@ -35,15 +35,15 @@ public class Mob extends Living {
     }
 
     @Override
-    public void move(Entity target) {//FIXME npc shake when colliding
+    public void move(Entity target, int modX, int modY, float scale) {//FIXME npc shake when colliding
         float x = target.getX() - locationX;
         float y = target.getY() - locationY;
         float sum = abs(x) + abs(y);
         boolean collidedX = false;
         boolean collidedY = false;
         if (sum > 4) { //stops if within 4 units of target location to prevent "the shakes"
-            float xMove = 5 * (x / sum);
-            float yMove = 5 * (y / sum);
+            float xMove = (moveSpeed * (x / sum)) * scale + modX;
+            float yMove = (moveSpeed * (y / sum)) * scale + modY;
             if(flee > 0){
                 xMove = -xMove;
                 yMove = -yMove;
@@ -96,7 +96,7 @@ public class Mob extends Living {
                 }
             }
             if(collidedX && collidedY){
-                attack(locationX, locationY, 1);
+                attack(locationX, locationY);
             }else{
                 locationX += xMove;
                 locationY += yMove;
@@ -114,10 +114,10 @@ public class Mob extends Living {
     }
 
     @Override
-    public void attack(float x, float y, int dmg) {
-        Entity hit = TonposeScreen.Map.mobCheckMap(x, y, 100, 100);
+    public void attack(float x, float y) {
+        Entity hit = TonposeScreen.Map.mobCheckMap(x, y, attackRange, attackRange);
         if(hit != null){
-            hit.changeHp(-dmg);
+            hit.changeHp(-power);
         }
     }
 }

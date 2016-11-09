@@ -26,7 +26,7 @@ public class Player extends Living{
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){
-        super(x, y, 8, 64, 45, 10);
+        super(x, y, 8, 64, 45, 10, 5, 50, 1, 100);
         texture = new Texture(Gdx.files.internal("mainbase.png"));
         userName = name;
         score = 0;
@@ -67,7 +67,7 @@ public class Player extends Living{
                 }
             }
         } else{
-            attack(locationX, locationY,50);
+            attack(locationX, locationY);
         }
     }
 
@@ -82,15 +82,15 @@ public class Player extends Living{
     }
 
     @Override
-    public void move(float targetX, float targetY) {
+    public void move(float targetX, float targetY, int modX, int modY, float scale) {
         float x = targetX - locationX;
         float y = targetY - locationY;
         float sum = abs(x) + abs(y);
         boolean collidedX=false;
         boolean collidedY=false;
         if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
-            float xMove = 5 * (x / sum);
-            float yMove = 5 * (y / sum);
+            float xMove = (moveSpeed * (x / sum)) * scale + modX;
+            float yMove = (moveSpeed * (y / sum)) * scale + modY;
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
             for(Item item : TonposeScreen.Map.getItems()){
@@ -106,7 +106,6 @@ public class Player extends Living{
                         collidedX = true;
                     }
                     if(newPositionY.overlaps(entity.getRectangle())){
-
                         collidedY=true;
                     }
                 }
@@ -145,6 +144,7 @@ public class Player extends Living{
             }
         }
     }
+
     public ArrayList<Item> getInventory(){
         return inventory;
     }
@@ -190,17 +190,6 @@ public class Player extends Living{
                }
         }
 
-    }
-
-    @Override
-    public void attack(float x, float y, int dmg) {
-        Entity hit = TonposeScreen.Map.checkMap(x, y, 100, 100);
-        if(hit != null){
-            hit.changeHp(-dmg);
-            if(hit instanceof Mob){
-                ((Mob) hit).scare(20);
-            }
-        }
     }
 
     @Override
