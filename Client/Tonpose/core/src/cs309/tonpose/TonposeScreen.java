@@ -39,6 +39,8 @@ public class TonposeScreen implements Screen {
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
 	private ImageButton playersButton;
+	private float renderBufferX;
+	private float renderBufferY;
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -47,8 +49,6 @@ public class TonposeScreen implements Screen {
 	private Array<Rectangle> terrain;
 
 	private long lastNpc = 0;
-	private long lastHit = 0;
-	private boolean touchedEnemy;
 	private long lastTick = 0;
 	private long lastMove;
 	private long lastUpdate;
@@ -71,7 +71,6 @@ public class TonposeScreen implements Screen {
 
 		// load textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
-		touchedEnemy = false;
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -83,6 +82,9 @@ public class TonposeScreen implements Screen {
 		// new camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		renderBufferX = camera.viewportWidth/2 + 20;
+		renderBufferY = camera.viewportHeight/2 + 20;
+
 
 		batch = new SpriteBatch();
 
@@ -110,39 +112,72 @@ public class TonposeScreen implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta) { //TODO change to only render inside of the camera
+		camera.update();
+		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
+		batch.begin();
+
 		// clear screen to dark blue color
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.update();
 
-		// render player and enemy
-		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
-		batch.begin();
-		batch.draw(player.texture, player.getX(), player.getY());
-		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
-		//batch.draw(enemyImage, enemy.x, enemy.y);			//TODO replace with mob
-		for (Entity entity : Map.getEntities()) { //draws terrain
-			batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
-		}
-		for(Item item : TonposeScreen.Map.getItems()){
-			if(!item.inInventory){
-				if(item.getBody().overlaps(player.body)){
-					player.addInventory(item);
+		float renderUpperX = camera.position.x + renderBufferX;
+		float renderLowerX = camera.position.x - renderBufferX;
+		float renderUpperY = camera.position.y + renderBufferY;
+		float renderLowerY = camera.position.y - renderBufferY ;
+
+		for (Terrain terrain : Map.getTerrains()) { //draws terrain
+			if(renderUpperX > terrain.locationX) {
+				if (renderLowerX < terrain.locationX) {
+					if (renderUpperY > terrain.locationY) {
+						if (renderLowerY < terrain.locationY) {
+							batch.draw(terrain.getTexture(), terrain.locationX, terrain.locationY);
+						}
+					}
 				}
 			}
 		}
-		for (Item item : Map.getItems()){
-			if(!item.inInventory){
-				batch.draw(item.getTexture(), item.locationX, item.locationY);
-			}
-		}
+
+		//render other players
 		if(!tonpose.Name.equals("offline")) {
 			for (User value : tonpose.users.values()) {
 				batch.draw(playerImage, value.x, value.y);
 			}
 		}
 
+		//renders user's player
+		batch.draw(player.texture, player.getX(), player.getY());
+
+		//renders other entities
+		for (Entity entity : Map.getEntities()) { //draws Entities
+			if(renderUpperX > entity.locationX) {
+				if (renderLowerX  - 40 < entity.locationX) {
+					if (renderUpperY > entity.locationY) {
+						if (renderLowerY - 100 < entity.locationY) {
+							batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+						}
+					}
+				}
+			}
+		}
+
+		//renders items dropped on the map
+		for (Item item : Map.getItems()){
+			if(!item.inInventory){
+				if(renderUpperX > item.locationX) {
+					if (renderLowerX < item.locationX) {
+						if (renderUpperY > item.locationY) {
+							if (renderLowerY < item.locationY) {
+								batch.draw(item.getTexture(), item.locationX, item.locationY);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//renders hp bar
+		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 
 		// make player move on touch

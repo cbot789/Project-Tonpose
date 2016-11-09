@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
  */
 
 public class RiverVertical extends Terrain {
-    public RiverVertical(int locationX, int locationY, int height, int width, boolean down) {
-        super(locationX, locationY, 100, height, width, 0, 0, (float) 0.9);
+    public RiverVertical(int locationX, int locationY, boolean down) {
+        super(locationX, locationY, 102, 0, 0, (float) 0.9);
         int flow = 10;
         if(down) {
             flow = -10;
         }
         modY = flow;
-        texture=new Texture(Gdx.files.internal("cabbage.png"));
+        texture=new Texture(Gdx.files.internal("water.png"));
     }
 }

@@ -21,9 +21,10 @@ public class Map {
     private ArrayList<Item> itemsDelete;
     private ArrayList<Entity> entitiesAdd;
     private ArrayList<Item> itemsAdd;
+    private ArrayList<Terrain> terrains;
     private int mobCount;
 
-    public Map(int height, int width, int terrain, int difficulty){
+    public Map(int height, int width, int maxEntities, int difficulty){
         this.height=height;
         this.width=width;
         entities=new ArrayList<Entity>();
@@ -32,14 +33,16 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
+        terrains = new ArrayList<Terrain>();
 
-        for(int i=0; i<terrain; i++){
-            entities.add(generateTerrain());
+        for(int i=0; i<maxEntities; i++){
+            entities.add(generateEntities());
         }
+        generateTerrain();
         mobCount = 0;
     }
 
-    private Entity generateTerrain(){
+    private Entity generateEntities(){
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
         int id=MathUtils.random(0,3);
@@ -47,7 +50,7 @@ public class Map {
         if(id==0){
             Cabbage cabbage = new Cabbage(x,y);
             if(cabbage.body.overlaps(playerRectangle)){
-                return generateTerrain(); //try again for a valid position
+                return generateEntities(); //try again for a valid position
             }
             /*for(Entity enitity:entities){ //check for overlap
                 if(cabbage.body.overlaps(enitity.getRectangle())){
@@ -65,7 +68,7 @@ public class Map {
         else {
             Tree tree=new Tree(x,y);
             if(tree.body.overlaps(playerRectangle)){
-                return generateTerrain();
+                return generateEntities();
             }
             /*for(Entity enitity:entities){ //check for overlap
                 if(tree.body.overlaps(enitity.getRectangle())){
@@ -74,6 +77,18 @@ public class Map {
             }*/
             return tree;                                                             //TODO make an id list for all entities, tree is currently 1
         }
+    }
+
+    private void generateTerrain(){
+        for(int i=0; i < width; i += 20){
+            for(int j = 0; j < height; j += 20){
+                terrains.add(new grass(i,j));
+            }
+        }
+    }
+
+    public ArrayList<Terrain> getTerrains(){
+        return terrains;
     }
 
     public ArrayList<Entity> getEntities() {

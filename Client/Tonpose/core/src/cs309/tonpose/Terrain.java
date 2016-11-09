@@ -7,14 +7,14 @@ import com.badlogic.gdx.math.Rectangle;
  */
 
 public class Terrain extends Entity {
-//TODO no purpose? Delete?
+//TODO change to not extend entity?
 
     protected int modX;
     protected int modY;
     protected float scale;
 
-    public Terrain(int locationX, int locationY, int id, int height, int width, int modX, int modY, float scale){
-        super(locationX, locationY, id, -1, height, width, -1, 0, false, false);
+    public Terrain(int locationX, int locationY, int id, int modX, int modY, float scale){
+        super(locationX, locationY, id, -1, 20, 20, -1, 0, false, false);
         this.modX = modX;
         this.modY = modY;
         this.scale = scale;
