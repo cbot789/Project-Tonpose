@@ -65,6 +65,7 @@ public class TonposeScreen implements Screen {
 	private TextButton.TextButtonStyle textButtonStyle;
 	public static float playerHealthX=1;
 	public static float playerHealthY=416;
+	Terrain terrainMap[][] = Map.getTerrains();
 
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
@@ -104,7 +105,7 @@ public class TonposeScreen implements Screen {
 
 
 
-		//add terrain to map
+		//add terrain to map	//TODO figure out what this is and rename it or delete it
 		terrain = new Array<Rectangle>(); //the array for terrain
 		for (Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
@@ -124,17 +125,22 @@ public class TonposeScreen implements Screen {
 		float renderUpperX = camera.position.x + renderBufferX;
 		float renderLowerX = camera.position.x - renderBufferX;
 		float renderUpperY = camera.position.y + renderBufferY;
-		float renderLowerY = camera.position.y - renderBufferY ;
+		float renderLowerY = camera.position.y - renderBufferY;
 
-		for (Terrain terrain : Map.getTerrains()) { //draws terrain
-			if(renderUpperX > terrain.locationX) {
-				if (renderLowerX < terrain.locationX) {
-					if (renderUpperY > terrain.locationY) {
-						if (renderLowerY < terrain.locationY) {
-							batch.draw(terrain.getTexture(), terrain.locationX, terrain.locationY);
-						}
-					}
-				}
+		if(renderUpperY > Map.getHeight()){
+			renderUpperY = Map.getHeight();
+		}else if(renderLowerY < 0){
+			renderLowerY = 0;
+		}
+		if(renderUpperX > Map.getWidth()){
+			renderUpperX = Map.getWidth();
+		}else if(renderLowerX < 0){
+			renderLowerX = 0;
+		}
+
+		for(int i = (int)(renderLowerX / 20); i < renderUpperX / 20; i++){
+			for(int j = (int)(renderLowerY / 20); j < renderUpperY /20; j++){
+				batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
 			}
 		}
 

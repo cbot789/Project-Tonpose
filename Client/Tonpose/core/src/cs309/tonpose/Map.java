@@ -21,7 +21,7 @@ public class Map {
     private ArrayList<Item> itemsDelete;
     private ArrayList<Entity> entitiesAdd;
     private ArrayList<Item> itemsAdd;
-    private ArrayList<Terrain> terrains;
+    private Terrain terrains[][];
     private int mobCount;
 
     public Map(int height, int width, int maxEntities, int difficulty){
@@ -33,7 +33,7 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
-        terrains = new ArrayList<Terrain>();
+        terrains = new Terrain[height/20][width/20];
 
         for(int i=0; i<maxEntities; i++){
             entities.add(generateEntities());
@@ -80,14 +80,21 @@ public class Map {
     }
 
     private void generateTerrain(){
-        for(int i=0; i < width; i += 20){
-            for(int j = 0; j < height; j += 20){
-                terrains.add(new grass(i,j));
+        for(int i=0; i < width/20; i ++){
+            for(int j = 0; j < height/20; j ++){
+                int id=MathUtils.random(0,10);
+                switch(id){
+                    case 1:
+                        terrains[i][j] = new RiverHorizontal(i* 20, j* 20, true);
+                        break;
+                    default:
+                        terrains[i][j] = new grass(i * 20, j* 20);
+                }
             }
         }
     }
 
-    public ArrayList<Terrain> getTerrains(){
+    public Terrain[][] getTerrains(){
         return terrains;
     }
 
