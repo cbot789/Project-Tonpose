@@ -81,6 +81,10 @@ public class Player extends Living{
         }
     }
 
+    public int getScore(){
+        return score;
+    }
+
     @Override
     public void move(float targetX, float targetY, int modX, int modY, float scale) {
         float x = targetX - locationX;
