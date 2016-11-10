@@ -88,19 +88,18 @@ public class Player extends Living{
     @Override
     public void move(float targetX, float targetY, int modX, int modY, float scale) {
         float moveScale = moveSpeed * scale;
-        if(targetX == locationX){
-            if(targetY == locationY) {
-                moveScale = scale;
-            }
-        }
         float x = targetX - locationX;
         float y = targetY - locationY;
         float sum = abs(x) + abs(y);
         boolean collidedX=false;
         boolean collidedY=false;
-        if (sum > 3) { //stops if within 3 units of clicked location to prevent never stopping
+        if (sum > 3 || sum == 0) { //stops if within 3 units of clicked location to prevent never stopping
             float xMove = (moveScale * (x / sum)) + modX;
             float yMove = (moveScale * (y / sum)) + modY;
+            if(sum == 0){
+                xMove = modX;
+                yMove = modY;
+            }
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
             for(Item item : TonposeScreen.Map.getItems()){
