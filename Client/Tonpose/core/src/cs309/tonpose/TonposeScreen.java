@@ -67,6 +67,8 @@ public class TonposeScreen implements Screen {
 	public static float playerHealthY=416;
 	Terrain terrainMap[][];
 
+	public String Score="Score-";
+
 	public TonposeScreen(Tonpose t) {
 		this.tonpose = t;
 
@@ -182,6 +184,7 @@ public class TonposeScreen implements Screen {
 			}
 		}
 
+		font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
 		//renders hp bar
 		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
