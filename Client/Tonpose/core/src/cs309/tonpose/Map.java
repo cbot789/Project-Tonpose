@@ -33,7 +33,7 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
-        terrains = new Terrain[height/20][width/20];
+        terrains = new Terrain[height/20+1][width/20+1];
 
         for(int i=0; i<maxEntities; i++){
             entities.add(generateEntities());
@@ -80,16 +80,25 @@ public class Map {
     }
 
     private void generateTerrain(){
-        for(int i=0; i < width/20; i ++){
-            for(int j = 0; j < height/20; j ++){
+        for(int i=0; i < width/20 +1; i ++){
+            for(int j = 0; j < height/20 +1; j ++){
                 int id=MathUtils.random(0,10);
                 switch(id){
-                    case 1:
-                        terrains[i][j] = new RiverHorizontal(i* 20, j* 20, true);
-                        break;
                     default:
                         terrains[i][j] = new grass(i * 20, j* 20);
                 }
+            }
+        }
+        int x=MathUtils.random(width/20 - 20);
+        int y= MathUtils.random(height/20 - 4);
+        createRiverHorizontal(x, y, 4, 20, true);
+
+    }
+
+    private void createRiverHorizontal(int x, int y, int width, int length, boolean left){
+        for(int i = x; i < x + length; i++){
+            for(int j = y; j < y + width; j++){
+                terrains[i][j] = new RiverHorizontal(i * 20, j * 20, left);
             }
         }
     }

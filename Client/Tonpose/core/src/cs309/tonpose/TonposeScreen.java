@@ -128,12 +128,12 @@ public class TonposeScreen implements Screen {
 		float renderLowerY = camera.position.y - renderBufferY;
 
 		if(renderUpperY > Map.getHeight()){
-			renderUpperY = Map.getHeight();
+			renderUpperY = Map.getHeight() + 20;
 		}else if(renderLowerY < 0){
 			renderLowerY = 0;
 		}
 		if(renderUpperX > Map.getWidth()){
-			renderUpperX = Map.getWidth();
+			renderUpperX = Map.getWidth() + 20;
 		}else if(renderLowerX < 0){
 			renderLowerX = 0;
 		}
@@ -210,7 +210,6 @@ public class TonposeScreen implements Screen {
 	private void tick() {
 
 		if (TimeUtils.nanoTime() > lastMove + MOVEDELAY)
-
 			movePlayer();
 
 		if (TimeUtils.nanoTime() > lastNpc + NPCDELAY)
@@ -238,8 +237,6 @@ public class TonposeScreen implements Screen {
 
 		lastMove = TimeUtils.nanoTime();
 	}
-
-
 
 	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
