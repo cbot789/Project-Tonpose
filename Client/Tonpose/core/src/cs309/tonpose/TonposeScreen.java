@@ -3,20 +3,17 @@ package cs309.tonpose;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,13 +22,18 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.map.Item;
+import cs309.tonpose.map.Map;
+import cs309.tonpose.map.Mob;
+import cs309.tonpose.map.Player;
+import cs309.tonpose.map.Terrain;
 
 import static java.lang.Math.abs;
 
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	public static Map Map;
+	public static cs309.tonpose.map.Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage;
 	public static Texture	healthImage;
@@ -44,7 +46,7 @@ public class TonposeScreen implements Screen {
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	public static Player player;
+	public static cs309.tonpose.map.Player player;
 
 	private Array<Rectangle> terrain;
 
@@ -109,7 +111,7 @@ public class TonposeScreen implements Screen {
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
 		terrain = new Array<Rectangle>(); //the array for terrain
-		for (Entity entity : Map.getEntities()) {
+		for (cs309.tonpose.map.Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
 	}
@@ -157,7 +159,7 @@ public class TonposeScreen implements Screen {
 		batch.draw(player.texture, player.getX(), player.getY());
 
 		//renders other entities
-		for (Entity entity : Map.getEntities()) { //draws Entities
+		for (cs309.tonpose.map.Entity entity : Map.getEntities()) { //draws Entities
 			if(renderUpperX > entity.locationX) {
 				if (renderLowerX  - 40 < entity.locationX) {
 					if (renderUpperY > entity.locationY) {
@@ -242,8 +244,8 @@ public class TonposeScreen implements Screen {
 	}
 
 	private void moveEnemy() {
-		for (Entity entity : Map.getEntities()) {
-			if(entity instanceof Mob){
+		for (cs309.tonpose.map.Entity entity : Map.getEntities()) {
+			if(entity instanceof cs309.tonpose.map.Mob){
 				/*
 				float x = player.getX() - entity.locationX;
 				float y = player.getY() - entity.locationY;

@@ -1,4 +1,4 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.math.Rectangle;
 

@@ -1,10 +1,11 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf; //caused compile error, package doesnt exist
+
+import cs309.tonpose.*;
 
 import static java.lang.Math.abs;
 

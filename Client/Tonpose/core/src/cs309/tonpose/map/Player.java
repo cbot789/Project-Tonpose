@@ -1,4 +1,4 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -8,21 +8,23 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
+import cs309.tonpose.*;
+
 import static java.lang.Math.abs;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
-public class Player extends Living{
-    protected int score;
-    protected int xp;
-    protected int lvl;
-    protected boolean logged;
-    protected int userId;
-    protected String  userName;
-    protected Item equiped;
-    protected Item base;
-    protected Item mod;
+public class Player extends Living {
+    public int score;
+    public int xp;
+    public int lvl;
+    public boolean logged;
+    public int userId;
+    public String  userName;
+    public Item equiped;
+    public Item base;
+    public Item mod;
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){

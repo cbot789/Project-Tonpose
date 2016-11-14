@@ -1,8 +1,10 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+
+import cs309.tonpose.*;
 
 /**
  * Created by Caleb on 11/2/2016.

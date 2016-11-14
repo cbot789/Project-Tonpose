@@ -1,38 +1,39 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
-import java.util.List;
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.utils.TimeUtils;
+
+import cs309.tonpose.TonposeScreen;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
 public class Entity {
-    protected float locationX;
-    protected float locationY;
-    protected int id;                                                                               //TODO determine if id is needed for all entities, or just for items
-    protected int currentHp;
-    protected int maxHp;
-    protected boolean killable;
-    protected boolean collision;
-    protected int width,height;
+    public float locationX;
+    public float locationY;
+    public int id;                                                                               //TODO determine if id is needed for all entities, or just for items
+    public int currentHp;
+    public int maxHp;
+    public boolean killable;
+    public boolean collision;
+    public int width,height;
 
-    protected Rectangle body;
-    protected Texture texture;
+    public Rectangle body;
+    public Texture texture;
 
-    protected int mass;
-    protected int forceX;
-    protected int forceY;
-    protected long lastHit = 0;
+    public int mass;
+    public int forceX;
+    public int forceY;
+    public long lastHit = 0;
 
-    protected int invSize;
-    protected ArrayList<Item> inventory;
-    protected Music sfx;
+    public int invSize;
+    public ArrayList<Item> inventory;
+    public Music sfx;
 
     public Entity(){
 
