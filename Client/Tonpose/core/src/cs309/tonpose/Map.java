@@ -42,6 +42,10 @@ public class Map {
         mobCount = 0;
     }
 
+    public void spawn(){
+        entities.add(generateEntities());
+    }
+
     private Entity generateEntities(){
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);

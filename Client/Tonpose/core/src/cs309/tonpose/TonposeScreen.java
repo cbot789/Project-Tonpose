@@ -50,12 +50,14 @@ public class TonposeScreen implements Screen {
 
 	private long lastNpc = 0;
 	private long lastTick = 0;
-	private long lastMove;
-	private long lastUpdate;
-	private final int TICKDELAY =    1000000;
-	private final int NPCDELAY =    30000000;
-	private final int MOVEDELAY =   10000000;
-	private final int UPDATEDELAY = 20000000;
+	private long lastMove = 0;
+	private long lastUpdate = 0;
+	private long lastSpawn = 0;
+	private final int TICKDELAY =     1000000;
+	private final int NPCDELAY =     30000000;
+	private final int MOVEDELAY =    10000000;
+	private final int UPDATEDELAY =  20000000;
+	private final long SPAWNDELAY =  8000000000L;
 
 	//private Stage stage;
 	private TextButton inv;
@@ -201,7 +203,7 @@ public class TonposeScreen implements Screen {
 			tonpose.lastY = player.getY();
 		}
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
-			tick();
+			tick(TimeUtils.nanoTime());
 		}
 
 
@@ -210,23 +212,29 @@ public class TonposeScreen implements Screen {
 		stage.draw();
 	}
 
-	private void tick() {
+	private void tick(long time) {
 
-		if (TimeUtils.nanoTime() > lastMove + MOVEDELAY)
+		if (time > lastMove + MOVEDELAY)
 			movePlayer();
 
-		if (TimeUtils.nanoTime() > lastNpc + NPCDELAY)
+		if (time > lastNpc + NPCDELAY)
 			moveEnemy();
 
-		if (TimeUtils.nanoTime() > lastUpdate + UPDATEDELAY)
+		if (time > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
-		if(player.currentHp < 0&&player.killable)
+		if (time > lastSpawn + SPAWNDELAY){
+			Map.spawn();
+			lastSpawn = time;
+		}
+
+
+		if(player.currentHp < 0 && player.killable)
 			tonpose.setScreen(tonpose.deathScreen);
 
 		Map.updateMap();
 
-		lastTick = TimeUtils.nanoTime();
+		lastTick = time;
 	}
 
 
