@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -118,7 +117,7 @@ public class InventoryScreen implements Screen {
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
         table.clear();
-        for (final Item item : player.getInventory()) {
+        for (final cs309.tonpose.map.Item item : player.getInventory()) {
             inv = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
             inv.getLabel().setFontScale(5,5);
             inv.addListener(new ClickListener()

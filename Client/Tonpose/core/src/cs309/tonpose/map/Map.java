@@ -1,13 +1,11 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-import org.w3c.dom.css.Rect;
-
 import java.util.ArrayList;
+
+import cs309.tonpose.*;
 
 /**
  * Created by Caleb on 10/24/2016.

@@ -1,4 +1,4 @@
-package cs309.tonpose;
+package cs309.tonpose.map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -7,16 +7,16 @@ import com.badlogic.gdx.math.Rectangle;
  * Created by Quade Spellman on 9/27/2016.
  */
 public class Item {
-    protected String name;
-    protected int itemID;
-    protected int count;
-    protected float locationX;
-    protected float locationY;
-    protected boolean hasAction;
-    protected boolean inInventory;
-    protected Rectangle body;
-    protected Texture texture;
-    protected boolean craftingBase;
+    public String name;
+    public int itemID;
+    public int count;
+    public float locationX;
+    public float locationY;
+    public boolean hasAction;
+    public boolean inInventory;
+    public Rectangle body;
+    public Texture texture;
+    public boolean craftingBase;
 
     public Item(int number, float x, float y, int id, boolean map){
         count = number;
