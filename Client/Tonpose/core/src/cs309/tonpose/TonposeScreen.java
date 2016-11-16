@@ -192,15 +192,21 @@ public class TonposeScreen implements Screen {
 		//renders hp bar
 		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
-
 		// make player move on touch
-		if (Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
-			camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-			tonpose.lastX = touchPos.x;
-			tonpose.lastY = touchPos.y;
-		}else{
+		int i=0;
+		boolean moving=false;
+		//TODO prevent movement when touching action button
+		for(i=0; i<20; i++){ //iterates through all possible touch events (Maximum of 20), and uses the first one found
+			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
+				Vector3 touchPos = new Vector3();
+				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0); //obtains coordinates of touch event i
+				camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
+				tonpose.lastX = touchPos.x;
+				tonpose.lastY = touchPos.y;
+				moving=true;
+			}
+		}
+		if(!moving){
 			tonpose.lastX = player.getX();
 			tonpose.lastY = player.getY();
 		}
