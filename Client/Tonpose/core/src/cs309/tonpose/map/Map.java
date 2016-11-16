@@ -41,16 +41,23 @@ public class Map {
 
     }
 
-    public Map(Terrain[][] terrain, ArrayList<Entity> entities){
-        this.height = terrain.length;
-        this.width = terrain[0].length;
-        this.entities = entities;
+    public Map(int height, int width, int[] terrain, int[][] entities){
+        this.height = height;
+        this.width = width;
+        this.entities=new ArrayList<Entity>();
         items = new ArrayList<Item>();
         entitiesAdd=new ArrayList<Entity>();
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
-        this.terrains = terrain;
+        this.terrains = new Terrain[height/20+1][width/20+1];
+        mobCount = 0;
+
+        for(int i=0; i < entities.length; i++){
+            this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2]));
+        }
+        generateTerrain(height, width, terrain);
+
     }
 
     public void spawn(){
@@ -94,6 +101,20 @@ public class Map {
         }
     }
 
+    private Entity generateEntities(int id, int x, int y){
+        switch(id){
+            case 0:
+                return new Cabbage(x,y);
+            case 2:
+                mobCount++;
+                return new Mob(x,y, mobCount);
+            case 9:
+                return new Tree(x, y);
+            default:
+                return new Tree(x,y);
+        }
+    }
+
     private void generateTerrain(){
         for(int i=0; i < width/20 +1; i ++){
             for(int j = 0; j < height/20 +1; j ++){
@@ -107,6 +128,32 @@ public class Map {
         int x=MathUtils.random(width/20 - 20);
         int y= MathUtils.random(height/20 - 4);
         createRiverHorizontal(x, y, 4, 20, true);
+
+    }
+
+    private void generateTerrain(int height, int width, int[] terrain){
+        int i = 0;
+        for(int x = 0; x < width + 1; x++){
+            for(int y = 0; y < height + 1; y++){
+                switch(terrain[i]){
+                    case 1:
+                        this.terrains[x][y] = new RiverHorizontal(x * 20, y * 20, true);
+                        break;
+                    case 2:
+                        this.terrains[x][y] = new RiverVertical(x*20, y*20, true);
+                        break;
+                    case 3:
+                        this.terrains[x][y] = new RiverHorizontal(x * 20, y * 20, false);
+                        break;
+                    case 4:
+                        this.terrains[x][y] = new RiverVertical(x*20, y*20, false);
+                        break;
+                    default:
+                        this.terrains[x][y] = new grass(x * 20 ,y * 20);
+                }
+                i++;
+            }
+        }
 
     }
 
