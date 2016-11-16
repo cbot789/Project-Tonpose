@@ -1,0 +1,16 @@
+item
+	10 - tree seeds
+	11 - cabbage seeds
+	12 - cabbage leaves
+	13 - log
+	14 - plank
+
+entity
+	 0 - cabbage
+	 2 - mob
+	 9 - tree
+	
+Terrain
+	100 - Grass
+	101 - River Horizontal
+	102 - River Vertical

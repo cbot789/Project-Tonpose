@@ -32,12 +32,25 @@ public class Map {
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
         terrains = new Terrain[height/20+1][width/20+1];
+        mobCount = 0;
 
         for(int i=0; i<maxEntities; i++){
             entities.add(generateEntities());
         }
         generateTerrain();
-        mobCount = 0;
+
+    }
+
+    public Map(Terrain[][] terrain, ArrayList<Entity> entities){
+        this.height = terrain.length;
+        this.width = terrain[0].length;
+        this.entities = entities;
+        items = new ArrayList<Item>();
+        entitiesAdd=new ArrayList<Entity>();
+        itemsAdd = new ArrayList<Item>();
+        entitiesDelete=new ArrayList<Entity>();
+        itemsDelete = new ArrayList<Item>();
+        this.terrains = terrain;
     }
 
     public void spawn(){
