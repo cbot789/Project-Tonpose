@@ -196,7 +196,7 @@ public class TonposeScreen implements Screen {
 		int i=0;
 		boolean moving=false;
 		//TODO prevent movement when touching action button
-		for(i=0; i<20; i++){ //iterates through all possible touch events (Maximum of 20), and uses the first one found
+		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
 			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
 				Vector3 touchPos = new Vector3();
 				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0); //obtains coordinates of touch event i
