@@ -133,8 +133,8 @@ public class Map {
 
     private void generateTerrain(int height, int width, int[] terrain){
         int i = 0;
-        for(int x = 0; x < width + 1; x++){
-            for(int y = 0; y < height + 1; y++){
+        for(int x = 0; x < width/20 + 1; x++){
+            for(int y = 0; y < height/20 + 1; y++){
                 switch(terrain[i]){
                     case 1:
                         this.terrains[x][y] = new RiverHorizontal(x * 20, y * 20, true);

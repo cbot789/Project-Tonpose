@@ -19,6 +19,8 @@ public class Network {
 		kryo.register(UpdateUser.class);
 		kryo.register(RemoveUser.class);
 		kryo.register(MovePlayer.class);
+		kryo.register(int[][].class);
+		kryo.register(int[].class);
 		kryo.register(SyncMap.class);
 		kryo.register(User.class);
 	}

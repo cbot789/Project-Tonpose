@@ -17,12 +17,16 @@ public class ServerMap {
         this.width=width;
         this.entityCount = entityCount;
         UIDcount = 0;
+        terrains = new int[height/20+1][width/20+1];
+        terrain = new int[(height/20+1)*(width/20+1)];
+        entities = new ArrayList<ServerEntity>();
+        items = new ArrayList<ServerItem>();
         
         generateTerrain();
         // Fills the terrain 1d array (to send through network) with the 2d array
-        for(int i = 0; i < height; i++){
-            for(int j = 0; j < width; j++){
-            	terrain[i * j] = terrains[i][j];
+        for(int i = 0; i < height/20 + 1; i++){
+            for(int j = 0; j < width/20 + 1; j++){
+            	terrain[i*j] = terrains[i][j];
             }
         }
         // Adds maxEntities
@@ -33,8 +37,8 @@ public class ServerMap {
 
     // Fills the terrain 2d array with grass, adds a single horizontal river
     private void generateTerrain(){
-        for(int i = 0; i < width/20 +1; i++){
-            for(int j = 0; j < height/20 +1; j++){
+        for(int i = 0; i < height/20 +1; i++){
+            for(int j = 0; j < width/20 +1; j++){
             	terrains[i][j] = 0;
             }
         }
@@ -87,7 +91,7 @@ public class ServerMap {
         return e;
     }
 
-    public int[][] EntityArray(){
+    public int[][] getEntityArray(){
     	// Fills 2d array (to be sent over network) with entity arraylist
     	int [][] arr = new int[entityCount][3];
     	for(int i = 0; i < entityCount; i++){

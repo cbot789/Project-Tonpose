@@ -201,8 +201,11 @@ public class tonpose_server {
 					//set the connection state user to the new user object
 					connection.user = user;
 					
+					// Send the map to the client
 					SyncMap sync = new SyncMap();
-					
+					sync.terrain = map.getTerrain();
+					sync.entities = map.getEntityArray();
+					connection.sendTCP(sync);
 					
 					//send all current users to the new user
 					for (User other : users) {

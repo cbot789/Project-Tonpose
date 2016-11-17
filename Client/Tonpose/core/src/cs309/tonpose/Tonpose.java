@@ -24,6 +24,9 @@ public class Tonpose extends Game{
     protected float lastX = 400;
     protected float lastY = 240;
     protected HashMap<Integer, User> users = new HashMap();
+    private boolean ready = false;
+    public int[] terrainArray;
+    public int[][] entitiesArray;
 
 
     public Tonpose(AndroidMethods androidMethod, String name) {
@@ -35,9 +38,10 @@ public class Tonpose extends Game{
     public void create(){
         if(!Name.equals("offline")){
             connectToServer();
+            while(!ready){}
         }
         deathScreen = new DeathScreen(this);
-        tonposeScreen = new TonposeScreen(this);
+        tonposeScreen = new TonposeScreen(this, terrainArray, entitiesArray);
         playersScreen = new PlayersScreen(this);
         inventoryScreen = new InventoryScreen(this);
         setScreen(tonposeScreen);
@@ -55,7 +59,7 @@ public class Tonpose extends Game{
     }
 
     public void connectToServer() {
-        client = new Client();
+        client = new Client(16384, 4096);
         client.start();
 
         Network.register(client);
@@ -71,6 +75,12 @@ public class Tonpose extends Game{
             }
 
             public void received(Connection connection, Object object) {
+                if (object instanceof Network.SyncMap) {
+                    Network.SyncMap sync = (Network.SyncMap) object;
+                    terrainArray = sync.terrain;
+                    entitiesArray = sync.entities;
+                    ready = true;
+                }
                 if (object instanceof Network.AddUser) {
                     Network.AddUser add = (Network.AddUser) object;
                     if (add.user.name.equals(Name)) {

@@ -386,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private Client client;
-        private String ip = "10.25.70.122";
+        private String ip = "10.25.70.122";//10.25.70.122
         private int port = Network.port;
 
         UserLoginTask(Client client) {
