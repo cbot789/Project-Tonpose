@@ -56,7 +56,7 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private final int TICKDELAY =     1000000;
-	private final int NPCDELAY =     30000000;
+	private final int NPCDELAY =     60000000;
 	private final int MOVEDELAY =    10000000;
 	private final int UPDATEDELAY =  20000000;
 	private final long SPAWNDELAY =  8000000000L;

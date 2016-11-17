@@ -19,6 +19,7 @@ public class Network {
 		kryo.register(UpdateUser.class);
 		kryo.register(RemoveUser.class);
 		kryo.register(MovePlayer.class);
+		kryo.register(SyncMap.class);
 		kryo.register(User.class);
 	}
 	
@@ -66,5 +67,28 @@ public class Network {
 	// For client to tell the server its player moved
 	static public class MovePlayer {
 		public float x, y;
+	}
+	
+	// For syncing the locations of everything in the map when client connects
+	static public class SyncMap {
+		public int[] terrain;
+		public int[][] entities;
+	}
+	
+	// For moving any element on the map
+	static public class MoveElement {
+		public int id;
+		public float x, y;
+	}
+	
+	// For adding elements to map
+	static public class AddElement {
+		public int id;
+		public float x, y;
+	}
+
+	// For removing elements from map
+	static public class RemoveElement {
+		public int id;
 	}
 }

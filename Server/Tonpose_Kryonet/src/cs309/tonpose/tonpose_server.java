@@ -17,6 +17,7 @@ import cs309.tonpose.Network.AddUser;
 import cs309.tonpose.Network.UpdateUser;
 import cs309.tonpose.Network.RemoveUser;
 import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.Network.SyncMap;
 
 
 public class tonpose_server {
@@ -24,6 +25,7 @@ public class tonpose_server {
 	Server server;
 	java.sql.Connection db_connection;
 	HashSet<User> users = new HashSet();
+	ServerMap map;
 
 	public tonpose_server () throws IOException {
 		server = new Server() {
@@ -34,6 +36,9 @@ public class tonpose_server {
 
 		//Registers the server and all packet classes
 		Network.register(server);
+		
+		// Initialize the game map
+		map = new ServerMap(1000, 1000, 20);
 
 		server.addListener(new Listener() {
 			public void received (Connection c, Object object) {
@@ -195,6 +200,9 @@ public class tonpose_server {
 					
 					//set the connection state user to the new user object
 					connection.user = user;
+					
+					SyncMap sync = new SyncMap();
+					
 					
 					//send all current users to the new user
 					for (User other : users) {
