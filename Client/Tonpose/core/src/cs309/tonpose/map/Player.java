@@ -136,6 +136,7 @@ public class Player extends Living {
                 body.setX(locationX);
                 TonposeScreen.camera.translate(xMove, 0);
                 TonposeScreen.playerHealthX+=xMove;
+                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x+xMove,TonposeScreen.actionButtonDeadZone.y);
             }
             if(!collidedY){
                 if (locationY + yMove < 0) {
@@ -152,6 +153,7 @@ public class Player extends Living {
                 body.setY(locationY);
                 TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
                 TonposeScreen.playerHealthY+=yMove;
+                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x,TonposeScreen.actionButtonDeadZone.y+yMove);
             }
         }
     }
