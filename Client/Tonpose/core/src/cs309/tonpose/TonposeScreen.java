@@ -198,13 +198,12 @@ public class TonposeScreen implements Screen {
 		// make player move on touch
 		int i=0;
 		 moving=false;
-		//TODO prevent movement when touching action button
 		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
 			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
 				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
 				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0);
 				camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)){
+				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
 					tonpose.lastX = player.getX();
 					tonpose.lastY = player.getY();
 				}
