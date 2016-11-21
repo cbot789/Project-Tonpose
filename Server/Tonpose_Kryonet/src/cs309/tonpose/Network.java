@@ -79,18 +79,21 @@ public class Network {
 	
 	// For moving any element on the map
 	static public class MoveElement {
-		public int id;
+		public int tid;
+		public int uid;
 		public float x, y;
 	}
 	
 	// For adding elements to map
 	static public class AddElement {
 		public int id;
+		public int uid;
 		public float x, y;
 	}
 
 	// For removing elements from map
 	static public class RemoveElement {
-		public int id;
+		public int tid;
+		public int uid;
 	}
 }

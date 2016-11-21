@@ -2,6 +2,7 @@ package cs309.tonpose;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -17,6 +18,9 @@ import cs309.tonpose.Network.AddUser;
 import cs309.tonpose.Network.UpdateUser;
 import cs309.tonpose.Network.RemoveUser;
 import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.Network.MoveElement;
+import cs309.tonpose.Network.AddElement;
+import cs309.tonpose.Network.RemoveElement;
 import cs309.tonpose.Network.SyncMap;
 
 
@@ -187,6 +191,8 @@ public class tonpose_server {
 					}
 					return;
 				}
+				// When a client connects, let other clients know, and send the new client
+				// all the map data and currently connected users
 				if (object instanceof ClientConnect) {
 					if (user != null) return;	//ignore if user already exists
 					ClientConnect connect = (ClientConnect)object;
@@ -220,6 +226,7 @@ public class tonpose_server {
 					//send new user to all existing users
 					server.sendToAllTCP(add);
 				}
+				// Let other clients know the user has moved
 				if (object instanceof MovePlayer) {
 					if (user == null) return;	//if user doesn't exist, ignore
 					MovePlayer move = (MovePlayer)object;
@@ -234,6 +241,116 @@ public class tonpose_server {
 					update.x = user.x;
 					update.y = user.y;
 					server.sendToAllTCP(update);
+				}
+				// Move an entity or object on the map
+				if (object instanceof MoveElement) {
+					MoveElement move = (MoveElement)object;
+					switch(move.tid){
+						// Elements is an entity
+						case 0:
+						case 2:
+						case 9:
+							ArrayList<ServerEntity> eList = map.getEntities();
+							for(int i = 0; i < eList.size(); i++){
+								if(move.uid == eList.get(i).uniqueID){
+									eList.get(i).x = move.x;
+									eList.get(i).y = move.y;
+									server.sendToAllTCP(move);
+									break;
+								}
+							}
+						break;
+						// Element is an item
+						case 10:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+							ArrayList<ServerItem> iList = map.getItems();
+							for(int i = 0; i < iList.size(); i++){
+								if(move.uid == iList.get(i).uniqueID){
+									iList.get(i).x = move.x;
+									iList.get(i).y = move.y;
+									server.sendToAllTCP(move);
+									break;
+								}
+							}
+						break;
+						default:
+						break;
+
+					}
+				}
+				// Add an entity or object to the map
+				if (object instanceof AddElement) {
+					MoveElement add = (MoveElement)object;
+					switch(add.tid){
+						// Elements is an entity
+						case 0:
+						case 2:
+						case 9:
+							ServerEntity ent = new ServerEntity();
+							ent.typeID = add.tid;
+							ent.uniqueID = map.UIDcount++;
+							ent.x = add.x;
+							ent.y = add.y;
+							map.add(ent);
+						break;
+						// Element is an item
+						case 10:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+							ServerItem item = new ServerItem();
+							item.typeID = add.tid;
+							item.uniqueID = add.uid;
+							item.x = add.x;
+							item.y = add.y;
+							map.add(item);
+							// Tell all connected clients to update the element
+							server.sendToAllTCP(add);
+						break;
+						default:
+						break;
+					}
+				}
+				// Remove an entity or item from the map
+				if (object instanceof RemoveElement) {
+					RemoveElement remove = (RemoveElement)object;
+					switch(remove.tid){
+						// Elements is an entity
+						case 0:
+						case 2:
+						case 9:
+							ArrayList<ServerEntity> eList = map.getEntities();
+							for(int i = 0; i < eList.size(); i++){
+								if(remove.uid == eList.get(i).uniqueID){
+									map.remove(eList.get(i));
+									server.sendToAllTCP(remove);
+									break;
+								}
+							}
+						break;
+						// Element is an item
+						case 10:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+							ArrayList<ServerItem> iList = map.getItems();
+							for(int i = 0; i < iList.size(); i++){
+								if(remove.uid == iList.get(i).uniqueID){
+									map.remove(iList.get(i));
+									server.sendToAllTCP(remove);
+									break;
+								}
+							}
+						break;
+						default:
+						break;
+
+					}
 				}
 			}
 
