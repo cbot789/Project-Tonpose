@@ -75,12 +75,14 @@ public class Tonpose extends Game{
             }
 
             public void received(Connection connection, Object object) {
+                // Sets up the map for when players connects
                 if (object instanceof Network.SyncMap) {
                     Network.SyncMap sync = (Network.SyncMap) object;
                     terrainArray = sync.terrain;
                     entitiesArray = sync.entities;
                     ready = true;
                 }
+                // To alert client a new user has joined the game
                 if (object instanceof Network.AddUser) {
                     Network.AddUser add = (Network.AddUser) object;
                     if (add.user.name.equals(Name)) {
@@ -91,6 +93,7 @@ public class Tonpose extends Game{
                         users.put(add.user.id, add.user);
                     }
                 }
+                // Updates the location of a certain user
                 if (object instanceof Network.UpdateUser) {
                     Network.UpdateUser update = (Network.UpdateUser) object;
                     if (update.id != ID) {    //do not update our own player
@@ -100,10 +103,26 @@ public class Tonpose extends Game{
                         users.put(update.id, user);
                     }
                 }
+                // Removes a user when they disconnect
                 if (object instanceof Network.RemoveUser) {
                     Network.RemoveUser remove = (Network.RemoveUser) object;
                     //remove the user from the hashmap
                     users.remove(remove.id);
+                }
+                // Updates the location of a specific element or item on the map
+                if (object instanceof Network.MoveElement) {
+                    Network.MoveElement move = (Network.MoveElement) object;
+                    //TODO: add Move() method to Map class, use here
+                }
+                // Adds an item or element to the map
+                if (object instanceof Network.AddElement) {
+                    Network.AddElement add = (Network.AddElement) object;
+                    //TODO: add Add() method to Map class, use here
+                }
+                // Removes an item or element from the map
+                if (object instanceof Network.RemoveElement) {
+                    Network.RemoveElement remove = (Network.RemoveElement) object;
+                    //TODO: add Remove() method to Map class, use here
                 }
             }
             public void disconnected(Connection connection) {
