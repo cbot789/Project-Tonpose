@@ -43,6 +43,7 @@ public class TonposeScreen implements Screen {
 	private ImageButton playersButton;
 	private float renderBufferX;
 	private float renderBufferY;
+	private boolean moving;
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -64,6 +65,7 @@ public class TonposeScreen implements Screen {
 	//private Stage stage;
 	private TextButton inv;
 	private TextButton actionButton;
+	public static Rectangle actionButtonDeadZone;
 	private BitmapFont font = new BitmapFont();
 	private Table table;
 	private TextButton.TextButtonStyle textButtonStyle;
@@ -116,6 +118,7 @@ public class TonposeScreen implements Screen {
 		for (cs309.tonpose.map.Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
+		actionButtonDeadZone=new Rectangle(725,0,75,40); //sets dead zone for the action button where player will not move if it is touched
 	}
 
 	@Override
@@ -194,22 +197,28 @@ public class TonposeScreen implements Screen {
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 		// make player move on touch
 		int i=0;
-		boolean moving=false;
-		//TODO prevent movement when touching action button
-		for(i=0; i<20; i++){ //iterates through all possible touch events (Maximum of 20), and uses the first one found
+		 moving=false;
+		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
 			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
-				Vector3 touchPos = new Vector3();
-				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0); //obtains coordinates of touch event i
+				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
+				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0);
 				camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-				tonpose.lastX = touchPos.x;
-				tonpose.lastY = touchPos.y;
-				moving=true;
+				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
+					tonpose.lastX = player.getX();
+					tonpose.lastY = player.getY();
+				}
+				else {
+					tonpose.lastX = touchPos.x;
+					tonpose.lastY = touchPos.y;
+					moving = true;
+				}
 			}
 		}
 		if(!moving){
 			tonpose.lastX = player.getX();
 			tonpose.lastY = player.getY();
 		}
+
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick(TimeUtils.nanoTime());
 		}
@@ -223,6 +232,7 @@ public class TonposeScreen implements Screen {
 	private void tick(long time) {
 
 		if (time > lastMove + MOVEDELAY)
+			if(moving)
 			movePlayer();
 
 		if (time > lastNpc + NPCDELAY)
@@ -348,8 +358,8 @@ public class TonposeScreen implements Screen {
 		});
 		tableRight.add(actionButton);
 		stage.addActor(tableRight);
+		//actionButtonDeadZone=new Rectangle(actionButton.getX(),actionButton.getY(),actionButton.getWidth(),actionButton.getHeight());
 	}
-
 	@Override
 	public void hide() {
 	}

@@ -136,6 +136,7 @@ public class Player extends Living {
                 body.setX(locationX);
                 TonposeScreen.camera.translate(xMove, 0);
                 TonposeScreen.playerHealthX+=xMove;
+                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x+xMove,TonposeScreen.actionButtonDeadZone.y); //moves dead zones with the camera
             }
             if(!collidedY){
                 if (locationY + yMove < 0) {
@@ -152,6 +153,7 @@ public class Player extends Living {
                 body.setY(locationY);
                 TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
                 TonposeScreen.playerHealthY+=yMove;
+                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x,TonposeScreen.actionButtonDeadZone.y+yMove); //moves dead zones with the camera
             }
         }
     }
@@ -161,7 +163,7 @@ public class Player extends Living {
     }
 
     @Override
-    public void changeHp(int mod) {
+    public void changeHp(int mod) { //changes image for health based on current players health
         if(userName != "God"){
             if(lastHit + 50000000 < TimeUtils.nanoTime()){
                 super.changeHp(mod);
