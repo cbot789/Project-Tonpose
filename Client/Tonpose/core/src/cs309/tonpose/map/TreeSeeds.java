@@ -24,6 +24,7 @@ public class TreeSeeds extends Item {
             Tree tree = new Tree((int)player.getX()+ 40, (int) player.getY());
             TonposeScreen.Map.addToMap(tree);
             super.action(player,user);
+            user.updateScore(5); //add points for planting tree
         }
     }
 }
