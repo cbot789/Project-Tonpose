@@ -23,6 +23,7 @@ public class CabbageSeeds extends Item {
             Cabbage cabbage = new Cabbage((int)player.getX()+ 40, (int) player.getY());
             TonposeScreen.Map.addToMap(cabbage);
             super.action(player, user);
+            user.updateScore(5); //adds points for planting cabbage
         }
     }
 }
