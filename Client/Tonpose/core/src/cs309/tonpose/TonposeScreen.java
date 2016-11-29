@@ -66,7 +66,7 @@ public class TonposeScreen implements Screen {
 	//private Stage stage;
 	private TextButton inv;
 	private TextButton actionButton;
-	public static Rectangle actionButtonDeadZone;
+	public static Rectangle actionButtonDeadZone, inventoryDeadZone, playersOnlineDeadZone;
 	private BitmapFont font = new BitmapFont();
 	private Table table;
 	private TextButton.TextButtonStyle textButtonStyle;
@@ -120,6 +120,8 @@ public class TonposeScreen implements Screen {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
 		actionButtonDeadZone=new Rectangle(725,0,75,40); //sets dead zone for the action button where player will not move if it is touched
+		playersOnlineDeadZone=new Rectangle(0,0,75,75);
+		inventoryDeadZone=new Rectangle(375,0,50,40);
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class TonposeScreen implements Screen {
 				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
 				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0);
 				camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
+				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)||playersOnlineDeadZone.contains(touchPos.x,touchPos.y)||inventoryDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
 					tonpose.lastX = player.getX();
 					tonpose.lastY = player.getY();
 				}

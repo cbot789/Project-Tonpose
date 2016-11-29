@@ -137,6 +137,8 @@ public class Player extends Living {
                 TonposeScreen.camera.translate(xMove, 0);
                 TonposeScreen.playerHealthX+=xMove;
                 TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x+xMove,TonposeScreen.actionButtonDeadZone.y); //moves dead zones with the camera
+                TonposeScreen.inventoryDeadZone.setPosition(TonposeScreen.inventoryDeadZone.x+xMove,TonposeScreen.inventoryDeadZone.y);
+                TonposeScreen.playersOnlineDeadZone.setPosition(TonposeScreen.playersOnlineDeadZone.x+xMove,TonposeScreen.playersOnlineDeadZone.y);
             }
             if(!collidedY){
                 if (locationY + yMove < 0) {
@@ -154,6 +156,8 @@ public class Player extends Living {
                 TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
                 TonposeScreen.playerHealthY+=yMove;
                 TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x,TonposeScreen.actionButtonDeadZone.y+yMove); //moves dead zones with the camera
+                TonposeScreen.inventoryDeadZone.setPosition(TonposeScreen.inventoryDeadZone.x,TonposeScreen.inventoryDeadZone.y+yMove);
+                TonposeScreen.playersOnlineDeadZone.setPosition(TonposeScreen.playersOnlineDeadZone.x,TonposeScreen.playersOnlineDeadZone.y+yMove);
             }
         }
     }
