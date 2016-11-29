@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.map.Entity;
 import cs309.tonpose.map.Item;
 import cs309.tonpose.map.Map;
 import cs309.tonpose.map.Mob;
@@ -33,7 +34,7 @@ import static java.lang.Math.abs;
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	public static cs309.tonpose.map.Map Map;
+	public static Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage;
 	public static Texture	healthImage;
@@ -47,7 +48,7 @@ public class TonposeScreen implements Screen {
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	public static cs309.tonpose.map.Player player;
+	public static Player player;
 
 	private Array<Rectangle> terrain;
 
@@ -73,7 +74,7 @@ public class TonposeScreen implements Screen {
 	public static float playerHealthY=416;
 	Terrain terrainMap[][];
 
-	public String Score="Score-";
+	public String Score="Score: ";
 
 	public TonposeScreen(Tonpose t, int[] terrainArray, int[][] entitiesArray){
 		this.tonpose = t;
@@ -115,7 +116,7 @@ public class TonposeScreen implements Screen {
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
 		terrain = new Array<Rectangle>(); //the array for terrain
-		for (cs309.tonpose.map.Entity entity : Map.getEntities()) {
+		for (Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
 		actionButtonDeadZone=new Rectangle(725,0,75,40); //sets dead zone for the action button where player will not move if it is touched
@@ -164,7 +165,7 @@ public class TonposeScreen implements Screen {
 		batch.draw(player.texture, player.getX(), player.getY());
 
 		//renders other entities
-		for (cs309.tonpose.map.Entity entity : Map.getEntities()) { //draws Entities
+		for (Entity entity : Map.getEntities()) { //draws Entities
 			if(renderUpperX > entity.locationX) {
 				if (renderLowerX  - 40 < entity.locationX) {
 					if (renderUpperY > entity.locationY) {
@@ -241,11 +242,12 @@ public class TonposeScreen implements Screen {
 		if (time > lastUpdate + UPDATEDELAY)
 			updatePlayer();
 
+		/* spawning temporarily disabled
 		if (time > lastSpawn + SPAWNDELAY){
 			Map.spawn();
 			lastSpawn = time;
 		}
-
+		*/
 
 		if(player.currentHp < 0 && player.killable)
 			tonpose.setScreen(tonpose.deathScreen);
@@ -268,8 +270,8 @@ public class TonposeScreen implements Screen {
 	}
 
 	private void moveEnemy() {
-		for (cs309.tonpose.map.Entity entity : Map.getEntities()) {
-			if(entity instanceof cs309.tonpose.map.Mob){
+		for (Entity entity : Map.getEntities()) {
+			if(entity instanceof Mob){
 				/*
 				float x = player.getX() - entity.locationX;
 				float y = player.getY() - entity.locationY;

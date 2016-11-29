@@ -16,7 +16,7 @@ import cs309.tonpose.TonposeScreen;
 public class Entity {
     public float locationX;
     public float locationY;
-    public int id;                                                                               //TODO determine if id is needed for all entities, or just for items
+    public int id;
     public int currentHp;
     public int maxHp;
     public boolean killable;

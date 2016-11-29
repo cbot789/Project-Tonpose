@@ -3,6 +3,7 @@ package cs309.tonpose.map;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.rmi.server.UID;
 import java.util.ArrayList;
 
 import cs309.tonpose.*;
@@ -21,6 +22,7 @@ public class Map {
     private ArrayList<Item> itemsAdd;
     private Terrain terrains[][];
     private int mobCount;
+    private int UIDmax;
 
     public Map(int height, int width, int maxEntities, int difficulty){
         this.height=height;
@@ -42,6 +44,7 @@ public class Map {
     }
 
     public Map(int height, int width, int[] terrain, int[][] entities){
+        UIDmax = 0;
         this.height = height;
         this.width = width;
         this.entities=new ArrayList<Entity>();
@@ -55,6 +58,7 @@ public class Map {
 
         for(int i=0; i < entities.length; i++){
             this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2]));
+            UIDmax++;
         }
         generateTerrain(height, width, terrain);
 
