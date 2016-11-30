@@ -63,6 +63,7 @@ public class Player extends Living {
     }
 
     public void action(){
+        nextAnimation(2);
         if(equiped != null){
             if(equiped.hasAction){
                 equiped.action(body, this);
@@ -173,6 +174,7 @@ public class Player extends Living {
         if(userName != "God"){
             if(lastHit + 50000000 < TimeUtils.nanoTime()){
                 super.changeHp(mod);
+                nextAnimation(3);
             }
         }
         switch (currentHp){
@@ -211,7 +213,7 @@ public class Player extends Living {
 
     }
 
-    public void nextAnimation(int i){
+    public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
         if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
             i = old++;
         }
