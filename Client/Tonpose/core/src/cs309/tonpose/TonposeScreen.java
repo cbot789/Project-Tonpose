@@ -45,6 +45,10 @@ public class TonposeScreen implements Screen {
 	private float renderBufferX;
 	private float renderBufferY;
 	private boolean moving;
+	public enum state {
+		action, moving, standing, hit
+	}
+	private int nextAnimation = 0;
 
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -57,12 +61,14 @@ public class TonposeScreen implements Screen {
 	private long lastMove = 0;
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
-	private final int TICKDELAY =     1000000;
-	private final int NPCDELAY =     60000000;
-	private final int MOVEDELAY =    10000000;
-	private final int UPDATEDELAY =  20000000;
-	private final long SPAWNDELAY =  8000000000L;
-	private final long GROWTHDELAY = 8000000000L; //TODO implement growth of trees and cabbages after planting
+	private long lastAnimation = 0;
+	private final int TICKDELAY =        1000000;
+	private final int NPCDELAY =        60000000;
+	private final int MOVEDELAY =       10000000;
+	private final int UPDATEDELAY =     20000000;
+	private final int ANIMATIONDELAY = 800000000;
+	private final long SPAWNDELAY =   8000000000L;
+	private final long GROWTHDELAY =  8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	//private Stage stage;
 	private TextButton inv;
@@ -135,11 +141,13 @@ public class TonposeScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		//sets area around screen so client only renders what the user will see
 		float renderUpperX = camera.position.x + renderBufferX;
 		float renderLowerX = camera.position.x - renderBufferX;
 		float renderUpperY = camera.position.y + renderBufferY;
 		float renderLowerY = camera.position.y - renderBufferY;
 
+		//dont render anything off the map
 		if(renderUpperY > Map.getHeight()){
 			renderUpperY = Map.getHeight() + 20;
 		}else if(renderLowerY < 0){
@@ -151,6 +159,7 @@ public class TonposeScreen implements Screen {
 			renderLowerX = 0;
 		}
 
+		//render terrain on screen
 		for(int i = (int)(renderLowerX / 20); i < renderUpperX / 20; i++){
 			for(int j = (int)(renderLowerY / 20); j < renderUpperY /20; j++){
 				batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
@@ -165,6 +174,7 @@ public class TonposeScreen implements Screen {
 		}
 
 		//renders user's player
+
 		batch.draw(player.texture, player.getX(), player.getY());
 
 		//renders other entities
@@ -215,6 +225,7 @@ public class TonposeScreen implements Screen {
 					tonpose.lastX = touchPos.x;
 					tonpose.lastY = touchPos.y;
 					moving = true;
+					nextAnimation = 1;
 				}
 			}
 		}
@@ -236,7 +247,7 @@ public class TonposeScreen implements Screen {
 	private void tick(long time) {
 
 		if (time > lastMove + MOVEDELAY)
-			if(moving)
+			//if(moving)
 			movePlayer();
 
 		if (time > lastNpc + NPCDELAY)
@@ -251,6 +262,8 @@ public class TonposeScreen implements Screen {
 			lastSpawn = time;
 		}
 		*/
+		if(time > lastAnimation + ANIMATIONDELAY)
+			player.nextAnimation(nextAnimation);
 
 		if(player.currentHp < 0 && player.killable)
 			tonpose.setScreen(tonpose.deathScreen);
@@ -259,7 +272,6 @@ public class TonposeScreen implements Screen {
 
 		lastTick = time;
 	}
-
 
 	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
 		int x = (int)player.getX()/20;

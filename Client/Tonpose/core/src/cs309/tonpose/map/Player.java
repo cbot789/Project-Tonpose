@@ -25,6 +25,8 @@ public class Player extends Living {
     public Item equiped;
     public Item base;
     public Item mod;
+    public int old;
+    public TonposeScreen.state state;
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){
@@ -207,6 +209,57 @@ public class Player extends Living {
                }
         }
 
+    }
+
+    public void nextAnimation(int i){
+        if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
+            i = old++;
+        }
+        switch (i){
+            case 1:
+                switch (old) {
+                    case 10:
+                        texture = new Texture(Gdx.files.internal("mainbase.png"));
+                        i = 11;
+                        break;
+                    case 11:
+                        texture = new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+                        i = 12;
+                        break;
+                    case 12:
+                        texture = new Texture(Gdx.files.internal("mainbase.png"));
+                        break;
+                    default:
+                        texture = new Texture(Gdx.files.internal("mainWalkingRight1.png"));
+                        i = 10;
+                        break;
+                }
+                break;
+            case 2:
+                texture = new Texture(Gdx.files.internal("mainbase.png"));
+                state = TonposeScreen.state.action;
+                i = 20;
+                break;
+            case 3:
+                texture = new Texture(Gdx.files.internal("mainbase.png"));
+                state = TonposeScreen.state.hit;
+                i = 30;
+                break;
+            case 21:
+                texture = new Texture(Gdx.files.internal("mainAttack1.png"));
+                break;
+            case 22:
+                texture = new Texture(Gdx.files.internal("mainAttack2.png"));
+                state = TonposeScreen.state.standing;
+                break;
+            case 31:
+                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                state = TonposeScreen.state.standing;
+                break;
+            default:
+                texture = new Texture(Gdx.files.internal("mainbase.png"));
+        }
+        old = i;
     }
 
     @Override
