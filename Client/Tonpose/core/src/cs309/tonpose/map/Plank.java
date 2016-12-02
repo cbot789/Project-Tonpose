@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
  */
 
 public class Plank extends Item {
-    public Plank(int number, float x, float y) {
-        super(number, x, y, 14, false);
+    public Plank(int uid, int number, float x, float y) {
+        super(uid, number, x, y, 14, false);
         texture = new Texture(Gdx.files.internal("shlog.png"));
         hasAction = false;
         name = "Planks";

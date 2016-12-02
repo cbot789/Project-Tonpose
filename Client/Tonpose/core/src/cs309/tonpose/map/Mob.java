@@ -17,8 +17,8 @@ public class Mob extends Living {
     protected int flee;
     protected int npcNumber;
 
-    public Mob(int x, int y, int number){
-        super(x, y, 100, 64, 64, 1, 5, 1, 1, 100);
+    public Mob(int uid, float x, float y, int number){
+        super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100);
         texture = new Texture(Gdx.files.internal("player2base.png"));
         flee = 0;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));

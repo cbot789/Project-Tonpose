@@ -62,10 +62,10 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
-	private final int TICKDELAY =        1000000;
-	private final int NPCDELAY =        60000000;
-	private final int MOVEDELAY =       10000000;
-	private final int UPDATEDELAY =     20000000;
+	private final int TICKDELAY =       10000000;
+	private final int NPCDELAY =        50000000;
+	private final int MOVEDELAY =       20000000;
+	private final int UPDATEDELAY =     40000000;
 	private final int ANIMATIONDELAY = 800000000;
 	private final long SPAWNDELAY =   8000000000L;
 	private final long GROWTHDELAY =  8000000000L; //TODO implement growth of trees and cabbages after planting
@@ -105,7 +105,7 @@ public class TonposeScreen implements Screen {
 
 		batch = new SpriteBatch();
 
-		Map = new Map(1000, 1000, terrainArray, entitiesArray);
+		Map = new Map(tonpose, 1000, 1000, terrainArray, entitiesArray);
 		terrainMap = Map.getTerrains();
 
 		//initialize main character
@@ -162,7 +162,7 @@ public class TonposeScreen implements Screen {
 		//render terrain on screen
 		for(int i = (int)(renderLowerX / 20); i < renderUpperX / 20; i++){
 			for(int j = (int)(renderLowerY / 20); j < renderUpperY /20; j++){
-				batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
+				//batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
 			}
 		}
 

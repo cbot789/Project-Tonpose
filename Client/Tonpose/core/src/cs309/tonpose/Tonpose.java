@@ -19,7 +19,7 @@ public class Tonpose extends Game{
     protected PlayersScreen playersScreen;
     protected InventoryScreen inventoryScreen;
     protected DeathScreen deathScreen;
-    protected Client client;
+    public Client client;
     protected int ID;
     protected float lastX = 400;
     protected float lastY = 240;
@@ -117,12 +117,12 @@ public class Tonpose extends Game{
                 // Adds an item or element to the map
                 if (object instanceof Network.AddElement) {
                     Network.AddElement add = (Network.AddElement) object;
-                    //TODO: add Add() method to Map class, use here
+                    tonposeScreen.Map.addToMap(add);
                 }
                 // Removes an item or element from the map
                 if (object instanceof Network.RemoveElement) {
                     Network.RemoveElement remove = (Network.RemoveElement) object;
-                    //TODO: add Remove() method to Map class, use here
+                    tonposeScreen.Map.removeFromMap(remove);
                 }
             }
             public void disconnected(Connection connection) {

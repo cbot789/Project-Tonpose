@@ -22,9 +22,11 @@ public class Map {
     private ArrayList<Item> itemsAdd;
     private Terrain terrains[][];
     private int mobCount;
-    private int UIDmax;
+    public int UIDmax;
+    private Tonpose tonpose;
 
-    public Map(int height, int width, int maxEntities, int difficulty){
+    public Map(Tonpose t, int height, int width, int maxEntities, int difficulty){
+        this.tonpose = t;
         this.height=height;
         this.width=width;
         entities=new ArrayList<Entity>();
@@ -43,7 +45,8 @@ public class Map {
 
     }
 
-    public Map(int height, int width, int[] terrain, int[][] entities){
+    public Map(Tonpose t, int height, int width, int[] terrain, int[][] entities){
+        this.tonpose = t;
         UIDmax = 0;
         this.height = height;
         this.width = width;
@@ -57,7 +60,7 @@ public class Map {
         mobCount = 0;
 
         for(int i=0; i < entities.length; i++){
-            this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2]));
+            this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2], entities[i][3]));
             UIDmax++;
         }
         generateTerrain(height, width, terrain);
@@ -74,7 +77,7 @@ public class Map {
         int id=MathUtils.random(0,3);
         Rectangle playerRectangle= new Rectangle(400,240,45,64);
         if(id==0){
-            Cabbage cabbage = new Cabbage(x,y);
+            Cabbage cabbage = new Cabbage(UIDmax++, x,y);
             if(cabbage.body.overlaps(playerRectangle)){
                 return generateEntities(); //try again for a valid position
             }
@@ -83,16 +86,16 @@ public class Map {
                     return generateTerrain();
                 }
             }*/
-            return new Cabbage(x, y);
+            return new Cabbage(UIDmax++, x, y);
         }
         else if(id == 1){
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
-            return new Mob(x, y, mobCount);
+            return new Mob(UIDmax++, x, y, mobCount);
         }
         else {
-            Tree tree=new Tree(x,y);
+            Tree tree=new Tree(UIDmax++, x,y);
             if(tree.body.overlaps(playerRectangle)){
                 return generateEntities();
             }
@@ -105,17 +108,32 @@ public class Map {
         }
     }
 
-    private Entity generateEntities(int id, int x, int y){
+    private Entity generateEntities(int uid, int id, float x, float y){
         switch(id){
             case 0:
-                return new Cabbage(x,y);
+                return new Cabbage(uid, x,y);
             case 2:
                 mobCount++;
-                return new Mob(x,y, mobCount);
+                return new Mob(uid, x,y, mobCount);
             case 9:
-                return new Tree(x, y);
+                return new Tree(uid, x, y);
             default:
-                return new Tree(x,y);
+                return new Tree(uid, x,y);
+        }
+    }
+
+    private Item generateItems(int uid, int id, float x, float y){
+        switch(id){
+            case 10:
+                return new TreeSeeds(uid, 1, x, y, true);
+            case 11:
+                return new CabbageSeeds(uid, 1, x, y, true);
+            case 12:
+                return new CabbageLeaves(uid, 1, x, y, true);
+            case 13:
+                return new Logs(uid, 1, x, y, true);
+            default:
+                return new Plank(uid, 1, x, y);
         }
     }
 
@@ -183,10 +201,30 @@ public class Map {
     //adds an item to appear on the map
     public void addToMap(Item item){
         itemsAdd.add(item);
+        Network.AddElement add = new Network.AddElement();
+        add.id = item.itemID;
+        add.uid = item.uid;
+        add.x = item.locationX;
+        add.y = item.locationY;
+        tonpose.client.sendTCP(add);
     }
 
     public void addToMap(Entity entity){
         entitiesAdd.add(entity);
+        Network.AddElement add = new Network.AddElement();
+        add.id = entity.id;
+        add.uid = entity.uid;
+        add.x = entity.locationX;
+        add.y = entity.locationY;
+        tonpose.client.sendTCP(add);
+    }
+    public void addToMap(Network.AddElement add){
+        if(add.id < 10){
+            entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
+        }
+        else if(add.id <= 14){
+            itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
+        }
     }
 
     public int getWidth(){
@@ -201,11 +239,37 @@ public class Map {
     //removes an item so it no longer shows on the map
     public void removeFromMap(Item item){
         itemsDelete.add(item);
+        Network.RemoveElement remove = new Network.RemoveElement();
+        remove.tid = item.itemID;
+        remove.uid = item.uid;
+        tonpose.client.sendTCP(remove);
+
     }
 
     public void removeFromMap(Entity entity){
         entitiesDelete.add(entity);
+        Network.RemoveElement remove = new Network.RemoveElement();
+        remove.tid = entity.id;
+        remove.uid = entity.uid;
+        tonpose.client.sendTCP(remove);
     }
+    public void removeFromMap(Network.RemoveElement remove){
+        if(remove.tid < 10){
+            for(Entity e: entities){
+                if(e.uid == remove.uid){
+                    entitiesDelete.add(e);
+                }
+            }
+        }
+        else if(remove.tid <= 14){
+            for(Item i: items){
+                if(i.uid == remove.uid){
+                    itemsDelete.add(i);
+                }
+            }
+        }
+    }
+
 
     public Entity checkMap(float x, float y, float rangeX, float rangeY){ //TODO improve selection method
         Entity returnEntity=null;

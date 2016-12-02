@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Item {
     public String name;
     public int itemID;
+    public int uid;
     public int count;
     public float locationX;
     public float locationY;
@@ -18,7 +19,8 @@ public class Item {
     public Texture texture;
     public boolean craftingBase;
 
-    public Item(int number, float x, float y, int id, boolean map){
+    public Item(int uid, int number, float x, float y, int id, boolean map){
+        this.uid = uid;
         count = number;
         locationX = x;
         locationY = y;

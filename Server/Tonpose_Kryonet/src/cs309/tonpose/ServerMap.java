@@ -78,9 +78,10 @@ public class ServerMap {
 	        case 0:
 	        	e.typeID = 0;
 	        	break;
-	        case 1:
-	        	e.typeID = 2;
-	        	break;
+	        // For now, server does not generate mobs, they will be added from the client
+	        //case 1:
+	        //	e.typeID = 2;
+	        //	break;
 	        default:
 	        	e.typeID = 9;
 	        	break;
@@ -93,11 +94,12 @@ public class ServerMap {
 
     public int[][] getEntityArray(){
     	// Fills 2d array (to be sent over network) with entity arraylist
-    	int [][] arr = new int[entityCount][3];
+    	int [][] arr = new int[entityCount][4];
     	for(int i = 0; i < entityCount; i++){
-    		arr[i][0] = entities.get(i).typeID;
-    		arr[i][1] = (int)entities.get(i).x;
-    		arr[i][2] = (int)entities.get(i).y;
+    		arr[i][0] = entities.get(i).uniqueID;
+    		arr[i][1] = entities.get(i).typeID;
+    		arr[i][2] = (int)entities.get(i).x;
+    		arr[i][3] = (int)entities.get(i).y;
     	}
     	return arr;
     }
@@ -132,5 +134,6 @@ public class ServerMap {
 
     public void remove(ServerEntity entity){
         entities.remove(entity);
+        entityCount--;
     }
 }

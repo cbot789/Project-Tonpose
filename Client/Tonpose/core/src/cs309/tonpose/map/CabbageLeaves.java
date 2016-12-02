@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
  */
 
 public class CabbageLeaves extends  Item {
-    public CabbageLeaves(int number, float x, float y, boolean map) {
-        super(number, x, y, 12, map);
+    public CabbageLeaves(int uid, int number, float x, float y, boolean map) {
+        super(uid, number, x, y, 12, map);
         texture = new Texture(Gdx.files.internal("CabbageLeaves.png"));
         hasAction = true;
         name = "Cabbage Leaves";

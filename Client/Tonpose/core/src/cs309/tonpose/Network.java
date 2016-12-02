@@ -23,6 +23,9 @@ public class Network {
 		kryo.register(int[].class);
 		kryo.register(SyncMap.class);
 		kryo.register(User.class);
+		kryo.register(MoveElement.class);
+		kryo.register(AddElement.class);
+		kryo.register(RemoveElement.class);
 	}
 
 	// For checking if username is in database

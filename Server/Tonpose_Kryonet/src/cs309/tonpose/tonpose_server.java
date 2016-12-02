@@ -379,7 +379,7 @@ public class tonpose_server {
 	}
 
 	public static void main (String[] args) throws IOException {
-		//Log.set(Log.LEVEL_DEBUG);
+		Log.set(Log.LEVEL_DEBUG);
 		new tonpose_server();
 	}
 }

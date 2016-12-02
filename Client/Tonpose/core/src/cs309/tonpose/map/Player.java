@@ -30,7 +30,7 @@ public class Player extends Living {
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name){
-        super(x, y, 8, 64, 45, 10, 5, 50, 1, 100);
+        super(-1, x, y, 8, 64, 45, 10, 5, 50, 1, 100);
         texture = new Texture(Gdx.files.internal("mainbase.png"));
         userName = name;
         score = 0;

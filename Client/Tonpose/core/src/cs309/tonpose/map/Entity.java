@@ -17,6 +17,7 @@ public class Entity {
     public float locationX;
     public float locationY;
     public int id;
+    public int uid;
     public int currentHp;
     public int maxHp;
     public boolean killable;
@@ -39,8 +40,9 @@ public class Entity {
 
     }
 
-    public Entity(float locationX, float locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
-       this.locationX=locationX;
+    public Entity(int uid, float locationX, float locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
+        this.uid = uid;
+        this.locationX=locationX;
         this.locationY=locationY;
         this.id=id;
         this.currentHp=maxHp;
