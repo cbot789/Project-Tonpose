@@ -62,13 +62,11 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
-	private long lastRender	   = 0;
 	private final int TICKDELAY =       20000000;
-	private final int NPCDELAY =        60000000;
+	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
-	private final int UPDATEDELAY =     40000000;
+	private final int UPDATEDELAY =     80000000;
 	private final int ANIMATIONDELAY = 800000000;
-	private final int RENDERDELAY	=   20000000;
 	private final long SPAWNDELAY =   8000000000L;
 	private final long GROWTHDELAY =  8000000000L; //TODO implement growth of trees and cabbages after planting
 
@@ -120,8 +118,7 @@ public class TonposeScreen implements Screen {
 		*/
 
 		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name);
-
-
+		Map.spawnNPC();
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
 		terrain = new Array<Rectangle>(); //the array for terrain
@@ -139,7 +136,6 @@ public class TonposeScreen implements Screen {
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick(TimeUtils.nanoTime());
 
-			lastRender = TimeUtils.nanoTime();
 			camera.update();
 			batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 			batch.begin();
@@ -290,17 +286,9 @@ public class TonposeScreen implements Screen {
 	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
-				/*
-				float x = player.getX() - entity.locationX;
-				float y = player.getY() - entity.locationY;
-				float sum = abs(x) + abs(y);
-				if(sum > 4){
-					entity.locationX += 5 * (x/sum);
-					entity.locationY += 5 * (y/sum);
-					entity.setBody(entity.locationX,entity.locationY);
+				if(((Mob)entity).targetID == tonpose.ID){
+					((Mob) entity).move(player, 0 ,0, 1);
 				}
-				*/
-				((Mob) entity).move(player, 0 ,0, 1);
 			}
 		}
 

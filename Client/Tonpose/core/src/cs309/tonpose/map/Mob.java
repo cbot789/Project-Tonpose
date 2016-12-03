@@ -16,9 +16,13 @@ public class Mob extends Living {
 
     protected int flee;
     protected int npcNumber;
+    public int targetID;
+    private Tonpose tonpose;
 
-    public Mob(int uid, float x, float y, int number){
+    public Mob(int uid, int targetID, float x, float y, int number, Tonpose t){
         super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100);
+        this.targetID = targetID;
+        this.tonpose = t;
         texture = new Texture(Gdx.files.internal("player2base.png"));
         flee = 0;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
@@ -29,6 +33,12 @@ public class Mob extends Living {
     public void setTarget(int x, int y){
 
     }
+
+    // Sets the ID of the player the mob will follow
+    public void setTargetID(int ID){
+        targetID = ID;
+    }
+
     public void setTarget(Entity prey){
         target = prey;
     }
@@ -104,6 +114,12 @@ public class Mob extends Living {
                 locationY += yMove;
                 body.setX(locationX);
                 body.setY(locationY);
+                Network.MoveElement move = new Network.MoveElement();
+                move.tid = 2;
+                move.uid = uid;
+                move.x = locationX;
+                move.y = locationY;
+                tonpose.client.sendTCP(move);
             }
 
             if (body.overlaps(target.getRectangle())) {

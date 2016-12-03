@@ -132,6 +132,11 @@ public class Entity {
         body.set(x,y,width,height);
     }
 
+    public void move(float x, float y){
+        locationX = x;
+        locationY = y;
+    }
+
     //deletes entity from the map
     public void kill(){
         int i=32;
