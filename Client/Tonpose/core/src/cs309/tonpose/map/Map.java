@@ -35,7 +35,7 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
-        terrains = new Terrain[height/20+1][width/20+1];
+        terrains = new Terrain[height/40+1][width/40+1];
         mobCount = 0;
 
         for(int i=0; i<maxEntities; i++){
@@ -108,6 +108,7 @@ public class Map {
         }
     }
 
+    //adds entities (mobs, trees ect) based on server side
     private Entity generateEntities(int uid, int id, float x, float y){
         switch(id){
             case 0:
@@ -122,6 +123,7 @@ public class Map {
         }
     }
 
+    //adds the item based on the server side info
     private Item generateItems(int uid, int id, float x, float y){
         switch(id){
             case 10:
@@ -137,6 +139,7 @@ public class Map {
         }
     }
 
+    //used in single player
     private void generateTerrain(){
         for(int i=0; i < width/20 +1; i ++){
             for(int j = 0; j < height/20 +1; j ++){
@@ -153,10 +156,11 @@ public class Map {
 
     }
 
+    //gen terrain based on server side info
     private void generateTerrain(int height, int width, int[] terrain){
         int i = 0;
-        for(int x = 0; x < width/20 + 1; x++){
-            for(int y = 0; y < height/20 + 1; y++){
+        for(int x = 0; x < width/40 + 1; x++){
+            for(int y = 0; y < height/40 + 1; y++){
                 switch(terrain[i]){
                     case 1:
                         this.terrains[x][y] = new RiverHorizontal(x * 20, y * 20, true);
@@ -171,7 +175,7 @@ public class Map {
                         this.terrains[x][y] = new RiverVertical(x*20, y*20, false);
                         break;
                     default:
-                        this.terrains[x][y] = new grass(x * 20 ,y * 20);
+                        this.terrains[x][y] = new grass(x * 40 ,y * 40);
                 }
                 i++;
             }

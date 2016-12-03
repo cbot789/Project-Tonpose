@@ -62,11 +62,13 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
-	private final int TICKDELAY =       10000000;
-	private final int NPCDELAY =        50000000;
+	private long lastRender	   = 0;
+	private final int TICKDELAY =       20000000;
+	private final int NPCDELAY =        60000000;
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     40000000;
 	private final int ANIMATIONDELAY = 800000000;
+	private final int RENDERDELAY	=   20000000;
 	private final long SPAWNDELAY =   8000000000L;
 	private final long GROWTHDELAY =  8000000000L; //TODO implement growth of trees and cabbages after planting
 
@@ -133,115 +135,116 @@ public class TonposeScreen implements Screen {
 
 	@Override
 	public void render(float delta) { //TODO change to only render inside of the camera
-		camera.update();
-		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
-		batch.begin();
 
-		// clear screen to dark blue color
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
+			tick(TimeUtils.nanoTime());
 
-		//sets area around screen so client only renders what the user will see
-		float renderUpperX = camera.position.x + renderBufferX;
-		float renderLowerX = camera.position.x - renderBufferX;
-		float renderUpperY = camera.position.y + renderBufferY;
-		float renderLowerY = camera.position.y - renderBufferY;
+			lastRender = TimeUtils.nanoTime();
+			camera.update();
+			batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
+			batch.begin();
 
-		//dont render anything off the map
-		if(renderUpperY > Map.getHeight()){
-			renderUpperY = Map.getHeight() + 20;
-		}else if(renderLowerY < 0){
-			renderLowerY = 0;
-		}
-		if(renderUpperX > Map.getWidth()){
-			renderUpperX = Map.getWidth() + 20;
-		}else if(renderLowerX < 0){
-			renderLowerX = 0;
-		}
+			// clear screen to dark blue color
+			Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//render terrain on screen
-		for(int i = (int)(renderLowerX / 20); i < renderUpperX / 20; i++){
-			for(int j = (int)(renderLowerY / 20); j < renderUpperY /20; j++){
-				//batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
+			//sets area around screen so client only renders what the user will see
+			float renderUpperX = camera.position.x + renderBufferX;
+			float renderLowerX = camera.position.x - renderBufferX;
+			float renderUpperY = camera.position.y + renderBufferY;
+			float renderLowerY = camera.position.y - renderBufferY;
+
+			//dont render anything off the map
+			if(renderUpperY > Map.getHeight()){
+				renderUpperY = Map.getHeight() + 20;
+			}else if(renderLowerY < 0){
+				renderLowerY = 0;
 			}
-		}
-
-		//render other players
-		if(!tonpose.Name.equals("offline")) {
-			for (User value : tonpose.users.values()) {
-				batch.draw(playerImage, value.x, value.y);
+			if(renderUpperX > Map.getWidth()){
+				renderUpperX = Map.getWidth() + 20;
+			}else if(renderLowerX < 0){
+				renderLowerX = 0;
 			}
-		}
 
-		//renders user's player
-
-		batch.draw(player.texture, player.getX(), player.getY());
-
-		//renders other entities
-		for (Entity entity : Map.getEntities()) { //draws Entities
-			if(renderUpperX > entity.locationX) {
-				if (renderLowerX  - 40 < entity.locationX) {
-					if (renderUpperY > entity.locationY) {
-						if (renderLowerY - 100 < entity.locationY) {
-							batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
-						}
-					}
+			//render terrain on screen
+			for(int i = (int)(renderLowerX / 40); i < renderUpperX / 40; i++){
+				for(int j = (int)(renderLowerY / 40); j < renderUpperY / 40; j ++){
+					batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX * 2, terrainMap[i][j].locationY * 2);
 				}
 			}
-		}
 
-		//renders items dropped on the map
-		for (Item item : Map.getItems()){
-			if(!item.inInventory){
-				if(renderUpperX > item.locationX) {
-					if (renderLowerX < item.locationX) {
-						if (renderUpperY > item.locationY) {
-							if (renderLowerY < item.locationY) {
-								batch.draw(item.getTexture(), item.locationX, item.locationY);
+			//render other players
+			if(!tonpose.Name.equals("offline")) {
+				for (User value : tonpose.users.values()) {
+					batch.draw(playerImage, value.x, value.y);
+				}
+			}
+
+			//renders user's player
+
+			batch.draw(player.texture, player.getX(), player.getY());
+
+			//renders other entities
+			for (Entity entity : Map.getEntities()) { //draws Entities
+				if(renderUpperX > entity.locationX) {
+					if (renderLowerX  - 40 < entity.locationX) {
+						if (renderUpperY > entity.locationY) {
+							if (renderLowerY - 100 < entity.locationY) {
+								batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
 							}
 						}
 					}
 				}
 			}
-		}
 
-		font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
-		//renders hp bar
-		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
-		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
-		// make player move on touch
-		int i=0;
-		 moving=false;
-		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
-			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
-				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
-				touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0);
-				camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
-				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)||playersOnlineDeadZone.contains(touchPos.x,touchPos.y)||inventoryDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
-					tonpose.lastX = player.getX();
-					tonpose.lastY = player.getY();
-				}
-				else {
-					tonpose.lastX = touchPos.x;
-					tonpose.lastY = touchPos.y;
-					moving = true;
-					nextAnimation = 1;
+			//renders items dropped on the map
+			for (Item item : Map.getItems()){
+				if(!item.inInventory){
+					if(renderUpperX > item.locationX) {
+						if (renderLowerX < item.locationX) {
+							if (renderUpperY > item.locationY) {
+								if (renderLowerY < item.locationY) {
+									batch.draw(item.getTexture(), item.locationX, item.locationY);
+								}
+							}
+						}
+					}
 				}
 			}
-		}
-		if(!moving){
-			tonpose.lastX = player.getX();
-			tonpose.lastY = player.getY();
-		}
 
-		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
-			tick(TimeUtils.nanoTime());
+			font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
+			//renders hp bar
+			batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
+			batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
+			// make player move on touch
+			int i=0;
+			moving=false;
+			for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
+				if (Gdx.input.isTouched(i)) { //checks if touch event i is active
+					Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
+					touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i),0);
+					camera.unproject(touchPos); // transforms the coordinates of the vector to the coordinate system of the camera
+					if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)||playersOnlineDeadZone.contains(touchPos.x,touchPos.y)||inventoryDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
+						tonpose.lastX = player.getX();
+						tonpose.lastY = player.getY();
+					}
+					else {
+						tonpose.lastX = touchPos.x;
+						tonpose.lastY = touchPos.y;
+						moving = true;
+						nextAnimation = 1;
+					}
+				}
+			}
+			if(!moving){
+				tonpose.lastX = player.getX();
+				tonpose.lastY = player.getY();
+			}
+
+			//render stage
+			stage.act(delta);
+			stage.draw();
 		}
-
-
-		//render stage
-		stage.act(delta);
-		stage.draw();
 	}
 
 	private void tick(long time) {
