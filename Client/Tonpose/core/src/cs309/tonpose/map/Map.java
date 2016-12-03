@@ -39,7 +39,7 @@ public class Map {
         mobCount = 0;
 
         for(int i=0; i<maxEntities; i++){
-            entities.add(generateEntities());
+            entities.add(generateEntities(MathUtils.random(3)));
         }
         generateTerrain();
 
@@ -61,25 +61,24 @@ public class Map {
 
         for(int i=0; i < entities.length; i++){
             this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2], entities[i][3]));
-            UIDmax++;
+            UIDmax = entities[i][0] + 1;
         }
         generateTerrain(height, width, terrain);
 
     }
 
-    public void spawn(){
-        entities.add(generateEntities());
+    public void spawnNPC(){
+        addToMap(generateEntities(1));
     }
 
-    private Entity generateEntities(){
+    private Entity generateEntities(int id){
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
-        int id=MathUtils.random(0,3);
         Rectangle playerRectangle= new Rectangle(400,240,45,64);
         if(id==0){
             Cabbage cabbage = new Cabbage(UIDmax++, x,y);
             if(cabbage.body.overlaps(playerRectangle)){
-                return generateEntities(); //try again for a valid position
+                return generateEntities(0); //try again for a valid position
             }
             /*for(Entity enitity:entities){ //check for overlap
                 if(cabbage.body.overlaps(enitity.getRectangle())){
@@ -92,12 +91,12 @@ public class Map {
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
-            return new Mob(UIDmax++, x, y, mobCount);
+            return new Mob(UIDmax++, tonpose.ID, x, y, mobCount, tonpose);
         }
         else {
             Tree tree=new Tree(UIDmax++, x,y);
             if(tree.body.overlaps(playerRectangle)){
-                return generateEntities();
+                return generateEntities(2);
             }
             /*for(Entity enitity:entities){ //check for overlap
                 if(tree.body.overlaps(enitity.getRectangle())){
@@ -114,7 +113,7 @@ public class Map {
                 return new Cabbage(uid, x,y);
             case 2:
                 mobCount++;
-                return new Mob(uid, x,y, mobCount);
+                return new Mob(uid, -1, x,y, mobCount, tonpose);
             case 9:
                 return new Tree(uid, x, y);
             default:
@@ -225,6 +224,7 @@ public class Map {
         else if(add.id <= 14){
             itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
         }
+        UIDmax = add.uid + 1;
     }
 
     public int getWidth(){
@@ -265,6 +265,17 @@ public class Map {
             for(Item i: items){
                 if(i.uid == remove.uid){
                     itemsDelete.add(i);
+                }
+            }
+        }
+    }
+
+    public void moveElement(Network.MoveElement move){
+        // Only move mob elements
+        if(move.tid == 2){
+            for(Entity e: entities){
+                if(e.uid == move.uid){
+                    e.move(move.x, move.y);
                 }
             }
         }

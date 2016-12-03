@@ -255,7 +255,7 @@ public class tonpose_server {
 								if(move.uid == eList.get(i).uniqueID){
 									eList.get(i).x = move.x;
 									eList.get(i).y = move.y;
-									server.sendToAllTCP(move);
+									server.sendToAllExceptTCP(connection.getID(), move);
 									break;
 								}
 							}
@@ -271,7 +271,7 @@ public class tonpose_server {
 								if(move.uid == iList.get(i).uniqueID){
 									iList.get(i).x = move.x;
 									iList.get(i).y = move.y;
-									server.sendToAllTCP(move);
+									server.sendToAllExceptTCP(connection.getID(), move);
 									break;
 								}
 							}
@@ -283,18 +283,20 @@ public class tonpose_server {
 				}
 				// Add an entity or object to the map
 				if (object instanceof AddElement) {
-					MoveElement add = (MoveElement)object;
-					switch(add.tid){
+					AddElement add = (AddElement)object;
+					switch(add.id){
 						// Elements is an entity
 						case 0:
 						case 2:
 						case 9:
 							ServerEntity ent = new ServerEntity();
-							ent.typeID = add.tid;
-							ent.uniqueID = map.UIDcount++;
+							ent.typeID = add.id;
+							ent.uniqueID = add.uid;
 							ent.x = add.x;
 							ent.y = add.y;
 							map.add(ent);
+							// Tell all connected clients to update the element
+							server.sendToAllExceptTCP(connection.getID(), add);
 						break;
 						// Element is an item
 						case 10:
@@ -303,13 +305,13 @@ public class tonpose_server {
 						case 13:
 						case 14:
 							ServerItem item = new ServerItem();
-							item.typeID = add.tid;
+							item.typeID = add.id;
 							item.uniqueID = add.uid;
 							item.x = add.x;
 							item.y = add.y;
 							map.add(item);
 							// Tell all connected clients to update the element
-							server.sendToAllTCP(add);
+							server.sendToAllExceptTCP(connection.getID(), add);
 						break;
 						default:
 						break;
@@ -327,7 +329,7 @@ public class tonpose_server {
 							for(int i = 0; i < eList.size(); i++){
 								if(remove.uid == eList.get(i).uniqueID){
 									map.remove(eList.get(i));
-									server.sendToAllTCP(remove);
+									server.sendToAllExceptTCP(connection.getID(), remove);
 									break;
 								}
 							}
@@ -342,7 +344,7 @@ public class tonpose_server {
 							for(int i = 0; i < iList.size(); i++){
 								if(remove.uid == iList.get(i).uniqueID){
 									map.remove(iList.get(i));
-									server.sendToAllTCP(remove);
+									server.sendToAllExceptTCP(connection.getID(), remove);
 									break;
 								}
 							}

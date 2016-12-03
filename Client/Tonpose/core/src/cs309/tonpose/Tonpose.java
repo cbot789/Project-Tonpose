@@ -20,7 +20,7 @@ public class Tonpose extends Game{
     protected InventoryScreen inventoryScreen;
     protected DeathScreen deathScreen;
     public Client client;
-    protected int ID;
+    public int ID;
     protected float lastX = 400;
     protected float lastY = 240;
     protected HashMap<Integer, User> users = new HashMap();
@@ -36,10 +36,10 @@ public class Tonpose extends Game{
     }
     @Override
     public void create(){
-        if(!Name.equals("offline")){
-            connectToServer();
-            while(!ready){}
-        }
+        connectToServer();
+        // Wait for server connection
+        while(!ready){}
+        // Initialize screens
         deathScreen = new DeathScreen(this);
         tonposeScreen = new TonposeScreen(this, terrainArray, entitiesArray);
         playersScreen = new PlayersScreen(this);
@@ -61,7 +61,7 @@ public class Tonpose extends Game{
     public void connectToServer() {
         client = new Client(16384, 4096);
         client.start();
-
+        // Register all packet
         Network.register(client);
 
         client.addListener(new Listener() {
@@ -112,7 +112,7 @@ public class Tonpose extends Game{
                 // Updates the location of a specific element or item on the map
                 if (object instanceof Network.MoveElement) {
                     Network.MoveElement move = (Network.MoveElement) object;
-                    //TODO: add Move() method to Map class, use here
+                    tonposeScreen.Map.moveElement(move);
                 }
                 // Adds an item or element to the map
                 if (object instanceof Network.AddElement) {

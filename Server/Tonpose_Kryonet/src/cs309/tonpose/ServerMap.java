@@ -126,6 +126,7 @@ public class ServerMap {
 
     public void add(ServerEntity entity){
         entities.add(entity);
+        entityCount++;
     }
     
     public void remove(ServerItem item){
