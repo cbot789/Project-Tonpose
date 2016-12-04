@@ -28,4 +28,18 @@ public class Cabbage extends Entity { //id is 0
         //addInventory(new CabbageLeaves(1, locationX, locationY, false));
         //addInventory((new CabbageSeeds(1,locationX,locationY,false)));
     }
+
+    @Override
+    public void kill(){
+        int i=32;
+        for (Item item:inventory) {
+            item.inInventory = false;
+            item.setLocation(locationX+i, locationY+i);
+            TonposeScreen.Map.addToMap(item);
+            i+=32;
+        }
+        TonposeScreen.Map.addToMap(new CabbageLeaves(TonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true));
+        TonposeScreen.Map.addToMap(new CabbageSeeds(TonposeScreen.Map.UIDmax++, 1, locationX+64, locationY+64, true));
+        TonposeScreen.Map.removeFromMap(this);
+    }
 }
