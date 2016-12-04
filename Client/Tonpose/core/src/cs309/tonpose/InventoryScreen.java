@@ -37,7 +37,8 @@ public class InventoryScreen implements Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
-    private TextButton inv;
+    private int currentInvSize = 0;
+    private TextButton inv[];
     private TextButton base;
     private TextButton mod;
     private TextButton craft;
@@ -51,6 +52,7 @@ public class InventoryScreen implements Screen {
 
     public InventoryScreen(Tonpose t){
         this.tonpose = t;
+        inv = new TextButton[player.invSize];
         currentMode = invMode.equipMode;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
@@ -100,6 +102,24 @@ public class InventoryScreen implements Screen {
             font.draw(batch, "equipped: Nothing", 100, 350);
         }
         batch.end();
+
+        if( player.base != null){
+            base.setText("Base: "+ player.base.name);
+        }else{
+            base.setText("Base: Nothing");
+        }
+
+        if( player.mod != null) {
+            mod.setText("Mod: " + player.mod.name);
+        }else{
+            mod.setText("Mod: Nothing");
+        }
+        int i = 0;
+        for (final cs309.tonpose.map.Item item : player.getInventory()) {
+            inv[i].setText(item.name + " " + item.getCount());
+            i++;
+        }
+
     }
 
     @Override
@@ -116,11 +136,16 @@ public class InventoryScreen implements Screen {
         font = new BitmapFont();
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
+        updateTable();
+        /*
         table.clear();
+        currentInvSize = 0;
+
         for (final cs309.tonpose.map.Item item : player.getInventory()) {
-            inv = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
-            inv.getLabel().setFontScale(5,5);
-            inv.addListener(new ClickListener()
+            //inv = new TextButton[player.invSize];
+            inv[currentInvSize] = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
+            inv[currentInvSize].getLabel().setFontScale(5,5);
+            inv[currentInvSize].addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -143,9 +168,10 @@ public class InventoryScreen implements Screen {
 
                 }
             });
-            table.add(inv);
+            table.add(inv[currentInvSize]);
             table.row();
-        }
+            currentInvSize++;
+        }*/
 
         craftTable.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         craftTable.right();
@@ -167,7 +193,7 @@ public class InventoryScreen implements Screen {
         });
         craftTable.add(base);
         craftTable.row();
-        if( player.base != null) {
+        if( player.mod != null) {
             mod = new TextButton("Mod: " + player.mod.name, textButtonStyle);
         }else{
             mod = new TextButton("Mod: Nothing", textButtonStyle);
@@ -194,11 +220,10 @@ public class InventoryScreen implements Screen {
             public void clicked(InputEvent event, float x, float y)
             {
                 player.craft();
+                updateTable();
             }
         });
         craftTable.add(craft);
-
-
     }
 
     @Override
@@ -216,6 +241,42 @@ public class InventoryScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    private void updateTable(){
+        table.clear();
+        currentInvSize = 0;
+        for (final cs309.tonpose.map.Item item : player.getInventory()) {
+            //inv = new TextButton[player.invSize];
+            inv[currentInvSize] = new TextButton(item.name + " " + item.getCount(), textButtonStyle);
+            inv[currentInvSize].getLabel().setFontScale(5,5);
+            inv[currentInvSize].addListener(new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    if(currentMode == invMode.equipMode){
+                        if(item != player.equiped){
+                            if(item.hasAction){
+                                player.equipItem(item);
+                            }
+                        }else{
+                            player.equipItem(null);
+                        }
+                    }else if(currentMode == invMode.baseMode){
+                        player.base = item;
+                        currentMode = invMode.equipMode;
+                    }else{
+                        player.mod = item;
+                        currentMode = invMode.equipMode;
+                    }
+
+                }
+            });
+            table.add(inv[currentInvSize]);
+            table.row();
+            currentInvSize++;
+        }
     }
 
 }
