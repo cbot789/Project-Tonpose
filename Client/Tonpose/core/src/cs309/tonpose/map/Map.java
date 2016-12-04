@@ -88,7 +88,7 @@ public class Map {
                     return generateTerrain();
                 }
             }*/
-            return new Cabbage(UIDmax++, x, y);
+            return new Cabbage(UIDmax++ + tonpose.ID, x, y);
         }
         else if(id == 1){
             mobCount++;
@@ -293,11 +293,17 @@ public class Map {
     //moves mobs from other clients
     public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is movin
         // Only move mob elements
+        boolean exists = false;
         if(move.tid == 2){
             for(Entity e: entities){
                 if(e.uid == move.uid){
                     e.move(move.x, move.y);
+                    exists = true;
                 }
+            }
+            if(!exists){
+                entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
+                UIDmax = move.uid++;
             }
         }
     }
