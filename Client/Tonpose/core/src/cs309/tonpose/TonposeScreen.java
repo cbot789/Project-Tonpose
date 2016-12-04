@@ -156,7 +156,7 @@ public class TonposeScreen implements Screen {
 		batch.begin();
 
 		// clear screen to dark blue color
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0.2f, 0.2f, 0.9f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//render terrain on screen
@@ -255,12 +255,12 @@ public class TonposeScreen implements Screen {
 		if (time > lastUpdate + UPDATEDELAY) //updates player position on other clients
 			updatePlayer();
 
-		/* spawning temporarily disabled
+		/*
 		if (time > lastSpawn + SPAWNDELAY){
-			Map.spawn();
+			Map.spawnNPC();
 			lastSpawn = time;
-		}
-		*/
+		}*/
+
 		if(time > lastAnimation + ANIMATIONDELAY) {
 			player.nextAnimation(nextAnimation);
 			lastAnimation = time;
