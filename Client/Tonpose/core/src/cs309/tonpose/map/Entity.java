@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.TimeUtils;
 
-import cs309.tonpose.TonposeScreen;
+import cs309.tonpose.*;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
@@ -35,12 +35,12 @@ public class Entity {
     public int invSize;
     public ArrayList<Item> inventory;
     public Music sfx;
-
+    protected Tonpose tonpose;
     public Entity(){
 
     }
 
-    public Entity(int uid, float locationX, float locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
+    public Entity(int uid, float locationX, float locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision, Tonpose t){
         this.uid = uid;
         this.locationX=locationX;
         this.locationY=locationY;
@@ -52,7 +52,7 @@ public class Entity {
         this.mass=mass;
         this.invSize=invSize;
         this.killable=killable;
-
+        this.tonpose = t;
         this.collision = collision;
         if(id==9){ //different rectangle for tree
             body=new Rectangle();
@@ -76,7 +76,7 @@ public class Entity {
         inventory.remove(toDrop);
         toDrop.inInventory = false;
         toDrop.setLocation(locationX, locationY);
-        TonposeScreen.Map.addToMap(toDrop);
+        tonpose.tonposeScreen.Map.addToMap(toDrop, true);
         //create world object
     }
 
@@ -88,7 +88,7 @@ public class Entity {
                     if(item.name.equals(toAdd.name)){
                         item.count += toAdd.count;
                         if(toAdd.inInventory == false){
-                            TonposeScreen.Map.removeFromMap(toAdd);
+                            tonpose.tonposeScreen.Map.removeFromMap(toAdd);
                         }
                         return;
                     }
@@ -96,7 +96,7 @@ public class Entity {
                 inventory.add(toAdd);
                 if(toAdd.inInventory == false){
                     toAdd.inInventory = true;
-                    TonposeScreen.Map.removeFromMap(toAdd);
+                    tonpose.tonposeScreen.Map.removeFromMap(toAdd);
                 }
             }
             else{
@@ -145,10 +145,10 @@ public class Entity {
         for (Item item:inventory) {
             item.inInventory = false;
             item.setLocation(locationX+i, locationY+i);
-            TonposeScreen.Map.addToMap(item);
+            tonpose.tonposeScreen.Map.addToMap(item, true);
             i+=32;
         }
-        TonposeScreen.Map.removeFromMap(this);
+        tonpose.tonposeScreen.Map.removeFromMap(this);
     }
 
     public Texture getTexture(){

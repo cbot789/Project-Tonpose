@@ -19,10 +19,9 @@ public class Mob extends Living {
     protected int flee;
     protected int npcNumber;
     public int targetID;
-    private Tonpose tonpose;
 
     public Mob(int uid, int targetID, float x, float y, int number, Tonpose t){
-        super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100);
+        super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100, t);
         this.targetID = targetID;
         this.tonpose = t;
         texture = new Texture(Gdx.files.internal("player2base.png"));
@@ -67,14 +66,14 @@ public class Mob extends Living {
             }
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
-            for(Item item : TonposeScreen.Map.getItems()){
+            for(Item item : tonpose.tonposeScreen.Map.getItems()){
                 if(!item.inInventory){
                     if(item.getBody().overlaps(body)){
                         addInventory(item);
                     }
                 }
             }
-            for (Entity entity : TonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
+            for (Entity entity : tonpose.tonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
                 if (entity instanceof Mob) {
                     if (((Mob) entity).npcNumber != npcNumber) {
                         if (newPositionX.overlaps(entity.getRectangle())) {
@@ -99,16 +98,16 @@ public class Mob extends Living {
             if (!collidedX) {
                 if (locationX + xMove < 0) {  //this section assumes no collisions with objects after xmove and ymove are added
                     xMove = -locationX;
-                } else if (locationX + xMove > TonposeScreen.Map.getWidth()) {
-                    xMove = TonposeScreen.Map.getWidth() - locationX;
+                } else if (locationX + xMove > tonpose.tonposeScreen.Map.getWidth()) {
+                    xMove = tonpose.tonposeScreen.Map.getWidth() - locationX;
                 }
             }
             if (!collidedY) {
                 if (locationY + yMove < 0) {
                     yMove = -locationY;
 
-                } else if (locationY + yMove > TonposeScreen.Map.getHeight()) {
-                    yMove = TonposeScreen.Map.getHeight() - locationY;
+                } else if (locationY + yMove > tonpose.tonposeScreen.Map.getHeight()) {
+                    yMove = tonpose.tonposeScreen.Map.getHeight() - locationY;
                 }
             }
             if(collidedX && collidedY){
@@ -200,7 +199,7 @@ public class Mob extends Living {
 
     @Override
     public void attack(float x, float y) {
-        Entity hit = TonposeScreen.Map.mobCheckMap(x, y, attackRange, attackRange);
+        Entity hit = tonpose.tonposeScreen.Map.mobCheckMap(x, y, attackRange, attackRange);
         if(hit != null){
             hit.changeHp(-power);
             nextAnimation(2);

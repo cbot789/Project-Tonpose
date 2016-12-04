@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 
-import cs309.tonpose.TonposeScreen;
+import cs309.tonpose.*;
 
 
 /**
@@ -14,8 +14,8 @@ import cs309.tonpose.TonposeScreen;
 public class Cabbage extends Entity { //id is 0
 
 
-    public Cabbage(int uid, float locationX, float locationY){
-        super(uid, locationX, locationY, 0, 10, 10, 10, 5, 7, true, false); //uid,x,y,id,hp,height,width,mass,invsize,killable, collision
+    public Cabbage(int uid, float locationX, float locationY, Tonpose t){
+        super(uid, locationX, locationY, 0, 10, 10, 10, 5, 7, true, false, t); //uid,x,y,id,hp,height,width,mass,invsize,killable, collision
         texture=new Texture(Gdx.files.internal("cabbage.png"));
         sfx = Gdx.audio.newMusic(Gdx.files.internal("cabbageHit.mp3"));
     }
@@ -35,11 +35,11 @@ public class Cabbage extends Entity { //id is 0
         for (Item item:inventory) {
             item.inInventory = false;
             item.setLocation(locationX+i, locationY+i);
-            TonposeScreen.Map.addToMap(item);
+            tonpose.tonposeScreen.Map.addToMap(item, true);
             i+=32;
         }
-        TonposeScreen.Map.addToMap(new CabbageLeaves(TonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true));
-        TonposeScreen.Map.addToMap(new CabbageSeeds(TonposeScreen.Map.UIDmax++, 1, locationX+64, locationY+64, true));
-        TonposeScreen.Map.removeFromMap(this);
+        tonpose.tonposeScreen.Map.addToMap(new CabbageLeaves(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true, tonpose), true);
+        tonpose.tonposeScreen.Map.addToMap(new CabbageSeeds(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+64, locationY+64, true, tonpose), true);
+        tonpose.tonposeScreen.Map.removeFromMap(this);
     }
 }

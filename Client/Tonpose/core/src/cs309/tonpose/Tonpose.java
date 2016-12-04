@@ -15,7 +15,7 @@ public class Tonpose extends Game{
 
     static AndroidMethods androidMethod;
     protected String Name;
-    protected TonposeScreen tonposeScreen;
+    public TonposeScreen tonposeScreen;
     protected PlayersScreen playersScreen;
     protected InventoryScreen inventoryScreen;
     protected DeathScreen deathScreen;

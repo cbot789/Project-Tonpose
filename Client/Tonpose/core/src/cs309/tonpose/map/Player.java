@@ -29,8 +29,8 @@ public class Player extends Living {
     public TonposeScreen.state state;
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
-    public Player(float x, float y, String name){
-        super(-1, x, y, 8, 64, 45, 10, 5, 25, 1, 80);
+    public Player(float x, float y, String name, Tonpose t){
+        super(-1, x, y, 8, 64, 45, 10, 5, 25, 1, 80, t);
         texture = new Texture(Gdx.files.internal("mainbase.png"));
         userName = name;
         score = 0;
@@ -107,14 +107,14 @@ public class Player extends Living {
             }
             Rectangle newPositionX = new Rectangle(locationX + xMove, locationY, width, height);
             Rectangle newPositionY = new Rectangle(locationX, locationY + yMove, width, height);
-            for(Item item : TonposeScreen.Map.getItems()){
+            for(Item item : tonpose.tonposeScreen.Map.getItems()){
                 if(!item.inInventory){
                     if(item.getBody().overlaps(body)){
                         addInventory(item);
                     }
                 }
             }
-            for (Entity entity : TonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
+            for (Entity entity : tonpose.tonposeScreen.Map.getEntities()) { //checks if the player is going to collide with any entities
                 if(entity.collision == true){
                     if (newPositionX.overlaps(entity.getRectangle())) {
                         collidedX = true;
@@ -129,9 +129,9 @@ public class Player extends Living {
                     xMove = -locationX;
                     locationX = 0;
 
-                } else if (locationX + xMove > TonposeScreen.Map.getWidth()) {
-                    xMove = TonposeScreen.Map.getWidth() -locationX;
-                    locationX = TonposeScreen.Map.getWidth();
+                } else if (locationX + xMove > tonpose.tonposeScreen.Map.getWidth()) {
+                    xMove = tonpose.tonposeScreen.Map.getWidth() -locationX;
+                    locationX = tonpose.tonposeScreen.Map.getWidth();
 
                 } else {
                     locationX += xMove;
@@ -148,9 +148,9 @@ public class Player extends Living {
                     yMove = -locationY;
                     locationY = 0;
 
-                } else if (locationY + yMove > TonposeScreen.Map.getHeight()) {
-                    yMove = TonposeScreen.Map.getHeight() - locationY;
-                    locationY = TonposeScreen.Map.getHeight();
+                } else if (locationY + yMove > tonpose.tonposeScreen.Map.getHeight()) {
+                    yMove = tonpose.tonposeScreen.Map.getHeight() - locationY;
+                    locationY = tonpose.tonposeScreen.Map.getHeight();
 
                 } else {
                     locationY += yMove;

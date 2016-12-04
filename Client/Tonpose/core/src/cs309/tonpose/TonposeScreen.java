@@ -34,7 +34,7 @@ import static java.lang.Math.abs;
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	public static Map Map;
+	public Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage;
 	public static Texture	healthImage;
@@ -117,7 +117,7 @@ public class TonposeScreen implements Screen {
 		player.y = tonpose.lastY;
 		*/
 
-		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name);
+		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name, tonpose);
 		Map.spawnNPC();
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
