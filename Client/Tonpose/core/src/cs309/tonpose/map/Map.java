@@ -3,7 +3,6 @@ package cs309.tonpose.map;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.rmi.server.UID;
 import java.util.ArrayList;
 
 import cs309.tonpose.*;

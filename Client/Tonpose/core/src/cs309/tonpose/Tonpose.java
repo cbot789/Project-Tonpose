@@ -98,9 +98,11 @@ public class Tonpose extends Game{
                     Network.UpdateUser update = (Network.UpdateUser) object;
                     if (update.id != ID) {    //do not update our own player
                         User user = users.get(update.id);
-                        user.x = update.x;
-                        user.y = update.y;
-                        users.put(update.id, user);
+                        if(user != null){
+                            user.x = update.x;
+                            user.y = update.y;
+                            users.put(update.id, user);
+                        }
                     }
                 }
                 // Removes a user when they disconnect
@@ -112,7 +114,9 @@ public class Tonpose extends Game{
                 // Updates the location of a specific element or item on the map
                 if (object instanceof Network.MoveElement) {
                     Network.MoveElement move = (Network.MoveElement) object;
-                    tonposeScreen.Map.moveElement(move);
+                    if(ready){
+                        tonposeScreen.Map.moveElement(move);
+                    }
                 }
                 // Adds an item or element to the map
                 if (object instanceof Network.AddElement) {

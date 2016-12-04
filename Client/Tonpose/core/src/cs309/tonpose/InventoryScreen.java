@@ -27,7 +27,7 @@ import static cs309.tonpose.TonposeScreen.player;
 public class InventoryScreen implements Screen {
 
     final Tonpose tonpose;
-    private Texture buttonImage;
+    private Texture buttonImage,Cabbage,Log;
     private Stage stage;
     private TextureRegion buttonRegion;
     private TextureRegionDrawable buttonRegionDrawable;
@@ -61,6 +61,8 @@ public class InventoryScreen implements Screen {
 
         //add stage and players button
         buttonImage = new Texture(Gdx.files.internal("back.png"));
+        Log=new Texture(Gdx.files.internal("shlog.png"));
+        Cabbage= new Texture(Gdx.files.internal("cabbage.png"));
         buttonRegion = new TextureRegion(buttonImage);
         buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
         backButton = new ImageButton(buttonRegionDrawable);
@@ -91,10 +93,13 @@ public class InventoryScreen implements Screen {
         batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
         batch.begin();
         // show all players
-        font.setColor(Color.BLACK);
+        font.setColor(Color.FIREBRICK);
         font.getData().setScale(4f);
         font.draw(batch, "Inventory", 300, 450);
-
+        batch.draw(Cabbage, 100, 100);
+        batch.draw(Log, 25, 300);
+        batch.draw(Cabbage, 600,350);
+        batch.draw(Log, 575, 80);
         font.getData().setScale(2f);
         if(player.equiped!= null){
             font.draw(batch, "equipped: " + player.equiped.name, 100, 350);
@@ -127,7 +132,7 @@ public class InventoryScreen implements Screen {
     }
 
     @Override
-    public void show() {
+    public void show() { //TODO needs comments
         Gdx.input.setInputProcessor(stage);
 
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
