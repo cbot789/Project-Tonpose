@@ -213,6 +213,7 @@ public class Player extends Living {
 
     }
 
+    @Override
     public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
         if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
             i = old + 1;

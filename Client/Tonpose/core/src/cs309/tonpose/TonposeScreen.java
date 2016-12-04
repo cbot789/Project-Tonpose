@@ -290,6 +290,8 @@ public class TonposeScreen implements Screen {
 			if(entity instanceof Mob){
 				if(((Mob)entity).targetID == tonpose.ID){ //checks if the mob is after the player
 					((Mob) entity).move(player, 0 ,0, 1); //moves mob towards player
+				}else{
+					entity.nextAnimation(1);
 				}
 			}
 		}

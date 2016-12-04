@@ -172,4 +172,8 @@ public class Entity {
     public float getHeight(){
         return height;
     }
+    public void nextAnimation(int i){
+        Texture temp = texture;
+        texture = temp;
+    }
 }
