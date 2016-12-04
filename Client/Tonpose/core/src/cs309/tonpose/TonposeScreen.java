@@ -252,7 +252,7 @@ public class TonposeScreen implements Screen {
 		if (time > lastNpc + NPCDELAY)
 			moveEnemy();
 
-		if (time > lastUpdate + UPDATEDELAY)
+		if (time > lastUpdate + UPDATEDELAY) //updates player position on other clients
 			updatePlayer();
 
 		/* spawning temporarily disabled
@@ -264,7 +264,7 @@ public class TonposeScreen implements Screen {
 		if(time > lastAnimation + ANIMATIONDELAY)
 			player.nextAnimation(nextAnimation);
 
-		if(player.currentHp < 0 && player.killable)
+		if(player.currentHp < 0 && player.killable) //checks if player is dead and changes screen accordingly
 			tonpose.setScreen(tonpose.deathScreen);
 
 		Map.updateMap();
@@ -286,8 +286,8 @@ public class TonposeScreen implements Screen {
 	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
-				if(((Mob)entity).targetID == tonpose.ID){
-					((Mob) entity).move(player, 0 ,0, 1);
+				if(((Mob)entity).targetID == tonpose.ID){ //checks if the mob is after the player
+					((Mob) entity).move(player, 0 ,0, 1); //moves mob towards player
 				}
 			}
 		}
