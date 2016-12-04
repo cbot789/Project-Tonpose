@@ -62,7 +62,7 @@ public class Player extends Living {
         logged = false;
     }
 
-    public void action(){
+    public void action(){//uses equipped item, if nothing is equipped, attack
         nextAnimation(2);
         if(equiped != null){
             if(equiped.hasAction){
@@ -76,7 +76,7 @@ public class Player extends Living {
         }
     }
 
-    public void craft(){
+    public void craft(){//delete 1 mod and base item to create a new item
         if(base != null){
             if(mod != null){
                 Item result = base.craft(mod);

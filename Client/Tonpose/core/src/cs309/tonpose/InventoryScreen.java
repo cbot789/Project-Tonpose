@@ -90,17 +90,21 @@ public class InventoryScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        // show all players
+
+
+        //title and pictures
         font.setColor(Color.FIREBRICK);
         font.getData().setScale(4f);
         font.draw(batch, "Inventory", 300, 450);
-        batch.draw(Cabbage, 100, 100);
+        batch.draw(Cabbage, 100, 100);             //TODO move images?
         batch.draw(Log, 25, 300);
         batch.draw(Cabbage, 600,350);
         batch.draw(Log, 575, 80);
         font.getData().setScale(2f);
+
+        //displays player's currently equiped item
         if(player.equiped!= null){
             font.draw(batch, "equipped: " + player.equiped.name, 100, 350);
         }else{
@@ -108,17 +112,19 @@ public class InventoryScreen implements Screen {
         }
         batch.end();
 
+        //displays items currently in the player's crafting que base and mod items are used to make new item
         if( player.base != null){
             base.setText("Base: "+ player.base.name);
         }else{
             base.setText("Base: Nothing");
         }
-
         if( player.mod != null) {
             mod.setText("Mod: " + player.mod.name);
         }else{
             mod.setText("Mod: Nothing");
         }
+
+        //updates item count
         int i = 0;
         for (final cs309.tonpose.map.Item item : player.getInventory()) {
             inv[i].setText(item.name + " " + item.getCount());
@@ -132,7 +138,7 @@ public class InventoryScreen implements Screen {
     }
 
     @Override
-    public void show() { //TODO needs comments
+    public void show() { //initializes buttons for items and crafting
         Gdx.input.setInputProcessor(stage);
 
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -141,7 +147,10 @@ public class InventoryScreen implements Screen {
         font = new BitmapFont();
         textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
+
         updateTable();
+
+        //moved to updateTable
         /*
         table.clear();
         currentInvSize = 0;
@@ -182,6 +191,8 @@ public class InventoryScreen implements Screen {
         craftTable.right();
         stage.addActor(craftTable);
         craftTable.clear();
+
+        //base crafting item button
         if( player.base != null){
             base = new TextButton("Base: "+ player.base.name, textButtonStyle);
         }else{
@@ -190,7 +201,7 @@ public class InventoryScreen implements Screen {
         base.getLabel().setFontScale(5,5);
         base.addListener(new ClickListener()
         {
-            @Override                                                   //FIXME buttons for crafting updating without refreshing
+            @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 currentMode = invMode.baseMode;
@@ -198,6 +209,8 @@ public class InventoryScreen implements Screen {
         });
         craftTable.add(base);
         craftTable.row();
+
+        //mod crafting item button
         if( player.mod != null) {
             mod = new TextButton("Mod: " + player.mod.name, textButtonStyle);
         }else{
@@ -216,8 +229,8 @@ public class InventoryScreen implements Screen {
         craftTable.row();
         craftTable.row();
 
+        //crafting button
         craft = new TextButton("Craft!", textButtonStyle);
-
         craft.getLabel().setFontScale(5,5);
         craft.addListener(new ClickListener()
         {
@@ -248,7 +261,7 @@ public class InventoryScreen implements Screen {
 
     }
 
-    private void updateTable(){
+    private void updateTable(){//updates values and names of all buttons on the inventory screen
         table.clear();
         currentInvSize = 0;
         for (final cs309.tonpose.map.Item item : player.getInventory()) {

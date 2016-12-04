@@ -15,6 +15,6 @@ public class RiverHorizontal extends Terrain {
             flow = -3;
         }
         modX = flow;
-        texture=new Texture(Gdx.files.internal("water.png"));
+        texture=new Texture(Gdx.files.internal("water80x80hd.png"));
     }
 }

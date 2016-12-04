@@ -131,7 +131,7 @@ public class TonposeScreen implements Screen {
 	}
 
 	@Override
-	public void render(float delta) { //TODO change to only render inside of the camera
+	public void render(float delta) {
 
 		//sets area around screen so client only renders what the user will see
 		float renderUpperX = camera.position.x + renderBufferX;
@@ -296,8 +296,6 @@ public class TonposeScreen implements Screen {
 
 		lastNpc = TimeUtils.nanoTime();
 	}
-
-	//TODO add menu button
 
 	//updates the player location through the network
 	public void updatePlayer(){

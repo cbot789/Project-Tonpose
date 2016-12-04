@@ -24,6 +24,7 @@ public class Map {
     public int UIDmax;
     private Tonpose tonpose;
 
+    //creates map in single player
     public Map(Tonpose t, int height, int width, int maxEntities, int difficulty){
         this.tonpose = t;
         this.height=height;
@@ -44,6 +45,7 @@ public class Map {
 
     }
 
+    //create map based on server data
     public Map(Tonpose t, int height, int width, int[] terrain, int[][] entities){
         this.tonpose = t;
         UIDmax = 0;
@@ -66,10 +68,12 @@ public class Map {
 
     }
 
+    //randomly spawns an npc onto the map
     public void spawnNPC(){
         addToMap(generateEntities(1));
     }
 
+    //used for single player
     private Entity generateEntities(int id){
         int x=MathUtils.random(width);
         int y= MathUtils.random(height);
@@ -102,7 +106,7 @@ public class Map {
                     return generateTerrain();
                 }
             }*/
-            return tree;                                                             //TODO make an id list for all entities, tree is currently 1
+            return tree;
         }
     }
 
@@ -181,6 +185,7 @@ public class Map {
 
     }
 
+    //creates a river at x,y location with given width and lenght
     private void createRiverHorizontal(int x, int y, int width, int length, boolean left){
         for(int i = x; i < x + length; i++){
             for(int j = y; j < y + width; j++){
@@ -200,6 +205,7 @@ public class Map {
     public ArrayList<Item> getItems() {
         return items;
     }
+
     //adds an item to appear on the map
     public void addToMap(Item item){
         itemsAdd.add(item);
@@ -211,6 +217,7 @@ public class Map {
         tonpose.client.sendTCP(add);
     }
 
+    //adds entitys to map
     public void addToMap(Entity entity){
         entitiesAdd.add(entity);
         Network.AddElement add = new Network.AddElement();
@@ -220,6 +227,8 @@ public class Map {
         add.y = entity.locationY;
         tonpose.client.sendTCP(add);
     }
+
+    //wrapper for entity and item addToMap
     public void addToMap(Network.AddElement add){
         if(add.id < 10){
             entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
@@ -249,6 +258,7 @@ public class Map {
 
     }
 
+    //removes an entity so it no longer shows on the map
     public void removeFromMap(Entity entity){
         entitiesDelete.add(entity);
         Network.RemoveElement remove = new Network.RemoveElement();
@@ -256,6 +266,8 @@ public class Map {
         remove.uid = entity.uid;
         tonpose.client.sendTCP(remove);
     }
+
+    //wrapper
     public void removeFromMap(Network.RemoveElement remove){
         if(remove.tid < 10){
             for(Entity e: entities){
@@ -273,7 +285,9 @@ public class Map {
         }
     }
 
-    public void moveElement(Network.MoveElement move){
+    //moves mobs from other clients
+    public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is moving
+        /*
         // Only move mob elements
         if(move.tid == 2){
             for(Entity e: entities){
@@ -281,10 +295,10 @@ public class Map {
                     e.move(move.x, move.y);
                 }
             }
-        }
+        }*/
     }
 
-
+    //checks for nearby targets for the player
     public Entity checkMap(float x, float y, float rangeX, float rangeY){ //TODO improve selection method
         Entity returnEntity=null;
         for (Entity entity:entities) {
@@ -310,6 +324,7 @@ public class Map {
         return null;
     }
 
+    //checks for nearby targets for mobs
     public Entity mobCheckMap(float x, float y, float rangeX, float rangeY){ //TODO improve selection method
         Entity returnEntity=null;
         for (Entity entity:entities) {
@@ -352,12 +367,14 @@ public class Map {
         return null;
     }
 
+    //returns the distance between two points
     public double getDistance(float x1, float y1, float x2, float y2){ // returns the distance between two points
       double distance=Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2)+Math.abs(y1-y2)*Math.abs(y1-y2));
       return distance;
 
     }
 
+    //adds and removes all objects from buffer list to the map
     public void updateMap(){
         for (Entity entity: entitiesAdd) {
             entities.add(entity);

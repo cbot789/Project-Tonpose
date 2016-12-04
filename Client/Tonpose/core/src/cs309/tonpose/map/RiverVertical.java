@@ -15,6 +15,6 @@ public class RiverVertical extends Terrain {
             flow = -3;
         }
         modY = flow;
-        texture=new Texture(Gdx.files.internal("water.png"));
+        texture=new Texture(Gdx.files.internal("water80x80hd.png"));
     }
 }

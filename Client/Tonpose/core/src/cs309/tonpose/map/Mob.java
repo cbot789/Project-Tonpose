@@ -14,6 +14,8 @@ import static java.lang.Math.abs;
  */
 public class Mob extends Living {
 
+    public int old;
+    public TonposeScreen.state state;
     protected int flee;
     protected int npcNumber;
     public int targetID;
@@ -54,6 +56,7 @@ public class Mob extends Living {
         boolean collidedX = false;
         boolean collidedY = false;
         if (sum > 4) { //stops if within 4 units of target location to prevent "the shakes"
+            nextAnimation(1);
             float xMove = (moveSpeed * (x / sum)) * scale + modX;
             float yMove = (moveSpeed * (y / sum)) * scale + modY;
             if(flee > 0){
@@ -126,9 +129,72 @@ public class Mob extends Living {
                 if (flee < 1) {
                     scare(20);
                     target.changeHp(-1);
+                    nextAnimation(2);
                 }
             }
+        }else{
+            nextAnimation(0);
         }
+    }
+
+    public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
+        if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
+            i = old + 1;
+        }
+        switch (i){
+            case 1:
+                switch (old) {
+                    case 10:
+                        texture = new Texture(Gdx.files.internal("player2base.png"));
+                        i = 11;
+                        break;
+                    case 11:
+                        texture = new Texture(Gdx.files.internal("player2WalkingRight3.png"));
+                        i = 12;
+                        break;
+                    case 12:
+                        texture = new Texture(Gdx.files.internal("player2base.png"));
+                        break;
+                    default:
+                        texture = new Texture(Gdx.files.internal("player2WalkingRight1.png"));
+                        i = 10;
+                        break;
+                }
+                break;
+            case 2:
+                texture = new Texture(Gdx.files.internal("player2base.png"));
+                state = TonposeScreen.state.action;
+                i = 20;
+                break;
+            case 3:
+                texture = new Texture(Gdx.files.internal("player2base.png"));
+                state = TonposeScreen.state.hit;
+                i = 30;
+                break;
+            case 21:
+                texture = new Texture(Gdx.files.internal("player2Attack1.png"));
+                break;
+            case 22:
+                texture = new Texture(Gdx.files.internal("player2Attack2.png"));
+                state = TonposeScreen.state.standing;
+                break;
+            case 31:
+                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                break;
+            case 32:
+                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                break;
+            case 33:
+                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                break;
+            case 34:
+                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                state = TonposeScreen.state.standing;
+                break;
+            default:
+                texture = new Texture(Gdx.files.internal("player2base.png"));
+        }
+        old = i;
     }
 
     @Override
@@ -136,11 +202,18 @@ public class Mob extends Living {
         Entity hit = TonposeScreen.Map.mobCheckMap(x, y, attackRange, attackRange);
         if(hit != null){
             hit.changeHp(-power);
+            nextAnimation(2);
         }
     }
     @Override
     public void kill(){
         super.kill();
         TonposeScreen.player.updateScore(10);
+    }
+
+    @Override
+    public void changeHp(int mod) {
+        super.changeHp(mod);
+        nextAnimation(3);
     }
 }

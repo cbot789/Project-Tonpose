@@ -30,6 +30,8 @@ public class Item {
         inInventory = !map;
         craftingBase = false;
     }
+
+    //when item is used, decrease count by 1
     public void action(Rectangle player,Player user){
             if(!hasAction){
                 return;
@@ -63,6 +65,6 @@ public class Item {
     }
 
     public Item craft(Item mod){
-        return mod;
+        return null;
     }
 }

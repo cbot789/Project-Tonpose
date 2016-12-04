@@ -54,6 +54,7 @@ public class PlayersScreen implements Screen {
         });
         stage = new Stage();
         stage.addActor(backButton);
+        //TODO add menu button
     }
 
 
@@ -92,6 +93,7 @@ public class PlayersScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override
