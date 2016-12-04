@@ -133,15 +133,6 @@ public class TonposeScreen implements Screen {
 	@Override
 	public void render(float delta) { //TODO change to only render inside of the camera
 
-
-		camera.update();
-		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
-		batch.begin();
-
-		// clear screen to dark blue color
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		//sets area around screen so client only renders what the user will see
 		float renderUpperX = camera.position.x + renderBufferX;
 		float renderLowerX = camera.position.x - renderBufferX;
@@ -160,6 +151,14 @@ public class TonposeScreen implements Screen {
 			renderLowerX = 0;
 		}
 
+		camera.update();
+		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
+		batch.begin();
+
+		// clear screen to dark blue color
+		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		//render terrain on screen
 		for(int i = (int)(renderLowerX / 80); i < renderUpperX / 80; i++){
 			for(int j = (int)(renderLowerY / 80); j < renderUpperY / 80; j ++){
@@ -175,7 +174,6 @@ public class TonposeScreen implements Screen {
 		}
 
 		//renders user's player
-
 		batch.draw(player.texture, player.getX(), player.getY());
 
 		//renders other entities
