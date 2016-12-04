@@ -28,7 +28,7 @@ import static cs309.tonpose.TonposeScreen.player;
 public class DeathScreen implements Screen {
 
     final Tonpose tonpose;
-    private Texture buttonImage;
+    private Texture buttonImage,Scared;
     private Stage stage;
     private TextureRegion buttonRegion;
     private TextureRegionDrawable buttonRegionDrawable;
@@ -52,6 +52,7 @@ public class DeathScreen implements Screen {
 
         //add stage and players button
         buttonImage = new Texture(Gdx.files.internal("back.png"));
+        Scared=new Texture(Gdx.files.internal("mainScared.png"));
         buttonRegion = new TextureRegion(buttonImage);
         buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
         backButton = new ImageButton(buttonRegionDrawable);
@@ -82,10 +83,11 @@ public class DeathScreen implements Screen {
         batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
         batch.begin();
         // show all players
-        font.setColor(Color.BLACK);
+        font.setColor(Color.FIREBRICK);
         font.getData().setScale(4f);
         font.draw(batch, TonposeScreen.player.userName, 300, 450);
         font.draw(batch, "has been slain", 225, 400);
+        batch.draw(Scared,215,200);
         batch.end();
     }
 
