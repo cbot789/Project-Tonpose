@@ -38,7 +38,7 @@ public class PlayersScreen implements Screen {
         camera.setToOrtho(false, 800, 480);
         batch = new SpriteBatch();
         font = new BitmapFont();
-
+        font.setColor(Color.LIME);
         //add stage and players button
         buttonImage = new Texture(Gdx.files.internal("back.png"));
         buttonRegion = new TextureRegion(buttonImage);
@@ -71,7 +71,7 @@ public class PlayersScreen implements Screen {
         batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
         batch.begin();
         // show all players
-        font.setColor(Color.BLACK);
+        font.setColor(Color.FIREBRICK);
         font.getData().setScale(4f);
         font.draw(batch, "Players Online", 200, 450);
         font.getData().setScale(2f);

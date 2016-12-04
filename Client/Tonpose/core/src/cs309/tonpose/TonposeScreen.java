@@ -66,9 +66,9 @@ public class TonposeScreen implements Screen {
 	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     80000000;
-	private final int ANIMATIONDELAY = 800000000;
-	private final long SPAWNDELAY =   8000000000L;
-	private final long GROWTHDELAY =  8000000000L; //TODO implement growth of trees and cabbages after planting
+	private final long ANIMATIONDELAY = 160000000L;
+	private final long SPAWNDELAY =     8000000000L;
+	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	//private Stage stage;
 	private TextButton inv;
@@ -231,6 +231,7 @@ public class TonposeScreen implements Screen {
 		if(!moving){
 			tonpose.lastX = player.getX();
 			tonpose.lastY = player.getY();
+			nextAnimation = 0;
 		}
 
 		//render stage
@@ -260,8 +261,10 @@ public class TonposeScreen implements Screen {
 			lastSpawn = time;
 		}
 		*/
-		if(time > lastAnimation + ANIMATIONDELAY)
+		if(time > lastAnimation + ANIMATIONDELAY) {
 			player.nextAnimation(nextAnimation);
+			lastAnimation = time;
+		}
 
 		if(player.currentHp < 0 && player.killable) //checks if player is dead and changes screen accordingly
 			tonpose.setScreen(tonpose.deathScreen);

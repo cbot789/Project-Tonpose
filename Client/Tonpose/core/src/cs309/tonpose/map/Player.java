@@ -215,10 +215,11 @@ public class Player extends Living {
 
     public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
         if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
-            i = old++;
+            i = old + 1;
         }
         switch (i){
             case 1:
+                System.out.println("walking");
                 switch (old) {
                     case 10:
                         texture = new Texture(Gdx.files.internal("mainbase.png"));
@@ -238,23 +239,40 @@ public class Player extends Living {
                 }
                 break;
             case 2:
+                System.out.println("attacking1");
                 texture = new Texture(Gdx.files.internal("mainbase.png"));
                 state = TonposeScreen.state.action;
                 i = 20;
                 break;
             case 3:
+                System.out.println("hit1");
                 texture = new Texture(Gdx.files.internal("mainbase.png"));
                 state = TonposeScreen.state.hit;
                 i = 30;
                 break;
             case 21:
+                System.out.println("attacking2");
                 texture = new Texture(Gdx.files.internal("mainAttack1.png"));
                 break;
             case 22:
+                System.out.println("attacking3");
                 texture = new Texture(Gdx.files.internal("mainAttack2.png"));
                 state = TonposeScreen.state.standing;
                 break;
             case 31:
+                System.out.println("hit2");
+                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                break;
+            case 32:
+                System.out.println("hit3");
+                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                break;
+            case 33:
+                System.out.println("hit4");
+                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                break;
+            case 34:
+                System.out.println("hit5");
                 texture = new Texture(Gdx.files.internal("mainScared.png"));
                 state = TonposeScreen.state.standing;
                 break;
