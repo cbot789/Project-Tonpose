@@ -157,7 +157,7 @@ public class TonposeScreen implements Screen {
 		batch.begin();
 
 		// clear screen to dark blue color
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.9f, 0.5f);
+		Gdx.gl.glClearColor(0, 0, 0.7f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//render terrain on screen

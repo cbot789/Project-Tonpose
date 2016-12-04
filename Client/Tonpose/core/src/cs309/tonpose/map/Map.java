@@ -295,7 +295,7 @@ public class Map {
     }
 
     //moves mobs from other clients
-    public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is movin
+    public void moveElement(Network.MoveElement move){
         // Only move mob elements
         boolean exists = false;
         if(move.tid == 2){
