@@ -14,8 +14,8 @@ public class Living extends cs309.tonpose.map.Entity {
     protected int attackRange;
 
     //Entity(int locationX, int locationY, int id, int maxHp, int height, int width, int mass, int invSize, boolean killable, boolean collision){
-    public Living(int uid, float x, float y, int hp, int height, int width, int invSize, int moveSpeed, int power, int lvl, int attackRange) {
-        super(uid, x, y, 2, hp, height, width, 1, invSize, true, false);
+    public Living(int uid, float x, float y, int hp, int height, int width, int invSize, int moveSpeed, int power, int lvl, int attackRange, Tonpose t) {
+        super(uid, x, y, 2, hp, height, width, 1, invSize, true, false, t);
         this.power = power;
         this.moveSpeed = moveSpeed;
         this.lvl = lvl;
@@ -30,7 +30,7 @@ public class Living extends cs309.tonpose.map.Entity {
     }
 
     public void attack(float x, float y) {
-        Entity hit = TonposeScreen.Map.checkMap(x, y, attackRange, attackRange);
+        Entity hit = tonpose.tonposeScreen.Map.checkMap(x, y, attackRange, attackRange);
         if(hit != null){
             hit.changeHp(-power);
         }

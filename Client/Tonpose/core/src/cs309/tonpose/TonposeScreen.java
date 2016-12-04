@@ -34,7 +34,7 @@ import static java.lang.Math.abs;
 public class TonposeScreen implements Screen {
 
 	final Tonpose tonpose;
-	public static Map Map;
+	public Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage;
 	public static Texture	healthImage;
@@ -82,6 +82,7 @@ public class TonposeScreen implements Screen {
 	Terrain terrainMap[][];
 
 	public String Score="Score: ";
+	public String Lvl="Level: ";
 
 	public TonposeScreen(Tonpose t, int[] terrainArray, int[][] entitiesArray){
 		this.tonpose = t;
@@ -117,7 +118,7 @@ public class TonposeScreen implements Screen {
 		player.y = tonpose.lastY;
 		*/
 
-		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name);
+		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name, tonpose);
 		Map.spawnNPC();
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
@@ -205,6 +206,7 @@ public class TonposeScreen implements Screen {
 		}
 
 		font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
+		font.draw(batch, Lvl+player.lvl, playerHealthX+65, playerHealthY+30); // draws current player level
 		//renders hp bar
 		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering

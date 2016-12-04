@@ -70,7 +70,7 @@ public class Map {
 
     //randomly spawns an npc onto the map
     public void spawnNPC(){
-        addToMap(generateEntities(1));
+        addToMap(generateEntities(1), true);
     }
 
     //used for single player
@@ -79,7 +79,7 @@ public class Map {
         int y= MathUtils.random(height);
         Rectangle playerRectangle= new Rectangle(400,240,45,64);
         if(id==0){
-            Cabbage cabbage = new Cabbage(UIDmax++, x,y);
+            Cabbage cabbage = new Cabbage(UIDmax++, x,y, tonpose);
             if(cabbage.body.overlaps(playerRectangle)){
                 return generateEntities(0); //try again for a valid position
             }
@@ -88,19 +88,19 @@ public class Map {
                     return generateTerrain();
                 }
             }*/
-            return new Cabbage(UIDmax++ + tonpose.ID, x, y);
+            return new Cabbage(UIDmax++, x, y, tonpose);
         }
         else if(id == 1){
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
-            return new Mob(UIDmax++, tonpose.ID, x, y, mobCount, tonpose);
+            return new Mob(UIDmax + tonpose.ID, tonpose.ID, x, y, mobCount, tonpose);
         }else if(id == 8){
-            WoodBlock woodBlock = new WoodBlock(UIDmax++, x, y);
+            WoodBlock woodBlock = new WoodBlock(UIDmax++, x, y, tonpose);
             return woodBlock;
         }
         else {
-            Tree tree=new Tree(UIDmax++, x,y);
+            Tree tree=new Tree(UIDmax++, x,y, tonpose);
             if(tree.body.overlaps(playerRectangle)){
                 return generateEntities(2);
             }
@@ -117,16 +117,16 @@ public class Map {
     private Entity generateEntities(int uid, int id, float x, float y){
         switch(id){
             case 0:
-                return new Cabbage(uid, x,y);
+                return new Cabbage(uid, x,y, tonpose);
             case 2:
                 mobCount++;
                 return new Mob(uid, -1, x,y, mobCount, tonpose);
             case 8:
-                return new WoodBlock(uid, x,y);
+                return new WoodBlock(uid, x,y, tonpose);
             case 9:
-                return new Tree(uid, x, y);
+                return new Tree(uid, x, y, tonpose);
             default:
-                return new Tree(uid, x,y);
+                return new Tree(uid, x,y, tonpose);
         }
     }
 
@@ -134,15 +134,15 @@ public class Map {
     private Item generateItems(int uid, int id, float x, float y){
         switch(id){
             case 10:
-                return new TreeSeeds(uid, 1, x, y, true);
+                return new TreeSeeds(uid, 1, x, y, true, tonpose);
             case 11:
-                return new CabbageSeeds(uid, 1, x, y, true);
+                return new CabbageSeeds(uid, 1, x, y, true, tonpose);
             case 12:
-                return new CabbageLeaves(uid, 1, x, y, true);
+                return new CabbageLeaves(uid, 1, x, y, true, tonpose);
             case 13:
-                return new Logs(uid, 1, x, y, true);
+                return new Logs(uid, 1, x, y, true, tonpose);
             default:
-                return new Plank(uid, 1, x, y);
+                return new Plank(uid, 1, x, y, tonpose);
         }
     }
 
@@ -153,7 +153,7 @@ public class Map {
                 int id=MathUtils.random(0,10);
                 switch(id){
                     default:
-                        terrains[i][j] = new grass(i * 20, j* 20);
+                        terrains[i][j] = new grass(i * 20, j* 20, tonpose);
                 }
             }
         }
@@ -170,19 +170,19 @@ public class Map {
             for(int y = 0; y < height/80 + 1; y++){
                 switch(terrain[i]){
                     case 1:
-                        this.terrains[x][y] = new RiverHorizontal(x * 80, y * 80, true);
+                        this.terrains[x][y] = new RiverHorizontal(x * 80, y * 80, true, tonpose);
                         break;
                     case 2:
-                        this.terrains[x][y] = new RiverVertical(x*80, y*80, true);
+                        this.terrains[x][y] = new RiverVertical(x*80, y*80, true, tonpose);
                         break;
                     case 3:
-                        this.terrains[x][y] = new RiverHorizontal(x * 80, y * 80, false);
+                        this.terrains[x][y] = new RiverHorizontal(x * 80, y * 80, false, tonpose);
                         break;
                     case 4:
-                        this.terrains[x][y] = new RiverVertical(x*80, y*80, false);
+                        this.terrains[x][y] = new RiverVertical(x*80, y*80, false, tonpose);
                         break;
                     default:
-                        this.terrains[x][y] = new grass(x * 80 ,y * 80);
+                        this.terrains[x][y] = new grass(x * 80 ,y * 80, tonpose);
                 }
                 i++;
             }
@@ -194,7 +194,7 @@ public class Map {
     private void createRiverHorizontal(int x, int y, int width, int length, boolean left){
         for(int i = x; i < x + length; i++){
             for(int j = y; j < y + width; j++){
-                terrains[i][j] = new RiverHorizontal(i * 80, j * 80, left);
+                terrains[i][j] = new RiverHorizontal(i * 80, j * 80, left, tonpose);
             }
         }
     }
@@ -212,34 +212,38 @@ public class Map {
     }
 
     //adds an item to appear on the server map
-    public void addToMap(Item item){
+    public void addToMap(Item item, boolean send){
         itemsAdd.add(item);
-        Network.AddElement add = new Network.AddElement();
-        add.id = item.itemID;
-        add.uid = item.uid;
-        add.x = item.locationX;
-        add.y = item.locationY;
-        tonpose.client.sendTCP(add);
+        if(send){
+            Network.AddElement add = new Network.AddElement();
+            add.id = item.itemID;
+            add.uid = item.uid;
+            add.x = item.locationX;
+            add.y = item.locationY;
+            tonpose.client.sendTCP(add);
+        }
     }
 
-    //adds entitys to server map
-    public void addToMap(Entity entity){
+    //adds entities to server map
+    public void addToMap(Entity entity, boolean send){
         entitiesAdd.add(entity);
-        Network.AddElement add = new Network.AddElement();
-        add.id = entity.id;
-        add.uid = entity.uid;
-        add.x = entity.locationX;
-        add.y = entity.locationY;
-        tonpose.client.sendTCP(add);
+        if(send){
+            Network.AddElement add = new Network.AddElement();
+            add.id = entity.id;
+            add.uid = entity.uid;
+            add.x = entity.locationX;
+            add.y = entity.locationY;
+            tonpose.client.sendTCP(add);
+        }
     }
 
     //add to client side from server
     public void addToMap(Network.AddElement add){
         if(add.id < 10){
-            entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
+            addToMap(generateEntities(add.uid, add.id, add.x, add.y), false);
         }
         else if(add.id <= 14){
-            itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
+            addToMap(generateItems(add.uid, add.id, add.x, add.y), false);
         }
         UIDmax = add.uid + 1;
     }

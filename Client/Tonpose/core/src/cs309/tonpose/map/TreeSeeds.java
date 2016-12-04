@@ -11,8 +11,8 @@ import cs309.tonpose.*;
  */
 
 public class TreeSeeds extends Item {
-    public TreeSeeds(int uid, int number, float x, float y, boolean map) {
-        super(uid, number, x, y, 10, map);
+    public TreeSeeds(int uid, int number, float x, float y, boolean map, Tonpose t) {
+        super(uid, number, x, y, 10, map, t);
         texture = new Texture(Gdx.files.internal("acorn.png"));
         hasAction = true;
         name = "Tree Seeds";
@@ -21,8 +21,8 @@ public class TreeSeeds extends Item {
     @Override
     public void action(Rectangle player, Player user) {
         if(count > 0){
-            Tree tree = new Tree(TonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY());
-            TonposeScreen.Map.addToMap(tree);
+            Tree tree = new Tree(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY(), tonpose);
+            tonpose.tonposeScreen.Map.addToMap(tree, true);
             super.action(player,user);
             user.updateScore(5); //add points for planting tree
         }

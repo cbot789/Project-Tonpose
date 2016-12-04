@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import cs309.tonpose.*;
 
 /**
  * Created by Quade Spellman on 9/27/2016.
@@ -18,8 +19,9 @@ public class Item {
     public Rectangle body;
     public Texture texture;
     public boolean craftingBase;
+    protected Tonpose tonpose;
 
-    public Item(int uid, int number, float x, float y, int id, boolean map){
+    public Item(int uid, int number, float x, float y, int id, boolean map, Tonpose t){
         this.uid = uid;
         count = number;
         locationX = x;
@@ -29,6 +31,7 @@ public class Item {
         body.set(locationX, locationY, 32, 32);
         inInventory = !map;
         craftingBase = false;
+        this.tonpose = t;
     }
 
     //when item is used, decrease count by 1

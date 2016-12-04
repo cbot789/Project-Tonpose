@@ -1,5 +1,7 @@
 package cs309.tonpose.map;
 
+import cs309.tonpose.*;
+
 /**
  * Created by Caleb on 10/26/2016.
  */
@@ -11,8 +13,8 @@ public class Terrain extends Entity {
     protected int modY;
     protected float scale;
 
-    public Terrain(int locationX, int locationY, int id, int modX, int modY, float scale){
-        super(-1, locationX, locationY, id, -1, 80, 80, -1, 0, false, false);
+    public Terrain(int locationX, int locationY, int id, int modX, int modY, float scale, Tonpose t){
+        super(-1, locationX, locationY, id, -1, 80, 80, -1, 0, false, false, t);
         this.modX = modX;
         this.modY = modY;
         this.scale = scale;
