@@ -12,7 +12,7 @@ public class Terrain extends Entity {
     protected float scale;
 
     public Terrain(int locationX, int locationY, int id, int modX, int modY, float scale){
-        super(-1, locationX, locationY, id, -1, 20, 20, -1, 0, false, false);
+        super(-1, locationX, locationY, id, -1, 80, 80, -1, 0, false, false);
         this.modX = modX;
         this.modY = modY;
         this.scale = scale;

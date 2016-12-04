@@ -135,6 +135,8 @@ public class Entity {
     public void move(float x, float y){
         locationX = x;
         locationY = y;
+        body.setX(locationX);
+        body.setY(locationY);
     }
 
     //deletes entity from the map

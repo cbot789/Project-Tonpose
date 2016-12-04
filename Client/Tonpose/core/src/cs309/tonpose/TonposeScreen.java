@@ -62,7 +62,7 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
-	private final int TICKDELAY =       10000000;
+	private final int TICKDELAY =       20000000;
 	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     80000000;
@@ -132,6 +132,8 @@ public class TonposeScreen implements Screen {
 
 	@Override
 	public void render(float delta) { //TODO change to only render inside of the camera
+
+
 		camera.update();
 		batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
 		batch.begin();
@@ -159,9 +161,9 @@ public class TonposeScreen implements Screen {
 		}
 
 		//render terrain on screen
-		for(int i = (int)(renderLowerX / 20); i < renderUpperX / 20; i++){
-			for(int j = (int)(renderLowerY / 20); j < renderUpperY /20; j++){
-				//batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
+		for(int i = (int)(renderLowerX / 80); i < renderUpperX / 80; i++){
+			for(int j = (int)(renderLowerY / 80); j < renderUpperY / 80; j ++){
+				batch.draw(terrainMap[i][j].getTexture(), terrainMap[i][j].locationX, terrainMap[i][j].locationY);
 			}
 		}
 
@@ -210,7 +212,7 @@ public class TonposeScreen implements Screen {
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 		// make player move on touch
 		int i=0;
-		 moving=false;
+		moving=false;
 		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
 			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
 				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
@@ -233,14 +235,13 @@ public class TonposeScreen implements Screen {
 			tonpose.lastY = player.getY();
 		}
 
-		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
-			tick(TimeUtils.nanoTime());
-		}
-
-
 		//render stage
 		stage.act(delta);
 		stage.draw();
+
+		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
+			tick(TimeUtils.nanoTime());
+		}
 	}
 
 	private void tick(long time) {
@@ -252,7 +253,7 @@ public class TonposeScreen implements Screen {
 		if (time > lastNpc + NPCDELAY)
 			moveEnemy();
 
-		if (time > lastUpdate + UPDATEDELAY)
+		if (time > lastUpdate + UPDATEDELAY) //updates player position on other clients
 			updatePlayer();
 
 		/* spawning temporarily disabled
@@ -264,7 +265,7 @@ public class TonposeScreen implements Screen {
 		if(time > lastAnimation + ANIMATIONDELAY)
 			player.nextAnimation(nextAnimation);
 
-		if(player.currentHp < 0 && player.killable)
+		if(player.currentHp < 0 && player.killable) //checks if player is dead and changes screen accordingly
 			tonpose.setScreen(tonpose.deathScreen);
 
 		Map.updateMap();
@@ -273,8 +274,8 @@ public class TonposeScreen implements Screen {
 	}
 
 	public void movePlayer() { //TODO change rectangles to better represent where they are on the screen. Also fix outlier case where player spawns in a terrain object
-		int x = (int)player.getX()/20;
-		int y = (int)player.getY()/20;
+		int x = (int)player.getX()/80;
+		int y = (int)player.getY()/80;
 		int modX = terrainMap[x][y].getModX();
 		int modY = terrainMap[x][y].getModY();
 		float scale = terrainMap[x][y].getScale();
@@ -286,8 +287,8 @@ public class TonposeScreen implements Screen {
 	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
-				if(((Mob)entity).targetID == tonpose.ID){
-					((Mob) entity).move(player, 0 ,0, 1);
+				if(((Mob)entity).targetID == tonpose.ID){ //checks if the mob is after the player
+					((Mob) entity).move(player, 0 ,0, 1); //moves mob towards player
 				}
 			}
 		}

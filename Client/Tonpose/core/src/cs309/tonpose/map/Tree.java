@@ -27,4 +27,17 @@ public class Tree extends Entity { //id is 9
         //addInventory(new TreeSeeds(number, locationX, locationY, false));
         //addInventory(new Logs(3,locationX,locationY,false));
     }
+    @Override
+    public void kill(){
+        int i=32;
+        for (Item item:inventory) {
+            item.inInventory = false;
+            item.setLocation(locationX+i, locationY+i);
+            TonposeScreen.Map.addToMap(item);
+            i+=32;
+        }
+        TonposeScreen.Map.addToMap(new Logs(TonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true));
+        TonposeScreen.Map.addToMap(new TreeSeeds(TonposeScreen.Map.UIDmax++, 1, locationX+64, locationY+64, true));
+        TonposeScreen.Map.removeFromMap(this);
+    }
 }
