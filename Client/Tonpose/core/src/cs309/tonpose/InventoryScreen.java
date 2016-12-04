@@ -77,8 +77,8 @@ public class InventoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // clear screen to dark blue color
-        Gdx.gl.glClearColor(1f, 1f, 1f, 1);
+        // clear screen to light blue color
+        Gdx.gl.glClearColor(130/255f, 200/255f, 230/255f, 1); //choose color by dividing rgb choices by 255f
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
