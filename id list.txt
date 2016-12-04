@@ -1,6 +1,7 @@
 entity
 	 0 - cabbage
 	 2 - mob
+	 8 - WoodBlock
 	 9 - tree
 
 item

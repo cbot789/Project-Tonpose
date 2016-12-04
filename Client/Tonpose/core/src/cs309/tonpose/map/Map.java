@@ -300,10 +300,14 @@ public class Map {
         boolean exists = false;
         if(move.tid == 2){
             for(Entity e: entities){
-                if(e.uid == move.uid){
+                if(e instanceof Mob){
                     e.move(move.x, move.y);
                     exists = true;
                 }
+                /*if(e.uid == move.uid){
+                    e.move(move.x, move.y);
+                    exists = true;
+                }*/
             }
             if(!exists){
                 entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
