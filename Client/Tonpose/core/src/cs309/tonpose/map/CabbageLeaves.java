@@ -21,6 +21,7 @@ public class CabbageLeaves extends  Item {
         if(count > 0){
             user.changeHp(1); // heals player by one
             super.action(player, user);
+            user.updateScore(1); //adds points for eating cabbage
         }
     }
 }

@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
-public class Player extends Living {
+public class Player extends Living { //TODO implement leveling up
     public int score;
     public int xp;
     public int lvl;
@@ -30,7 +30,7 @@ public class Player extends Living {
     Music death = Gdx.audio.newMusic(Gdx.files.internal("playerDeath.mp3"));
 
     public Player(float x, float y, String name, Tonpose t){
-        super(-1, x, y, 8, 64, 45, 10, 5, 25, 1, 80, t);
+        super(-1, x, y, 8, 64, 45, 10, 5, 25, 1, 80, t); //move speed 5 power 25
         texture = new Texture(Gdx.files.internal("mainbase.png"));
         userName = name;
         score = 0;
@@ -44,15 +44,20 @@ public class Player extends Living {
 
     public void updateScore(int points){
         score += points;
+        gainXp(points); //points are directly related to experience
     }
     public void equipItem(Item toEquip){
             equiped = toEquip;
     }
-    public void gainXp(int gain){
+    public void gainXp(int gain){ //levels up player if enough points have been gained
         xp += gain;
-        if(xp >= lvl*100){
+        if(xp >= lvl*50){
             lvl++;
-            xp -= lvl*100;
+            xp -= lvl*50;
+            if(lvl%2==0){ //adds move speed or attack damage upon leveling up
+                this.moveSpeed+=2;
+            }
+            else this.power+=5;
         }
     }
     public void login(){
