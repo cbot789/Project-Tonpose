@@ -35,7 +35,7 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
-        terrains = new Terrain[height/40+1][width/40+1];
+        terrains = new Terrain[height/80+1][width/80+1];
         mobCount = 0;
 
         for(int i=0; i<maxEntities; i++){
@@ -95,6 +95,9 @@ public class Map {
             if(mobCount > 10000)
                 mobCount = 1;
             return new Mob(UIDmax++, tonpose.ID, x, y, mobCount, tonpose);
+        }else if(id == 8){
+            WoodBlock woodBlock = new WoodBlock(UIDmax++, x, y);
+            return woodBlock;
         }
         else {
             Tree tree=new Tree(UIDmax++, x,y);
@@ -118,6 +121,8 @@ public class Map {
             case 2:
                 mobCount++;
                 return new Mob(uid, -1, x,y, mobCount, tonpose);
+            case 8:
+                return new WoodBlock(uid, x,y);
             case 9:
                 return new Tree(uid, x, y);
             default:
@@ -154,7 +159,7 @@ public class Map {
         }
         int x=MathUtils.random(width/20 - 20);
         int y= MathUtils.random(height/20 - 4);
-        createRiverHorizontal(x, y, 4, 20, true);
+        createRiverHorizontal(x, y, 1, 5, true);
 
     }
 
@@ -189,7 +194,7 @@ public class Map {
     private void createRiverHorizontal(int x, int y, int width, int length, boolean left){
         for(int i = x; i < x + length; i++){
             for(int j = y; j < y + width; j++){
-                terrains[i][j] = new RiverHorizontal(i * 20, j * 20, left);
+                terrains[i][j] = new RiverHorizontal(i * 80, j * 80, left);
             }
         }
     }
@@ -206,7 +211,7 @@ public class Map {
         return items;
     }
 
-    //adds an item to appear on the map
+    //adds an item to appear on the server map
     public void addToMap(Item item){
         itemsAdd.add(item);
         Network.AddElement add = new Network.AddElement();
@@ -217,7 +222,7 @@ public class Map {
         tonpose.client.sendTCP(add);
     }
 
-    //adds entitys to map
+    //adds entitys to server map
     public void addToMap(Entity entity){
         entitiesAdd.add(entity);
         Network.AddElement add = new Network.AddElement();
@@ -228,7 +233,7 @@ public class Map {
         tonpose.client.sendTCP(add);
     }
 
-    //wrapper for entity and item addToMap
+    //add to client side from server
     public void addToMap(Network.AddElement add){
         if(add.id < 10){
             entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
@@ -248,7 +253,7 @@ public class Map {
     }
 
 
-    //removes an item so it no longer shows on the map
+    //removes an item so it no longer shows on the server map
     public void removeFromMap(Item item){
         itemsDelete.add(item);
         Network.RemoveElement remove = new Network.RemoveElement();
@@ -258,7 +263,7 @@ public class Map {
 
     }
 
-    //removes an entity so it no longer shows on the map
+    //removes an entity so it no longer shows on the server map
     public void removeFromMap(Entity entity){
         entitiesDelete.add(entity);
         Network.RemoveElement remove = new Network.RemoveElement();
@@ -267,7 +272,7 @@ public class Map {
         tonpose.client.sendTCP(remove);
     }
 
-    //wrapper
+    //remove from client side from server
     public void removeFromMap(Network.RemoveElement remove){
         if(remove.tid < 10){
             for(Entity e: entities){
@@ -286,8 +291,7 @@ public class Map {
     }
 
     //moves mobs from other clients
-    public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is moving
-        /*
+    public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is movin
         // Only move mob elements
         if(move.tid == 2){
             for(Entity e: entities){
@@ -295,7 +299,7 @@ public class Map {
                     e.move(move.x, move.y);
                 }
             }
-        }*/
+        }
     }
 
     //checks for nearby targets for the player

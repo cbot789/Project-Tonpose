@@ -255,12 +255,12 @@ public class TonposeScreen implements Screen {
 		if (time > lastUpdate + UPDATEDELAY) //updates player position on other clients
 			updatePlayer();
 
-		/* spawning temporarily disabled
-		if (time > lastSpawn + SPAWNDELAY){
-			Map.spawn();
+		// spawning temporarily disabled TODO renamble
+		/*if (time > lastSpawn + SPAWNDELAY){
+			Map.spawnNPC();
 			lastSpawn = time;
-		}
-		*/
+		}*/
+
 		if(time > lastAnimation + ANIMATIONDELAY) {
 			player.nextAnimation(nextAnimation);
 			lastAnimation = time;

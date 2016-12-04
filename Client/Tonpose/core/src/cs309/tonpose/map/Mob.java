@@ -30,6 +30,7 @@ public class Mob extends Living {
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
         sfx.setVolume((float) 0.3);
         npcNumber = number;
+        nextAnimation(0);
     }
 
     public void setTarget(int x, int y){
@@ -214,6 +215,7 @@ public class Mob extends Living {
     @Override
     public void changeHp(int mod) {
         super.changeHp(mod);
+        scare(10);
         nextAnimation(3);
     }
 }

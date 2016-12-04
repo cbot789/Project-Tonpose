@@ -114,9 +114,11 @@ public class Tonpose extends Game{
                 // Updates the location of a specific element or item on the map
                 if (object instanceof Network.MoveElement) {
                     Network.MoveElement move = (Network.MoveElement) object;
-                    if(ready){
-                        tonposeScreen.Map.moveElement(move);
-                    }
+                        try{
+                            tonposeScreen.Map.moveElement(move);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                 }
                 // Adds an item or element to the map
                 if (object instanceof Network.AddElement) {
