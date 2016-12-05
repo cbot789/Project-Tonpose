@@ -146,8 +146,12 @@ public class Map {
                 return new CabbageLeaves(uid, 1, x, y, true, tonpose);
             case 13:
                 return new Logs(uid, 1, x, y, true, tonpose);
-            default:
+            case 14:
                 return new Plank(uid, 1, x, y, tonpose);
+            case 15:
+                return new Bones(uid, 1, x, y, true, tonpose);
+            default:
+                return new Sword(uid, 1, x, y, true, tonpose);
         }
     }
 
@@ -243,7 +247,7 @@ public class Map {
         if(add.id < 10){
             entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
         }
-        else if(add.id <= 14){
+        else if(add.id <= 16){
             itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
         }
         UIDmax = add.uid + 1;
@@ -286,7 +290,7 @@ public class Map {
                 }
             }
         }
-        else if(remove.tid <= 14){
+        else if(remove.tid <= 16){
             for(Item i: items){
                 if(i.uid == remove.uid){
                     itemsDelete.add(i);

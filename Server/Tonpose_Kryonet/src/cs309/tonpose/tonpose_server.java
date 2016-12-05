@@ -278,6 +278,8 @@ public class tonpose_server {
 						case 12:
 						case 13:
 						case 14:
+						case 15:
+						case 16:
 							ArrayList<ServerItem> iList = map.getItems();
 							for(int i = 0; i < iList.size(); i++){
 								if(move.uid == iList.get(i).uniqueID){
@@ -317,6 +319,8 @@ public class tonpose_server {
 						case 12:
 						case 13:
 						case 14:
+						case 15:
+						case 16:
 							ServerItem item = new ServerItem();
 							item.typeID = add.id;
 							item.uniqueID = add.uid;
@@ -354,6 +358,8 @@ public class tonpose_server {
 						case 12:
 						case 13:
 						case 14:
+						case 15:
+						case 16:
 							ArrayList<ServerItem> iList = map.getItems();
 							for(int i = 0; i < iList.size(); i++){
 								if(remove.uid == iList.get(i).uniqueID){
