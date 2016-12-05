@@ -70,7 +70,7 @@ public class Map {
 
     //randomly spawns an npc onto the map
     public void spawnNPC(){
-        addToMap(generateEntities(1), true);
+        addToMap(generateEntities(1));
     }
 
     //used for single player
@@ -94,6 +94,7 @@ public class Map {
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
+            UIDmax++;
             return new Mob(UIDmax + tonpose.ID, tonpose.ID, x, y, mobCount, tonpose);
         }else if(id == 8){
             WoodBlock woodBlock = new WoodBlock(UIDmax++, x, y, tonpose);
@@ -212,38 +213,34 @@ public class Map {
     }
 
     //adds an item to appear on the server map
-    public void addToMap(Item item, boolean send){
+    public void addToMap(Item item){
         itemsAdd.add(item);
-        if(send){
-            Network.AddElement add = new Network.AddElement();
-            add.id = item.itemID;
-            add.uid = item.uid;
-            add.x = item.locationX;
-            add.y = item.locationY;
-            tonpose.client.sendTCP(add);
-        }
+        Network.AddElement add = new Network.AddElement();
+        add.id = item.itemID;
+        add.uid = item.uid;
+        add.x = item.locationX;
+        add.y = item.locationY;
+        tonpose.client.sendTCP(add);
     }
 
     //adds entities to server map
-    public void addToMap(Entity entity, boolean send){
+    public void addToMap(Entity entity){
         entitiesAdd.add(entity);
-        if(send){
-            Network.AddElement add = new Network.AddElement();
-            add.id = entity.id;
-            add.uid = entity.uid;
-            add.x = entity.locationX;
-            add.y = entity.locationY;
-            tonpose.client.sendTCP(add);
-        }
+        Network.AddElement add = new Network.AddElement();
+        add.id = entity.id;
+        add.uid = entity.uid;
+        add.x = entity.locationX;
+        add.y = entity.locationY;
+        tonpose.client.sendTCP(add);
     }
 
     //add to client side from server
     public void addToMap(Network.AddElement add){
         if(add.id < 10){
-            addToMap(generateEntities(add.uid, add.id, add.x, add.y), false);
+            entitiesAdd.add(generateEntities(add.uid, add.id, add.x, add.y));
         }
         else if(add.id <= 14){
-            addToMap(generateItems(add.uid, add.id, add.x, add.y), false);
+            itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
         }
         UIDmax = add.uid + 1;
     }
@@ -295,19 +292,15 @@ public class Map {
     }
 
     //moves mobs from other clients
-    public void moveElement(Network.MoveElement move){//TODO FIXME causes crashes on joining if npc is movin
+    public void moveElement(Network.MoveElement move){
         // Only move mob elements
         boolean exists = false;
         if(move.tid == 2){
             for(Entity e: entities){
-                if(e instanceof Mob){
+                if(e.uid == move.uid){
                     e.move(move.x, move.y);
                     exists = true;
                 }
-                /*if(e.uid == move.uid){
-                    e.move(move.x, move.y);
-                    exists = true;
-                }*/
             }
             if(!exists){
                 entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
