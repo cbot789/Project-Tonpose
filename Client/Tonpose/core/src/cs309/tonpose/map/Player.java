@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
 /**
  * Created by Quade Spellman on 9/27/2016.
  */
-public class Player extends Living { //TODO implement leveling up
+public class Player extends Living {
     public int score;
     public int xp;
     public int lvl;
