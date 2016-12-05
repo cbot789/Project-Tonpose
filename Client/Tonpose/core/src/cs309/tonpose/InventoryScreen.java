@@ -27,7 +27,7 @@ import static cs309.tonpose.TonposeScreen.player;
 public class InventoryScreen implements Screen {
 
     final Tonpose tonpose;
-    private Texture buttonImage,Cabbage,Log;
+    private Texture buttonImage,Cabbage,Log,Background;
     private Stage stage;
     private TextureRegion buttonRegion;
     private TextureRegionDrawable buttonRegionDrawable;
@@ -61,6 +61,7 @@ public class InventoryScreen implements Screen {
 
         //add stage and players button
         buttonImage = new Texture(Gdx.files.internal("back.png"));
+        Background=new Texture(Gdx.files.internal("bluebackground.png"));
         Log=new Texture(Gdx.files.internal("shlog.png"));
         Cabbage= new Texture(Gdx.files.internal("cabbage.png"));
         buttonRegion = new TextureRegion(buttonImage);
@@ -86,12 +87,11 @@ public class InventoryScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
-        //render stage
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        batch.draw(Background,0,0);
 
 
         //title and pictures
@@ -111,7 +111,9 @@ public class InventoryScreen implements Screen {
             font.draw(batch, "equipped: Nothing", 100, 350);
         }
         batch.end();
-
+        //render stage
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
         //displays items currently in the player's crafting que base and mod items are used to make new item
         if( player.base != null){
             base.setText("Base: "+ player.base.name);
