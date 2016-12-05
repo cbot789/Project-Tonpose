@@ -41,6 +41,16 @@ public class TonposeScreen implements Screen {
 	private Texture playerImage, buttonImage, playerMoving1, playerMoving2;
 	private Texture mob, tree, cabbage, woodBlock;
 	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log;
+	private Texture moving1Mob;
+	private Texture moving2Mob;
+	private Texture attacking1Mob;
+	private Texture attacking2Mob;
+	private Texture hitMob;
+	private Texture standingMob;
+	private Texture attacking1Player;
+	private Texture attacking2Player;
+	private Texture hitPlayer;
+	private Texture standingPlayer;
 
 	public static Texture	healthImage;
 	private Stage stage;
@@ -95,7 +105,7 @@ public class TonposeScreen implements Screen {
 	public TonposeScreen(Tonpose t, int[] terrainArray, int[][] entitiesArray){
 		this.tonpose = t;
 
-		// load textures
+		// load standing Entity textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		mob=new Texture(Gdx.files.internal("player2base.png"));
@@ -103,15 +113,25 @@ public class TonposeScreen implements Screen {
 		woodBlock =new Texture(Gdx.files.internal("woodBlock.png"));
 		tree =new Texture(Gdx.files.internal("treeStill.png"));
 
+		//load mob animation textures
+		moving2Mob = new Texture(Gdx.files.internal("player2WalkingRight3.png"));
+		moving1Mob = new Texture(Gdx.files.internal("player2WalkingRight1.png"));
+		attacking1Mob = new Texture(Gdx.files.internal("player2Attack1.png"));
+		attacking2Mob = new Texture(Gdx.files.internal("player2Attack2.png"));
+		hitMob = new Texture(Gdx.files.internal("player2Scared.png"));
+
+		//load item textures
 		treeSeeds =new Texture(Gdx.files.internal("acorn.png"));
 		cabbageSeeds =new Texture(Gdx.files.internal("cabbage seeds.png"));
 		cabbageLeaves =new Texture(Gdx.files.internal("CabbageLeaves.png"));
 		log =new Texture(Gdx.files.internal("shlog.png"));
 
-
-
+		//load player textures
 		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
 		playerMoving2=new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+		attacking1Player=new Texture(Gdx.files.internal("mainAttack1.png"));
+		attacking2Player=new Texture(Gdx.files.internal("mainAttack2.png"));
+		hitPlayer=new Texture(Gdx.files.internal("mainScared.png"));
 
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -246,7 +266,7 @@ public class TonposeScreen implements Screen {
 									batch.draw(cabbage, entity.locationX, entity.locationY);
 									break;
 								case 2:
-									batch.draw(mob, entity.locationX, entity.locationY);
+									batch.draw(getTextureMob(((Mob) entity).old), entity.locationX, entity.locationY);
 									break;
 								case 8:
 									batch.draw(woodBlock, entity.locationX, entity.locationY);
@@ -255,7 +275,7 @@ public class TonposeScreen implements Screen {
 									batch.draw(tree, entity.locationX, entity.locationY);
 									break;
 								default:
-									batch.draw(playerImage, entity.locationX, entity.locationY);
+									batch.draw(getTexturePlayer(player.old), entity.locationX, entity.locationY);
 							}
 						}
 					}
@@ -481,5 +501,66 @@ public class TonposeScreen implements Screen {
 		playerImage.dispose();
 		buttonImage.dispose();
 		batch.dispose();
+	}
+
+	private Texture getTexturePlayer(int old){
+		switch (old) {
+			case 10:
+				return playerImage;
+			case 11:
+				return playerMoving1;
+			case 12:
+				return playerImage;
+			case 13:
+				return playerMoving2;
+			case 2:
+				return playerImage;
+			case 3:
+				return playerImage;
+			case 21:
+				return attacking1Player;
+			case 22:
+				return attacking2Player;
+			case 31:
+				return hitPlayer;
+			case 32:
+				return hitPlayer;
+			case 33:
+				return hitPlayer;
+			case 34:
+				return hitPlayer;
+			default:
+				return playerImage;
+		}
+	}
+	private Texture getTextureMob(int old){
+		switch (old) {
+			case 10:
+				return moving1Mob;
+			case 11:
+				return mob;
+			case 12:
+				return moving2Mob;
+			case 13:
+				return mob;
+			case 2:
+				return mob;
+			case 3:
+				return mob;
+			case 21:
+				return attacking1Mob;
+			case 22:
+				return attacking2Mob;
+			case 31:
+				return hitMob;
+			case 32:
+				return hitMob;
+			case 33:
+				return hitMob;
+			case 34:
+				return hitMob;
+			default:
+				return mob;
+		}
 	}
 }
