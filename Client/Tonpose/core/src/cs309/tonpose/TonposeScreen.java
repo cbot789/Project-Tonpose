@@ -39,6 +39,9 @@ public class TonposeScreen implements Screen {
 	public Map Map;
 	private Music music;
 	private Texture playerImage, buttonImage, playerMoving1, playerMoving2;
+	private Texture mob, tree, cabbage, woodBlock;
+	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log;
+
 	public static Texture	healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
@@ -95,6 +98,18 @@ public class TonposeScreen implements Screen {
 		// load textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
+		mob=new Texture(Gdx.files.internal("player2base.png"));
+		cabbage=new Texture(Gdx.files.internal("cabbage.png"));
+		woodBlock =new Texture(Gdx.files.internal("woodBlock.png"));
+		tree =new Texture(Gdx.files.internal("treeStill.png"));
+
+		treeSeeds =new Texture(Gdx.files.internal("acorn.png"));
+		cabbageSeeds =new Texture(Gdx.files.internal("cabbage seeds.png"));
+		cabbageLeaves =new Texture(Gdx.files.internal("CabbageLeaves.png"));
+		log =new Texture(Gdx.files.internal("shlog.png"));
+
+
+
 		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
 		playerMoving2=new Texture(Gdx.files.internal("mainWalkingRight3.png"));
 
@@ -225,7 +240,23 @@ public class TonposeScreen implements Screen {
 				if (renderLowerX  - 40 < entity.locationX) {
 					if (renderUpperY > entity.locationY) {
 						if (renderLowerY - 100 < entity.locationY) {
-							batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+							//batch.draw(entity.getTexture(), entity.locationX, entity.locationY);
+							switch (entity.id){
+								case 0:
+									batch.draw(cabbage, entity.locationX, entity.locationY);
+									break;
+								case 2:
+									batch.draw(mob, entity.locationX, entity.locationY);
+									break;
+								case 8:
+									batch.draw(woodBlock, entity.locationX, entity.locationY);
+									break;
+								case 9:
+									batch.draw(tree, entity.locationX, entity.locationY);
+									break;
+								default:
+									batch.draw(playerImage, entity.locationX, entity.locationY);
+							}
 						}
 					}
 				}
@@ -239,7 +270,26 @@ public class TonposeScreen implements Screen {
 					if (renderLowerX < item.locationX) {
 						if (renderUpperY > item.locationY) {
 							if (renderLowerY < item.locationY) {
-								batch.draw(item.getTexture(), item.locationX, item.locationY);
+								switch (item.getID()){
+									case 10:
+										batch.draw(treeSeeds, item.locationX, item.locationY);
+										break;
+									case 11:
+										batch.draw(cabbageSeeds, item.locationX, item.locationY);
+										break;
+									case 12:
+										batch.draw(cabbageLeaves, item.locationX, item.locationY);
+										break;
+									case 13:
+										batch.draw(log, item.locationX, item.locationY);
+										break;
+									case 14:
+										batch.draw(log, item.locationX, item.locationY);
+										break;
+									default:
+										batch.draw(playerImage, item.locationX, item.locationY);
+								}
+								//batch.draw(item.getTexture(), item.locationX, item.locationY);
 							}
 						}
 					}
