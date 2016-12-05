@@ -11,6 +11,7 @@ public class ServerMap {
 	private ArrayList<ServerEntity> entities;
 	private ArrayList<ServerItem> items;
 	private int entityCount;
+	private int itemCount;
 	private int mobCount;
 	public int UIDcount;
 
@@ -18,6 +19,7 @@ public class ServerMap {
         this.height=height;
         this.width=width;
         this.entityCount = entityCount;
+        itemCount = 0;
         UIDcount = 0;
         terrains = new int[height/80+1][width/80+1];
         terrain = new int[(height/80+1)*(width/80+1)];
@@ -110,6 +112,18 @@ public class ServerMap {
     	return arr;
     }
     
+    public int[][] getItemArray(){
+    	// Fills 2d array (to be sent over network) with entity arraylist
+    	int [][] arr = new int[itemCount][4];
+    	for(int i = 0; i < itemCount; i++){
+    		arr[i][0] = items.get(i).uniqueID;
+    		arr[i][1] = items.get(i).typeID;
+    		arr[i][2] = (int)items.get(i).x;
+    		arr[i][3] = (int)items.get(i).y;
+    	}
+    	return arr;
+    }
+    
     public ArrayList<ServerEntity> getEntities() {
         return entities;
     }
@@ -132,6 +146,7 @@ public class ServerMap {
 
     public void add(ServerItem item){
         items.add(item);
+        itemCount++;
     }
 
     public void add(ServerEntity entity){
@@ -147,6 +162,7 @@ public class ServerMap {
     
     public void remove(ServerItem item){
         items.remove(item);
+        itemCount--;
     }
 
     public void remove(ServerEntity entity){

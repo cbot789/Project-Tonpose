@@ -213,7 +213,6 @@ public class Mob extends Living {
         old = i;
     }
 
-
     @Override
     public void attack(float x, float y) {
         Entity hit = tonpose.tonposeScreen.Map.mobCheckMap(x, y, attackRange, attackRange);

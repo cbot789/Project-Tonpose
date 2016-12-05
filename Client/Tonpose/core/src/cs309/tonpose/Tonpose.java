@@ -27,6 +27,7 @@ public class Tonpose extends Game{
     private boolean ready = false;
     public int[] terrainArray;
     public int[][] entitiesArray;
+    public int[][] itemsArray;
 
 
     public Tonpose(AndroidMethods androidMethod, String name) {
@@ -41,7 +42,7 @@ public class Tonpose extends Game{
         while(!ready){}
         // Initialize screens
         deathScreen = new DeathScreen(this);
-        tonposeScreen = new TonposeScreen(this, terrainArray, entitiesArray);
+        tonposeScreen = new TonposeScreen(this);
         playersScreen = new PlayersScreen(this);
         inventoryScreen = new InventoryScreen(this);
         setScreen(tonposeScreen);
@@ -80,6 +81,7 @@ public class Tonpose extends Game{
                     Network.SyncMap sync = (Network.SyncMap) object;
                     terrainArray = sync.terrain;
                     entitiesArray = sync.entities;
+                    itemsArray = sync.items;
                     ready = true;
                 }
                 // To alert client a new user has joined the game

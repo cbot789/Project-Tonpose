@@ -78,6 +78,7 @@ public class Network {
 	static public class SyncMap {
 		public int[] terrain;
 		public int[][] entities;
+		public int[][] items;
 	}
 
 	// For moving any element on the map
