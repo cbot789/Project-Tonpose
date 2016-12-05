@@ -134,7 +134,7 @@ public class Tonpose extends Game{
                 }
             }
             public void disconnected(Connection connection) {
-                Toast("Lost Connection to Server");
+                //Toast("Lost Connection to Server");
                 client.close();
             }
         });
@@ -152,6 +152,7 @@ public class Tonpose extends Game{
     @Override
     public void dispose() {
         //dispose assets
+        tonposeScreen.dispose();
         client.close();
     }
 }

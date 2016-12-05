@@ -54,7 +54,7 @@ public class DeathScreen implements Screen {
         buttonImage = new Texture(Gdx.files.internal("back.png"));
         Scared=new Texture(Gdx.files.internal("mainScared.png"));
         Background=new Texture(Gdx.files.internal("deadbackground.png"));
-        buttonRegion = new TextureRegion(buttonImage);
+        /*buttonRegion = new TextureRegion(buttonImage);
         buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
         backButton = new ImageButton(buttonRegionDrawable);
         backButton.addListener(new ClickListener()
@@ -64,9 +64,9 @@ public class DeathScreen implements Screen {
             {
                 tonpose.setScreen(tonpose.tonposeScreen);
             }
-        });
+        });*/
         stage = new Stage();
-        stage.addActor(backButton);
+        //stage.addActor(backButton);
     }
 
 
