@@ -404,7 +404,12 @@ public class TonposeScreen implements Screen {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
 				if(((Mob)entity).targetID == tonpose.ID){ //checks if the mob is after the player
-					((Mob) entity).move(player, 0 ,0, 1); //moves mob towards player
+					int x = (int)entity.getX()/80;
+					int y = (int)entity.getY()/80;
+					int modX = terrainMap[x][y].getModX();
+					int modY = terrainMap[x][y].getModY();
+					float scale = terrainMap[x][y].getScale();
+					((Mob) entity).move(player, modX ,modY, scale); //moves mob towards player
 				}else{
 					entity.nextAnimation(1);
 				}
@@ -503,6 +508,7 @@ public class TonposeScreen implements Screen {
 		batch.dispose();
 	}
 
+	//sets texture for players
 	private Texture getTexturePlayer(int old){
 		switch (old) {
 			case 10:
@@ -533,6 +539,8 @@ public class TonposeScreen implements Screen {
 				return playerImage;
 		}
 	}
+
+	//sets the texture for mob
 	private Texture getTextureMob(int old){
 		switch (old) {
 			case 10:
