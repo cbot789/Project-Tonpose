@@ -41,17 +41,15 @@ public class TonposeScreen implements Screen {
 
 	private Texture playerImage, buttonImage, playerMoving1, playerMoving2,Background;
 	private Texture mob, tree, cabbage, woodBlock;
-	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log;
+	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones;
 	private Texture moving1Mob;
 	private Texture moving2Mob;
 	private Texture attacking1Mob;
 	private Texture attacking2Mob;
 	private Texture hitMob;
-	private Texture standingMob;
 	private Texture attacking1Player;
 	private Texture attacking2Player;
 	private Texture hitPlayer;
-	private Texture standingPlayer;
 
 	public static Texture	healthImage;
 	private Stage stage;
@@ -126,6 +124,8 @@ public class TonposeScreen implements Screen {
 		cabbageSeeds =new Texture(Gdx.files.internal("cabbage seeds.png"));
 		cabbageLeaves =new Texture(Gdx.files.internal("CabbageLeaves.png"));
 		log =new Texture(Gdx.files.internal("shlog.png"));
+		sword =new Texture(Gdx.files.internal("sword.png"));
+		bones =new Texture(Gdx.files.internal("bone.png"));
 
 		//load player textures
 		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
@@ -308,6 +308,12 @@ public class TonposeScreen implements Screen {
 									case 14:
 										batch.draw(log, item.locationX, item.locationY);
 										break;
+									case 15:
+										batch.draw(bones, item.locationX, item.locationY);
+										break;
+									case 16:
+										batch.draw(sword, item.locationX, item.locationY);
+										break;
 									default:
 										batch.draw(playerImage, item.locationX, item.locationY);
 								}
@@ -371,11 +377,10 @@ public class TonposeScreen implements Screen {
 		if (time > lastUpdate + UPDATEDELAY) //updates player position on other clients
 			updatePlayer();
 
-		// spawning temporarily disabled TODO renamble
-		/*if (time > lastSpawn + SPAWNDELAY){
+		if (time > lastSpawn + SPAWNDELAY){
 			Map.spawnNPC();
 			lastSpawn = time;
-		}*/
+		}
 
 		if(time > lastAnimation + ANIMATIONDELAY) {
 			player.nextAnimation(nextAnimation);
