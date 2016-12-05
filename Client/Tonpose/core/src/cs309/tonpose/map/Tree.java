@@ -14,7 +14,7 @@ import cs309.tonpose.*;
 public class Tree extends Entity { //id is 9
 
     public Tree(int uid, float locationX, float locationY, Tonpose t){
-        super(uid, locationX, locationY, 9, 100, 50, 20, 1000,  7, true, true, t); //tree image is 64x128
+        super(uid, locationX, locationY, 9, 99, 50, 20, 1000,  7, true, true, t); //tree image is 64x128
         texture = new Texture(Gdx.files.internal("treeStill.png"));
         sfx = Gdx.audio.newMusic(Gdx.files.internal("logHit.wav"));
     }

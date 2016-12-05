@@ -21,12 +21,21 @@ public class Logs extends Item {
     @Override
     public Item craft(Item mod) {
         switch (mod.getID()){
-            case 13:
+            case 13: //id of item crafted with
                 if(count > 1){
                     if(mod.count > 1){
                         count--;
                         mod.count--;
                         return new Plank(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX, locationY, tonpose);
+                    }
+                }
+                break;
+            case 15: //bones
+                if(count >= 1){
+                    if(mod.count >= 1){
+                        count--;
+                        mod.count--;
+                        return new Sword(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX, locationY, true, tonpose);
                     }
                 }
                 break;

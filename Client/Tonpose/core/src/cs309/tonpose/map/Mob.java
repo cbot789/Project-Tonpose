@@ -224,6 +224,7 @@ public class Mob extends Living {
     }
     @Override
     public void kill(){
+        tonpose.tonposeScreen.Map.addToMap(new Bones(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true, tonpose)); //drop bones
         super.kill();
         TonposeScreen.player.updateScore(10);
     }

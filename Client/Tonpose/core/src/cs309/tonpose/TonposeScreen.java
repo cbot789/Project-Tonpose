@@ -38,7 +38,7 @@ public class TonposeScreen implements Screen {
 	final Tonpose tonpose;
 	public Map Map;
 	private Music music;
-	private Texture playerImage, buttonImage, playerMoving1, playerMoving2;
+	private Texture playerImage, buttonImage, playerMoving1, playerMoving2,Background;
 	public static Texture	healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
@@ -97,6 +97,7 @@ public class TonposeScreen implements Screen {
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
 		playerMoving2=new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+		Background= new Texture(Gdx.files.internal("waterbackground2.png"));
 
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -134,7 +135,7 @@ public class TonposeScreen implements Screen {
 		for (Entity entity : Map.getEntities()) {
 			terrain.add(new Rectangle(entity.locationX, entity.locationY, entity.width, entity.height));
 		}
-		actionButtonDeadZone=new Rectangle(725,0,75,40); //sets dead zone for the action button where player will not move if it is touched
+		actionButtonDeadZone=new Rectangle(675,0,125,50); //sets dead zone for the action button where player will not move if it is touched
 		playersOnlineDeadZone=new Rectangle(0,0,75,75);
 		inventoryDeadZone=new Rectangle(375,0,50,40);
 	}
@@ -167,7 +168,7 @@ public class TonposeScreen implements Screen {
 		// clear screen to dark blue color
 		Gdx.gl.glClearColor(0, 0, 0.7f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		batch.draw(Background,-400,-400);
 		//render terrain on screen
 		for(int i = (int)(renderLowerX / 80); i < renderUpperX / 80; i++){
 			for(int j = (int)(renderLowerY / 80); j < renderUpperY / 80; j ++){

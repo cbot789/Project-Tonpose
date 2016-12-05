@@ -25,7 +25,7 @@ public class Plank extends Item {
             WoodBlock WoodBlock = new WoodBlock(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX() + 80, (int) player.getY(), tonpose);
             tonpose.tonposeScreen.Map.addToMap(WoodBlock);
             super.action(player,user);
-            user.updateScore(1); //add points for placing woodblock
+            user.updateScore(5); //add points for placing woodblock
         }
     }
 }

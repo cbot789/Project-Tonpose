@@ -55,7 +55,7 @@ public class Player extends Living {
         gainXp(points); //points are directly related to experience
     }
     public void equipItem(Item toEquip){
-            equiped = toEquip;
+        equiped = toEquip;
     }
     public void gainXp(int gain){ //levels up player if enough points have been gained
         xp += gain;
