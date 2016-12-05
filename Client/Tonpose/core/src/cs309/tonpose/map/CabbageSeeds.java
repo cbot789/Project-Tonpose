@@ -21,7 +21,7 @@ public class CabbageSeeds extends Item {
     public void action(Rectangle player, Player user) {
         if(count > 0){
             Cabbage cabbage = new Cabbage(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY(), tonpose);
-            tonpose.tonposeScreen.Map.addToMap(cabbage, true);
+            tonpose.tonposeScreen.Map.addToMap(cabbage);
             super.action(player, user);
             user.updateScore(5); //adds points for planting cabbage
         }

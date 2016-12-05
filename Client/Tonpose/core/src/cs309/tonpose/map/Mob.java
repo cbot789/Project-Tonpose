@@ -120,8 +120,8 @@ public class Mob extends Living {
                 Network.MoveElement move = new Network.MoveElement();
                 move.tid = 2;
                 move.uid = uid;
-                move.x = locationX;
-                move.y = locationY;
+                move.x = locationX + xMove;
+                move.y = locationY + yMove;
                 tonpose.client.sendTCP(move);
             }
 

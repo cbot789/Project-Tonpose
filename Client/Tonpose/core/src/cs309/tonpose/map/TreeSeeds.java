@@ -22,7 +22,7 @@ public class TreeSeeds extends Item {
     public void action(Rectangle player, Player user) {
         if(count > 0){
             Tree tree = new Tree(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY(), tonpose);
-            tonpose.tonposeScreen.Map.addToMap(tree, true);
+            tonpose.tonposeScreen.Map.addToMap(tree);
             super.action(player,user);
             user.updateScore(5); //add points for planting tree
         }
