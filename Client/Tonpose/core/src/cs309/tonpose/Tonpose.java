@@ -8,6 +8,9 @@ import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
 import java.util.HashMap;
 
+import cs309.tonpose.map.Entity;
+import cs309.tonpose.map.Mob;
+
 /**
  * Created by Luke on 11/1/16.
  */
@@ -136,6 +139,13 @@ public class Tonpose extends Game{
             public void disconnected(Connection connection) {
                 //Toast("Lost Connection to Server");
                 client.close();
+                for (Entity entity : tonposeScreen.Map.getEntities()) {
+                    if(entity instanceof Mob){
+                        if(((Mob)entity).targetID == ID){ //checks if the mob is after the player
+                            tonposeScreen.Map.removeFromMap(entity);
+                        }
+                    }
+                }
             }
         });
         new Thread("Connect") {

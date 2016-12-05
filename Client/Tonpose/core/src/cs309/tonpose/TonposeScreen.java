@@ -417,8 +417,6 @@ public class TonposeScreen implements Screen {
 					int modY = terrainMap[x][y].getModY();
 					float scale = terrainMap[x][y].getScale();
 					((Mob) entity).move(player, modX ,modY, scale); //moves mob towards player
-				}else{
-					entity.nextAnimation(1);
 				}
 			}
 		}
