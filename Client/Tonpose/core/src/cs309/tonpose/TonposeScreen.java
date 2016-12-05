@@ -102,7 +102,7 @@ public class TonposeScreen implements Screen {
 	public String Score="Score: ";
 	public String Lvl="Level: ";
 
-	public TonposeScreen(Tonpose t, int[] terrainArray, int[][] entitiesArray){
+	public TonposeScreen(Tonpose t){
 		this.tonpose = t;
 
 		// load standing Entity textures
@@ -149,7 +149,7 @@ public class TonposeScreen implements Screen {
 
 		batch = new SpriteBatch();
 
-		Map = new Map(tonpose, 1000, 1000, terrainArray, entitiesArray);
+		Map = new Map(tonpose, 1000, 1000, tonpose.terrainArray, tonpose.entitiesArray, tonpose.itemsArray);
 		terrainMap = Map.getTerrains();
 
 		//initialize main character

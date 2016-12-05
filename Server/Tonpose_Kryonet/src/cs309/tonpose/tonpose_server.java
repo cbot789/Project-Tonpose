@@ -211,6 +211,7 @@ public class tonpose_server {
 					SyncMap sync = new SyncMap();
 					sync.terrain = map.getTerrain();
 					sync.entities = map.getEntityArray();
+					sync.items = map.getItemArray();
 					connection.sendTCP(sync);
 					
 					//send all current users to the new user

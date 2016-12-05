@@ -46,13 +46,13 @@ public class Map {
     }
 
     //create map based on server data
-    public Map(Tonpose t, int height, int width, int[] terrain, int[][] entities){
+    public Map(Tonpose t, int height, int width, int[] terrain, int[][] entities, int[][] items){
         this.tonpose = t;
         UIDmax = 0;
         this.height = height;
         this.width = width;
         this.entities=new ArrayList<Entity>();
-        items = new ArrayList<Item>();
+        this.items = new ArrayList<Item>();
         entitiesAdd=new ArrayList<Entity>();
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
@@ -63,6 +63,10 @@ public class Map {
         for(int i=0; i < entities.length; i++){
             this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2], entities[i][3]));
             UIDmax = entities[i][0] + 1;
+        }
+        for(int i=0; i < items.length; i++){
+            this.items.add(generateItems(items[i][0], items[i][1], items[i][2], items[i][3]));
+            UIDmax = items[i][0] + 101;
         }
         generateTerrain(height, width, terrain);
 
