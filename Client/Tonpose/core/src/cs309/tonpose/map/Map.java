@@ -312,7 +312,8 @@ public class Map {
             }
             if(!exists){
                 entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
-                UIDmax = move.uid++;
+                UIDmax = move.uid;
+                UIDmax++;
             }
         }
     }
