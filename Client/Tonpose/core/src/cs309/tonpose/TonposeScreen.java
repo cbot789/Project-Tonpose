@@ -81,7 +81,7 @@ public class TonposeScreen implements Screen {
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     80000000;
 	private final long ANIMATIONDELAY = 160000000L;
-	private final long SPAWNDELAY =     80000000000L;
+	private final long SPAWNDELAY =     50000000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	private int animationCount = 0;
