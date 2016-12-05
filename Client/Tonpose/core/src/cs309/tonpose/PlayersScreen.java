@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class PlayersScreen implements Screen {
 
     final Tonpose tonpose;
-    private Texture buttonImage;
+    private Texture buttonImage,Background;
     private Stage stage;
     private TextureRegion buttonRegion;
     private TextureRegionDrawable buttonRegionDrawable;
@@ -41,6 +41,7 @@ public class PlayersScreen implements Screen {
         font.setColor(Color.LIME);
         //add stage and players button
         buttonImage = new Texture(Gdx.files.internal("back.png"));
+        Background= new Texture(Gdx.files.internal("playerbackground.png"));
         buttonRegion = new TextureRegion(buttonImage);
         buttonRegionDrawable = new TextureRegionDrawable(buttonRegion);
         backButton = new ImageButton(buttonRegionDrawable);
@@ -65,12 +66,11 @@ public class PlayersScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
-        //render stage
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+
 
         batch.setProjectionMatrix(camera.combined); // tells spriteBatch to use camera coordinate system
         batch.begin();
+        batch.draw(Background,0,0);
         // show all players
         font.setColor(Color.FIREBRICK);
         font.getData().setScale(4f);
@@ -84,6 +84,9 @@ public class PlayersScreen implements Screen {
         }
 
         batch.end();
+        //render stage
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     @Override
