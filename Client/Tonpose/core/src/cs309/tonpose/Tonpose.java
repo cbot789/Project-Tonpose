@@ -139,13 +139,13 @@ public class Tonpose extends Game{
             public void disconnected(Connection connection) {
                 //Toast("Lost Connection to Server");
                 client.close();
-                for (Entity entity : tonposeScreen.Map.getEntities()) {
+                /*for (Entity entity : tonposeScreen.Map.getEntities()) {
                     if(entity instanceof Mob){
                         if(((Mob)entity).targetID == ID){ //checks if the mob is after the player
                             tonposeScreen.Map.removeFromMap(entity);
                         }
                     }
-                }
+                }*/
             }
         });
         new Thread("Connect") {
