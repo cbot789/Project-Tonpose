@@ -7,9 +7,11 @@ public class ServerMap {
 	private int height,width;
 	private int[][] terrains;
 	private int[] terrain;
+	private ArrayList<ServerEntity> mobs;
 	private ArrayList<ServerEntity> entities;
 	private ArrayList<ServerItem> items;
 	private int entityCount;
+	private int mobCount;
 	public int UIDcount;
 
     public ServerMap(int height, int width, int entityCount){
@@ -17,16 +19,18 @@ public class ServerMap {
         this.width=width;
         this.entityCount = entityCount;
         UIDcount = 0;
-        terrains = new int[height/20+1][width/20+1];
-        terrain = new int[(height/20+1)*(width/20+1)];
+        terrains = new int[height/80+1][width/80+1];
+        terrain = new int[(height/80+1)*(width/80+1)];
+        mobCount = 0;
+        mobs = new ArrayList<ServerEntity>();
         entities = new ArrayList<ServerEntity>();
         items = new ArrayList<ServerItem>();
         
         generateTerrain();
         // Fills the terrain 1d array (to send through network) with the 2d array
-        for(int i = 0; i < height/20 + 1; i++){
-            for(int j = 0; j < width/20 + 1; j++){
-            	terrain[i*j] = terrains[i][j];
+        for(int i = 0; i < height/80 + 1; i++){
+            for(int j = 0; j < width/80 + 1; j++){
+            	terrain[i*((width/80)+1) + j] = terrains[i][j];
             }
         }
         // Adds maxEntities
@@ -37,16 +41,18 @@ public class ServerMap {
 
     // Fills the terrain 2d array with grass, adds a single horizontal river
     private void generateTerrain(){
-        for(int i = 0; i < height/20 +1; i++){
-            for(int j = 0; j < width/20 +1; j++){
+        for(int i = 0; i < height/80 +1; i++){
+            for(int j = 0; j < width/80 +1; j++){
             	terrains[i][j] = 0;
             }
         }
         Random r = new Random();
-        int x = r.nextInt(width/20 - 20);
-        int y = r.nextInt(height/20 - 4);
-        createRiverHorizontal(x, y, 4, 20, true);
-
+        int x = r.nextInt(width/80 - 5);
+        int y = r.nextInt(height/80 - 1);
+        createRiverHorizontal(x, y, 1, 5, true);
+        x = r.nextInt(width/80 - 5);
+        y = r.nextInt(height/80 - 1);
+        createRiverHorizontal(x, y, 1, 5, true);
     }
 
     // Adds a horizontal river to the terrain 2d array
@@ -107,6 +113,10 @@ public class ServerMap {
     public ArrayList<ServerEntity> getEntities() {
         return entities;
     }
+    
+    public ArrayList<ServerEntity> getMobs() {
+        return mobs;
+    }
 
     public ArrayList<ServerItem> getItems() {
         return items;
@@ -125,8 +135,14 @@ public class ServerMap {
     }
 
     public void add(ServerEntity entity){
-        entities.add(entity);
-        entityCount++;
+        if(entity.typeID == 2){
+        	mobCount++;
+        	mobs.add(entity);
+        }
+        else{
+        	entities.add(entity);
+        	entityCount++;
+        }
     }
     
     public void remove(ServerItem item){
@@ -134,7 +150,13 @@ public class ServerMap {
     }
 
     public void remove(ServerEntity entity){
-        entities.remove(entity);
-        entityCount--;
+        if(entity.typeID == 2){
+        	mobCount--;
+        	mobs.remove(entity);
+        }
+        else{
+        	entities.remove(entity);
+        	entityCount--;
+        }
     }
 }

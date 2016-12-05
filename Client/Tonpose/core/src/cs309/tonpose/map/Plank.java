@@ -23,7 +23,7 @@ public class Plank extends Item {
     public void action(Rectangle player, Player user) {
         if(count > 0){
             WoodBlock WoodBlock = new WoodBlock(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX() + 80, (int) player.getY(), tonpose);
-            tonpose.tonposeScreen.Map.addToMap(WoodBlock, true);
+            tonpose.tonposeScreen.Map.addToMap(WoodBlock);
             super.action(player,user);
             user.updateScore(1); //add points for placing woodblock
         }

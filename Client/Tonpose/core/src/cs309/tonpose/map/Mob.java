@@ -24,7 +24,16 @@ public class Mob extends Living {
         super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100, t);
         this.targetID = targetID;
         this.tonpose = t;
-        texture = new Texture(Gdx.files.internal("player2base.png"));
+
+        standing = new Texture(Gdx.files.internal("player2base.png"));
+        moving2 = new Texture(Gdx.files.internal("player2WalkingRight3.png"));
+        moving1 = new Texture(Gdx.files.internal("player2WalkingRight1.png"));
+        attacking1 = new Texture(Gdx.files.internal("player2Attack1.png"));
+        attacking2 = new Texture(Gdx.files.internal("player2Attack2.png"));
+        hit = new Texture(Gdx.files.internal("player2Scared.png"));
+        
+        texture = standing;
+
         flee = 0;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
         sfx.setVolume((float) 0.3);
@@ -120,8 +129,8 @@ public class Mob extends Living {
                 Network.MoveElement move = new Network.MoveElement();
                 move.tid = 2;
                 move.uid = uid;
-                move.x = locationX;
-                move.y = locationY;
+                move.x = locationX + xMove;
+                move.y = locationY + yMove;
                 tonpose.client.sendTCP(move);
             }
 
@@ -137,6 +146,13 @@ public class Mob extends Living {
         }
     }
 
+    @Override
+    public void move(float x, float y){
+        super.move(x, y);
+        nextAnimation(2);
+    }
+
+    @Override
     public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
         if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
             i = old + 1;
@@ -145,57 +161,58 @@ public class Mob extends Living {
             case 1:
                 switch (old) {
                     case 10:
-                        texture = new Texture(Gdx.files.internal("player2base.png"));
+                        texture = standing;
                         i = 11;
                         break;
                     case 11:
-                        texture = new Texture(Gdx.files.internal("player2WalkingRight3.png"));
+                        texture = moving1;
                         i = 12;
                         break;
                     case 12:
-                        texture = new Texture(Gdx.files.internal("player2base.png"));
+                        texture = standing;
                         break;
                     default:
-                        texture = new Texture(Gdx.files.internal("player2WalkingRight1.png"));
+                        texture = moving2;
                         i = 10;
                         break;
                 }
                 break;
             case 2:
-                texture = new Texture(Gdx.files.internal("player2base.png"));
+                texture = standing;
                 state = TonposeScreen.state.action;
                 i = 20;
                 break;
             case 3:
-                texture = new Texture(Gdx.files.internal("player2base.png"));
+                texture = standing;
                 state = TonposeScreen.state.hit;
                 i = 30;
                 break;
             case 21:
-                texture = new Texture(Gdx.files.internal("player2Attack1.png"));
+                texture = attacking1;
                 break;
             case 22:
-                texture = new Texture(Gdx.files.internal("player2Attack2.png"));
+                texture = attacking2;
                 state = TonposeScreen.state.standing;
                 break;
             case 31:
-                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                texture = hit;
                 break;
             case 32:
-                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                texture = hit;;
                 break;
             case 33:
-                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                texture = hit;;
                 break;
             case 34:
-                texture = new Texture(Gdx.files.internal("player2Scared.png"));
+                texture = hit;;
                 state = TonposeScreen.state.standing;
                 break;
             default:
-                texture = new Texture(Gdx.files.internal("player2base.png"));
+                texture = standing;
         }
         old = i;
     }
+
 
     @Override
     public void attack(float x, float y) {

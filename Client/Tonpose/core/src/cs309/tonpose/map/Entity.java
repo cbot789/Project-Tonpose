@@ -76,7 +76,7 @@ public class Entity {
         inventory.remove(toDrop);
         toDrop.inInventory = false;
         toDrop.setLocation(locationX, locationY);
-        tonpose.tonposeScreen.Map.addToMap(toDrop, true);
+        tonpose.tonposeScreen.Map.addToMap(toDrop);
         //create world object
     }
 
@@ -145,7 +145,7 @@ public class Entity {
         for (Item item:inventory) {
             item.inInventory = false;
             item.setLocation(locationX+i, locationY+i);
-            tonpose.tonposeScreen.Map.addToMap(item, true);
+            tonpose.tonposeScreen.Map.addToMap(item);
             i+=32;
         }
         tonpose.tonposeScreen.Map.removeFromMap(this);
@@ -171,5 +171,9 @@ public class Entity {
     }
     public float getHeight(){
         return height;
+    }
+    public void nextAnimation(int i){
+        Texture temp = texture;
+        texture = temp;
     }
 }

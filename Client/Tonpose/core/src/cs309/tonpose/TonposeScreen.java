@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.util.ArrayList;
+
 import cs309.tonpose.Network.MovePlayer;
 import cs309.tonpose.map.Entity;
 import cs309.tonpose.map.Item;
@@ -36,7 +38,7 @@ public class TonposeScreen implements Screen {
 	final Tonpose tonpose;
 	public Map Map;
 	private Music music;
-	private Texture playerImage, buttonImage;
+	private Texture playerImage, buttonImage, playerMoving1, playerMoving2;
 	public static Texture	healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
@@ -70,6 +72,8 @@ public class TonposeScreen implements Screen {
 	private final long SPAWNDELAY =     8000000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
+	private int animationCount = 0;
+
 	//private Stage stage;
 	private TextButton inv;
 	private TextButton actionButton;
@@ -80,6 +84,7 @@ public class TonposeScreen implements Screen {
 	public static float playerHealthX=1;
 	public static float playerHealthY=416;
 	Terrain terrainMap[][];
+	private ArrayList<User> oldPlayers = new ArrayList<User>();
 
 	public String Score="Score: ";
 	public String Lvl="Level: ";
@@ -90,6 +95,9 @@ public class TonposeScreen implements Screen {
 		// load textures
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
+		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
+		playerMoving2=new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 
@@ -157,7 +165,7 @@ public class TonposeScreen implements Screen {
 		batch.begin();
 
 		// clear screen to dark blue color
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.9f, 0.5f);
+		Gdx.gl.glClearColor(0, 0, 0.7f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//render terrain on screen
@@ -167,12 +175,46 @@ public class TonposeScreen implements Screen {
 			}
 		}
 
-		//render other players
-		if(!tonpose.Name.equals("offline")) {
-			for (User value : tonpose.users.values()) {
-				batch.draw(playerImage, value.x, value.y);
+		//renders other players and plays walking or standing animation
+		for (User value	: tonpose.users.values()) {
+			boolean found = false;
+			for (User old: oldPlayers) {
+				if(old.id == value.id){
+					if(old.x != value.x || old.y != value.y){
+						switch(animationCount){
+							case 0:
+								batch.draw(playerMoving1, value.x, value.y);
+								break;
+							case 1:
+								batch.draw(playerImage, value.x, value.y);
+								break;
+							case 2:
+								batch.draw(playerMoving2, value.x, value.y);
+								break;
+							case 3:
+								batch.draw(playerImage, value.x, value.y);
+								break;
+							default:
+								batch.draw(playerMoving1, value.x, value.y);
+								animationCount = 0;
+						}
+					}else{
+						batch.draw(playerImage, value.x, value.y);
+					}
+					old.x = value.x;
+					old.y = value.y;
+					found = true;
+				}
+			}
+			if(found == false){
+				oldPlayers.add(value);
 			}
 		}
+
+		/*//render other players old
+		for (User value : tonpose.users.values()) {
+			batch.draw(playerImage, value.x, value.y);
+		}*/
 
 		//renders user's player
 		batch.draw(player.texture, player.getX(), player.getY());
@@ -266,6 +308,7 @@ public class TonposeScreen implements Screen {
 		if(time > lastAnimation + ANIMATIONDELAY) {
 			player.nextAnimation(nextAnimation);
 			lastAnimation = time;
+			animationCount++;
 		}
 
 		if(player.currentHp < 0 && player.killable) //checks if player is dead and changes screen accordingly
@@ -292,6 +335,8 @@ public class TonposeScreen implements Screen {
 			if(entity instanceof Mob){
 				if(((Mob)entity).targetID == tonpose.ID){ //checks if the mob is after the player
 					((Mob) entity).move(player, 0 ,0, 1); //moves mob towards player
+				}else{
+					entity.nextAnimation(1);
 				}
 			}
 		}
@@ -304,9 +349,7 @@ public class TonposeScreen implements Screen {
 		MovePlayer move = new MovePlayer();
 		move.x = player.getX();
 		move.y = player.getY();
-		if(!tonpose.Name.equals("offline")) {
-			tonpose.client.sendTCP(move);
-		}
+		tonpose.client.sendTCP(move);
 		lastUpdate = TimeUtils.nanoTime();
 	}
 

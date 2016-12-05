@@ -31,7 +31,15 @@ public class Player extends Living {
 
     public Player(float x, float y, String name, Tonpose t){
         super(-1, x, y, 8, 64, 45, 10, 5, 25, 1, 80, t); //move speed 5 power 25
-        texture = new Texture(Gdx.files.internal("mainbase.png"));
+        
+        standing = new Texture(Gdx.files.internal("mainbase.png"));
+        moving2 = new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+        moving1 = new Texture(Gdx.files.internal("mainWalkingRight1.png"));
+        attacking1 = new Texture(Gdx.files.internal("mainAttack1.png"));
+        attacking2 = new Texture(Gdx.files.internal("mainAttack2.png"));
+        hit = new Texture(Gdx.files.internal("mainScared.png"));
+        
+        texture = standing;
         userName = name;
         score = 0;
         xp = 0;
@@ -215,74 +223,65 @@ public class Player extends Living {
                 kill();
                }
         }
-
     }
 
+    @Override
     public void nextAnimation(int i){// 0 = standing, 1 = moving, 2 = attacking, 3 = hit
         if(state == TonposeScreen.state.hit || state == TonposeScreen.state.action){
             i = old + 1;
         }
         switch (i){
             case 1:
-                System.out.println("walking");
                 switch (old) {
                     case 10:
-                        texture = new Texture(Gdx.files.internal("mainbase.png"));
+                        texture = standing;
                         i = 11;
                         break;
                     case 11:
-                        texture = new Texture(Gdx.files.internal("mainWalkingRight3.png"));
+                        texture = moving1;
                         i = 12;
                         break;
                     case 12:
-                        texture = new Texture(Gdx.files.internal("mainbase.png"));
+                        texture = standing;
                         break;
                     default:
-                        texture = new Texture(Gdx.files.internal("mainWalkingRight1.png"));
+                        texture = moving2;
                         i = 10;
                         break;
                 }
                 break;
             case 2:
-                System.out.println("attacking1");
-                texture = new Texture(Gdx.files.internal("mainbase.png"));
+                texture = standing;
                 state = TonposeScreen.state.action;
                 i = 20;
                 break;
             case 3:
-                System.out.println("hit1");
-                texture = new Texture(Gdx.files.internal("mainbase.png"));
+                texture = standing;
                 state = TonposeScreen.state.hit;
                 i = 30;
                 break;
             case 21:
-                System.out.println("attacking2");
-                texture = new Texture(Gdx.files.internal("mainAttack1.png"));
+                texture = attacking1;
                 break;
             case 22:
-                System.out.println("attacking3");
-                texture = new Texture(Gdx.files.internal("mainAttack2.png"));
+                texture = attacking2;
                 state = TonposeScreen.state.standing;
                 break;
             case 31:
-                System.out.println("hit2");
-                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                texture = hit;
                 break;
             case 32:
-                System.out.println("hit3");
-                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                texture = hit;;
                 break;
             case 33:
-                System.out.println("hit4");
-                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                texture = hit;;
                 break;
             case 34:
-                System.out.println("hit5");
-                texture = new Texture(Gdx.files.internal("mainScared.png"));
+                texture = hit;;
                 state = TonposeScreen.state.standing;
                 break;
             default:
-                texture = new Texture(Gdx.files.internal("mainbase.png"));
+                texture = standing;
         }
         old = i;
     }
