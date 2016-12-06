@@ -15,10 +15,14 @@ public class Map {
     private int height,width;
     private ArrayList<Entity> entities;
     private ArrayList<Item> items;
+    private ArrayList<Projectile> projectiles;
     private ArrayList<Entity> entitiesDelete;
     private ArrayList<Item> itemsDelete;
     private ArrayList<Entity> entitiesAdd;
     private ArrayList<Item> itemsAdd;
+    private ArrayList<Projectile> projectileAdd;
+    private ArrayList<Projectile> projectileDelete;
+
     private Terrain terrains[][];
     private int mobCount;
     public int UIDmax;
@@ -35,6 +39,9 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
+        projectileDelete = new ArrayList<Projectile>();
+        projectileAdd = new ArrayList<Projectile>();
+        projectiles = new ArrayList<Projectile>();
         terrains = new Terrain[height/80+1][width/80+1];
         mobCount = 0;
 
@@ -150,8 +157,12 @@ public class Map {
                 return new Plank(uid, 1, x, y, tonpose);
             case 15:
                 return new Bones(uid, 1, x, y, true, tonpose);
-            default:
+            case 16:
                 return new Sword(uid, 1, x, y, true, tonpose);
+            case 17:
+                return new Bow(uid, 1, x, y, true, tonpose);
+            default:
+                return new Bow(uid, 1, x, y, true, tonpose);
         }
     }
 
@@ -231,6 +242,16 @@ public class Map {
         tonpose.client.sendTCP(add);
     }
 
+    public void addToMap(Projectile projectile){
+        projectileAdd.add(projectile);
+        Network.AddElement add = new Network.AddElement();
+        add.id = projectile.itemID;
+        add.uid = projectile.uid;
+        add.x = projectile.currentX;
+        add.y = projectile.currentY;
+        tonpose.client.sendTCP(add);
+    }
+
     //adds entities to server map
     public void addToMap(Entity entity){
         entitiesAdd.add(entity);
@@ -249,6 +270,8 @@ public class Map {
         }
         else if(add.id <= 16){
             itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
+        }else{
+            projectileAdd.add(new Projectile(add.uid, add.x, add.y, add.id, tonpose));
         }
         UIDmax = add.uid + 1;
     }
@@ -269,7 +292,15 @@ public class Map {
         remove.tid = item.itemID;
         remove.uid = item.uid;
         tonpose.client.sendTCP(remove);
+    }
 
+    //removes a projectile so it no longer shows on the server map
+    public void removeFromMap(Projectile projectile){
+        projectileDelete.add(projectile);
+        Network.RemoveElement remove = new Network.RemoveElement();
+        remove.tid = projectile.itemID;
+        remove.uid = projectile.uid;
+        tonpose.client.sendTCP(remove);
     }
 
     //removes an entity so it no longer shows on the server map
@@ -296,12 +327,18 @@ public class Map {
                     itemsDelete.add(i);
                 }
             }
+        }else{
+            for(Projectile i: projectiles){
+                if(i.uid == remove.uid){
+                    projectileDelete.add(i);
+                }
+            }
         }
     }
 
     //moves mobs from other clients
     public void moveElement(Network.MoveElement move){
-        // Only move mob elements
+        // Only move mob and projectile elements
         boolean exists = false;
         if(move.tid == 2){
             for(Entity e: entities){
@@ -312,6 +349,18 @@ public class Map {
             }
             if(!exists){
                 entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
+                UIDmax = move.uid;
+                UIDmax++;
+            }
+        }else if(move.tid == 20){
+            for(Projectile p: projectiles){
+                if(p.uid == move.uid){
+                    p.move(move.x, move.y, TonposeScreen.player);
+                    exists = true;
+                }
+            }
+            if(!exists){
+                projectileAdd.add(new Projectile(move.uid, move.x, move.y, 20, tonpose));
                 UIDmax = move.uid;
                 UIDmax++;
             }
@@ -412,5 +461,18 @@ public class Map {
             items.remove(item);
         }
         itemsDelete.clear();
+
+        for (Projectile projectile: projectileAdd) {
+            projectiles.add(projectile);
+        }
+        projectileAdd.clear();
+        for (Projectile projectile: projectileDelete) {
+            projectiles.remove(projectile);
+        }
+        projectileDelete.clear();
+    }
+
+    public ArrayList<Projectile> getProjectiles(){
+        return projectiles;
     }
 }

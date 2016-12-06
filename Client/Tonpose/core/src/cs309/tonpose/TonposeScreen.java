@@ -24,11 +24,13 @@ import com.badlogic.gdx.utils.TimeUtils;
 import java.util.ArrayList;
 
 import cs309.tonpose.Network.MovePlayer;
+import cs309.tonpose.map.Bow;
 import cs309.tonpose.map.Entity;
 import cs309.tonpose.map.Item;
 import cs309.tonpose.map.Map;
 import cs309.tonpose.map.Mob;
 import cs309.tonpose.map.Player;
+import cs309.tonpose.map.Projectile;
 import cs309.tonpose.map.Terrain;
 
 import static java.lang.Math.abs;
@@ -85,6 +87,11 @@ public class TonposeScreen implements Screen {
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	private int animationCount = 0;
+
+	private boolean aiming = false;
+	private float aimX;
+	private float aimY;
+	private boolean targeting =false;
 
 	//private Stage stage;
 	private TextButton inv;
@@ -333,6 +340,8 @@ public class TonposeScreen implements Screen {
 		// make player move on touch
 		int i=0;
 		moving=false;
+		aiming=false;
+		targeting=false;
 		for(i=0; i<3; i++){ //iterates through all possible touch events (Maximum of 3), and uses the first one found
 			if (Gdx.input.isTouched(i)) { //checks if touch event i is active
 				Vector3 touchPos = new Vector3(); //obtains coordinates of touch event i
@@ -341,12 +350,19 @@ public class TonposeScreen implements Screen {
 				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)||playersOnlineDeadZone.contains(touchPos.x,touchPos.y)||inventoryDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
 					tonpose.lastX = player.getX();
 					tonpose.lastY = player.getY();
+					if(player.equiped instanceof Bow){
+						aiming = true;
+					}
 				}
-				else {
+				else if (aiming == false){
 					tonpose.lastX = touchPos.x;
 					tonpose.lastY = touchPos.y;
 					moving = true;
 					nextAnimation = 1;
+				}else{
+					aimX = touchPos.x;
+					aimY = touchPos.y;
+					targeting = true;
 				}
 			}
 		}
@@ -359,6 +375,13 @@ public class TonposeScreen implements Screen {
 		//render stage
 		stage.act(delta);
 		stage.draw();
+
+		if(targeting == true){
+			if(aiming == false){
+				((Bow)player.equiped).fire(aimX, aimY, player, tonpose);
+				targeting = false;
+			}
+		}
 
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick(TimeUtils.nanoTime());
@@ -407,6 +430,7 @@ public class TonposeScreen implements Screen {
 		lastMove = TimeUtils.nanoTime();
 	}
 
+	//moves enemys and projectiles
 	private void moveEnemy() {
 		for (Entity entity : Map.getEntities()) {
 			if(entity instanceof Mob){
@@ -418,6 +442,13 @@ public class TonposeScreen implements Screen {
 					float scale = terrainMap[x][y].getScale();
 					((Mob) entity).move(player, modX ,modY, scale); //moves mob towards player
 				}
+			}
+		}
+
+		//moves projectiles
+		for(Projectile projectile : Map.getProjectiles()){
+			if(projectile.ownerID == tonpose.ID){
+				projectile.move(Map.getEntities(), player);
 			}
 		}
 
