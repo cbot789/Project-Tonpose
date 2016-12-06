@@ -291,6 +291,7 @@ public class tonpose_server {
 							}
 						break;
 						default:
+							server.sendToAllExceptTCP(connection.getID(), move);
 						break;
 
 					}
@@ -331,6 +332,7 @@ public class tonpose_server {
 							server.sendToAllExceptTCP(connection.getID(), add);
 						break;
 						default:
+							server.sendToAllExceptTCP(connection.getID(), add);
 						break;
 					}
 				}
@@ -340,13 +342,22 @@ public class tonpose_server {
 					switch(remove.tid){
 						// Elements is an entity
 						case 0:
-						case 2:
 						case 8:
 						case 9:
 							ArrayList<ServerEntity> eList = map.getEntities();
 							for(int i = 0; i < eList.size(); i++){
 								if(remove.uid == eList.get(i).uniqueID){
 									map.remove(eList.get(i));
+									server.sendToAllExceptTCP(connection.getID(), remove);
+									break;
+								}
+							}
+						break;
+						case 2:
+							ArrayList<ServerEntity> mList = map.getMobs();
+							for(int i = 0; i < mList.size(); i++){
+								if(remove.uid == mList.get(i).uniqueID){
+									map.remove(mList.get(i));
 									server.sendToAllExceptTCP(connection.getID(), remove);
 									break;
 								}
@@ -370,6 +381,7 @@ public class tonpose_server {
 							}
 						break;
 						default:
+							server.sendToAllExceptTCP(connection.getID(), remove);
 						break;
 
 					}
@@ -401,7 +413,7 @@ public class tonpose_server {
 	}
 
 	public static void main (String[] args) throws IOException {
-		Log.set(Log.LEVEL_DEBUG);
+		//Log.set(Log.LEVEL_DEBUG);
 		new tonpose_server();
 	}
 }

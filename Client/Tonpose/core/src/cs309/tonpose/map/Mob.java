@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 //import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf; //caused compile error, package doesnt exist
 
@@ -20,7 +21,7 @@ public class Mob extends Living {
     protected int npcNumber;
     public int targetID;
 
-    public Mob(int uid, int targetID, float x, float y, int number, Tonpose t){
+    public Mob(int uid, int targetID, float x, float y, Tonpose t){
         super(uid, x, y, 100, 64, 64, 1, 5, 1, 1, 100, t);
         this.targetID = targetID;
         this.tonpose = t;
@@ -33,11 +34,11 @@ public class Mob extends Living {
         hit = new Texture(Gdx.files.internal("player2Scared.png"));
         
         texture = standing;
-
+        old = 0;
         flee = 0;
         sfx = Gdx.audio.newMusic(Gdx.files.internal("mobHit.wav"));
         sfx.setVolume((float) 0.3);
-        npcNumber = number;
+        npcNumber = uid;
         nextAnimation(0);
     }
 
@@ -129,8 +130,8 @@ public class Mob extends Living {
                 Network.MoveElement move = new Network.MoveElement();
                 move.tid = 2;
                 move.uid = uid;
-                move.x = locationX + xMove;
-                move.y = locationY + yMove;
+                move.x = locationX;// + xMove;
+                move.y = locationY;// + yMove;
                 tonpose.client.sendTCP(move);
             }
 
@@ -149,7 +150,7 @@ public class Mob extends Living {
     @Override
     public void move(float x, float y){
         super.move(x, y);
-        nextAnimation(2);
+        nextAnimation(0);
     }
 
     @Override
@@ -223,7 +224,7 @@ public class Mob extends Living {
     }
     @Override
     public void kill(){
-        tonpose.tonposeScreen.Map.addToMap(new Bones(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true, tonpose)); //drop bones
+        tonpose.tonposeScreen.Map.addToMap(new Bones(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX+32, locationY+32, true, tonpose)); //drop bones
         super.kill();
         TonposeScreen.player.updateScore(10);
     }

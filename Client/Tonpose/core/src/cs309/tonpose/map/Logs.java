@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 
 import cs309.tonpose.*;
 
@@ -26,7 +27,7 @@ public class Logs extends Item {
                     if(mod.count > 1){
                         count--;
                         mod.count--;
-                        return new Plank(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX, locationY, tonpose);
+                        return new Plank(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX, locationY, tonpose);
                     }
                 }
                 break;
@@ -35,7 +36,7 @@ public class Logs extends Item {
                     if(mod.count >= 1){
                         count--;
                         mod.count--;
-                        return new Sword(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX, locationY, true, tonpose);
+                        return new Sword(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX, locationY, true, tonpose);
                     }
                 }
                 break;

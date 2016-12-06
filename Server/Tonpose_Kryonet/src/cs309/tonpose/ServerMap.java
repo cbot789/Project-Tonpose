@@ -102,12 +102,20 @@ public class ServerMap {
 
     public int[][] getEntityArray(){
     	// Fills 2d array (to be sent over network) with entity arraylist
-    	int [][] arr = new int[entityCount][4];
+    	int [][] arr = new int[entityCount + mobCount][4];
     	for(int i = 0; i < entityCount; i++){
     		arr[i][0] = entities.get(i).uniqueID;
     		arr[i][1] = entities.get(i).typeID;
     		arr[i][2] = (int)entities.get(i).x;
     		arr[i][3] = (int)entities.get(i).y;
+    	}
+    	int j = 0;
+    	for(int i = entityCount; i < entityCount + mobCount; i++){
+    		arr[i][0] = mobs.get(j).uniqueID;
+    		arr[i][1] = mobs.get(j).typeID;
+    		arr[i][2] = (int)mobs.get(j).x;
+    		arr[i][3] = (int)mobs.get(j).y;
+    		j++;
     	}
     	return arr;
     }

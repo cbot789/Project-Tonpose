@@ -55,7 +55,7 @@ public class Map {
     //create map based on server data
     public Map(Tonpose t, int height, int width, int[] terrain, int[][] entities, int[][] items){
         this.tonpose = t;
-        UIDmax = 0;
+        UIDmax = 10000000;
         this.height = height;
         this.width = width;
         this.entities=new ArrayList<Entity>();
@@ -69,11 +69,11 @@ public class Map {
 
         for(int i=0; i < entities.length; i++){
             this.entities.add(generateEntities(entities[i][0], entities[i][1], entities[i][2], entities[i][3]));
-            UIDmax = entities[i][0] + 1;
+            //UIDmax = entities[i][0] + 1;
         }
         for(int i=0; i < items.length; i++){
             this.items.add(generateItems(items[i][0], items[i][1], items[i][2], items[i][3]));
-            UIDmax = items[i][0] + 101;
+            //UIDmax = items[i][0] + 101;
         }
         generateTerrain(height, width, terrain);
 
@@ -90,7 +90,7 @@ public class Map {
         int y= MathUtils.random(height);
         Rectangle playerRectangle= new Rectangle(400,240,45,64);
         if(id==0){
-            Cabbage cabbage = new Cabbage(UIDmax++, x,y, tonpose);
+            Cabbage cabbage = new Cabbage(MathUtils.random(UIDmax), x,y, tonpose);
             if(cabbage.body.overlaps(playerRectangle)){
                 return generateEntities(0); //try again for a valid position
             }
@@ -99,20 +99,20 @@ public class Map {
                     return generateTerrain();
                 }
             }*/
-            return new Cabbage(UIDmax++, x, y, tonpose);
+            return new Cabbage(MathUtils.random(UIDmax), x, y, tonpose);
         }
         else if(id == 1){
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
-            UIDmax++;
-            return new Mob(UIDmax + tonpose.ID, tonpose.ID, x, y, mobCount, tonpose);
+            //UIDmax += tonpose.ID;
+            return new Mob(MathUtils.random(UIDmax), tonpose.ID, x, y, tonpose);
         }else if(id == 8){
-            WoodBlock woodBlock = new WoodBlock(UIDmax++, x, y, tonpose);
+            WoodBlock woodBlock = new WoodBlock(MathUtils.random(UIDmax), x, y, tonpose);
             return woodBlock;
         }
         else {
-            Tree tree=new Tree(UIDmax++, x,y, tonpose);
+            Tree tree=new Tree(MathUtils.random(UIDmax), x,y, tonpose);
             if(tree.body.overlaps(playerRectangle)){
                 return generateEntities(2);
             }
@@ -132,7 +132,7 @@ public class Map {
                 return new Cabbage(uid, x,y, tonpose);
             case 2:
                 mobCount++;
-                return new Mob(uid, -1, x,y, mobCount, tonpose);
+                return new Mob(uid, -1, x,y, tonpose);
             case 8:
                 return new WoodBlock(uid, x,y, tonpose);
             case 9:
@@ -306,6 +306,7 @@ public class Map {
     //removes an entity so it no longer shows on the server map
     public void removeFromMap(Entity entity){
         entitiesDelete.add(entity);
+        mobCount--;
         Network.RemoveElement remove = new Network.RemoveElement();
         remove.tid = entity.id;
         remove.uid = entity.uid;
@@ -318,6 +319,9 @@ public class Map {
             for(Entity e: entities){
                 if(e.uid == remove.uid){
                     entitiesDelete.add(e);
+                    if(remove.tid == 2){
+                        mobCount--;
+                    }
                 }
             }
         }
@@ -347,7 +351,7 @@ public class Map {
                     exists = true;
                 }
             }
-            if(!exists){
+            /*if(!exists){
                 entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
                 UIDmax = move.uid;
                 UIDmax++;
@@ -363,6 +367,14 @@ public class Map {
                 projectileAdd.add(new Projectile(move.uid, move.x, move.y, 20, tonpose));
                 UIDmax = move.uid;
                 UIDmax++;
+            }
+                mobCount++;
+            }*/
+        }else if(move.tid == 20) {
+            for (Projectile p : projectiles) {
+                if (p.uid == move.uid) {
+                    p.move(move.x, move.y, TonposeScreen.player);
+                }
             }
         }
     }
@@ -440,7 +452,6 @@ public class Map {
     public double getDistance(float x1, float y1, float x2, float y2){ // returns the distance between two points
       double distance=Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2)+Math.abs(y1-y2)*Math.abs(y1-y2));
       return distance;
-
     }
 
     //adds and removes all objects from buffer list to the map

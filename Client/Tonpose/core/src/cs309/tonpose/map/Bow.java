@@ -22,7 +22,7 @@ public class Bow extends Item {
 
     @Override
     public void action(Rectangle player, Player user){
-        
+
     }
 
     public void fire(float targetX, float targetY, Player user, Tonpose t){

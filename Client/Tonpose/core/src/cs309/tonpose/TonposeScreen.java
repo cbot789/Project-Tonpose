@@ -53,7 +53,7 @@ public class TonposeScreen implements Screen {
 	private Texture attacking2Player;
 	private Texture hitPlayer;
 
-	public static Texture	healthImage;
+	public Texture healthImage;
 	private Stage stage;
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
@@ -62,7 +62,7 @@ public class TonposeScreen implements Screen {
 	private float renderBufferY;
 	private boolean moving;
 	public enum state {
-		action, moving, standing, hit
+		standing, moving, action, hit
 	}
 	private int nextAnimation = 0;
 
@@ -81,9 +81,9 @@ public class TonposeScreen implements Screen {
 	private final int TICKDELAY =       20000000;
 	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
-	private final int UPDATEDELAY =     80000000;
+	private final int UPDATEDELAY =     50000000;
 	private final long ANIMATIONDELAY = 160000000L;
-	private final long SPAWNDELAY =     50000000000L;
+	private final long SPAWNDELAY =     80000000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	private int animationCount = 0;
@@ -96,12 +96,12 @@ public class TonposeScreen implements Screen {
 	//private Stage stage;
 	private TextButton inv;
 	private TextButton actionButton;
-	public static Rectangle actionButtonDeadZone, inventoryDeadZone, playersOnlineDeadZone;
+	public Rectangle actionButtonDeadZone, inventoryDeadZone, playersOnlineDeadZone;
 	private BitmapFont font = new BitmapFont();
 	private Table table;
 	private TextButton.TextButtonStyle textButtonStyle;
-	public static float playerHealthX=1;
-	public static float playerHealthY=416;
+	public float playerHealthX=1;
+	public float playerHealthY=416;
 	Terrain terrainMap[][];
 	private ArrayList<User> oldPlayers = new ArrayList<User>();
 

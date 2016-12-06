@@ -38,8 +38,8 @@ public class Cabbage extends Entity { //id is 0
             tonpose.tonposeScreen.Map.addToMap(item);
             i+=32;
         }
-        tonpose.tonposeScreen.Map.addToMap(new CabbageLeaves(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+32, locationY+32, true, tonpose));
-        tonpose.tonposeScreen.Map.addToMap(new CabbageSeeds(tonpose.tonposeScreen.Map.UIDmax++, 1, locationX+64, locationY+64, true, tonpose));
+        tonpose.tonposeScreen.Map.addToMap(new CabbageLeaves(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX+32, locationY+32, true, tonpose));
+        tonpose.tonposeScreen.Map.addToMap(new CabbageSeeds(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX+64, locationY+64, true, tonpose));
         tonpose.tonposeScreen.Map.removeFromMap(this);
     }
 }
