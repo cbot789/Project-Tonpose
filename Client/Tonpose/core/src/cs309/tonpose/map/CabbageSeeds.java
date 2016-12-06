@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 import cs309.tonpose.*;
@@ -20,7 +21,7 @@ public class CabbageSeeds extends Item {
     @Override
     public void action(Rectangle player, Player user) {
         if(count > 0){
-            Cabbage cabbage = new Cabbage(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY(), tonpose);
+            Cabbage cabbage = new Cabbage(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), (int)player.getX()+ 40, (int) player.getY(), tonpose);
             tonpose.tonposeScreen.Map.addToMap(cabbage);
             super.action(player, user);
             user.updateScore(5); //adds points for planting cabbage

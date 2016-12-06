@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 import cs309.tonpose.*;
@@ -21,7 +22,7 @@ public class TreeSeeds extends Item {
     @Override
     public void action(Rectangle player, Player user) {
         if(count > 0){
-            Tree tree = new Tree(tonpose.tonposeScreen.Map.UIDmax++, (int)player.getX()+ 40, (int) player.getY(), tonpose);
+            Tree tree = new Tree(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), (int)player.getX()+ 40, (int) player.getY(), tonpose);
             tonpose.tonposeScreen.Map.addToMap(tree);
             super.action(player,user);
             user.updateScore(5); //add points for planting tree

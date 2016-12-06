@@ -150,11 +150,11 @@ public class Player extends Living {
                     locationX += xMove;
                 }
                 body.setX(locationX);
-                TonposeScreen.camera.translate(xMove, 0);
-                TonposeScreen.playerHealthX+=xMove;
-                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x+xMove,TonposeScreen.actionButtonDeadZone.y); //moves dead zones with the camera
-                TonposeScreen.inventoryDeadZone.setPosition(TonposeScreen.inventoryDeadZone.x+xMove,TonposeScreen.inventoryDeadZone.y);
-                TonposeScreen.playersOnlineDeadZone.setPosition(TonposeScreen.playersOnlineDeadZone.x+xMove,TonposeScreen.playersOnlineDeadZone.y);
+                tonpose.tonposeScreen.camera.translate(xMove, 0);
+                tonpose.tonposeScreen.playerHealthX+=xMove;
+                tonpose.tonposeScreen.actionButtonDeadZone.setPosition(tonpose.tonposeScreen.actionButtonDeadZone.x+xMove,tonpose.tonposeScreen.actionButtonDeadZone.y); //moves dead zones with the camera
+                tonpose.tonposeScreen.inventoryDeadZone.setPosition(tonpose.tonposeScreen.inventoryDeadZone.x+xMove,tonpose.tonposeScreen.inventoryDeadZone.y);
+                tonpose.tonposeScreen.playersOnlineDeadZone.setPosition(tonpose.tonposeScreen.playersOnlineDeadZone.x+xMove,tonpose.tonposeScreen.playersOnlineDeadZone.y);
             }
             if(!collidedY){
                 if (locationY + yMove < 0) {
@@ -169,11 +169,11 @@ public class Player extends Living {
                     locationY += yMove;
                 }
                 body.setY(locationY);
-                TonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
-                TonposeScreen.playerHealthY+=yMove;
-                TonposeScreen.actionButtonDeadZone.setPosition(TonposeScreen.actionButtonDeadZone.x,TonposeScreen.actionButtonDeadZone.y+yMove); //moves dead zones with the camera
-                TonposeScreen.inventoryDeadZone.setPosition(TonposeScreen.inventoryDeadZone.x,TonposeScreen.inventoryDeadZone.y+yMove);
-                TonposeScreen.playersOnlineDeadZone.setPosition(TonposeScreen.playersOnlineDeadZone.x,TonposeScreen.playersOnlineDeadZone.y+yMove);
+                tonpose.tonposeScreen.camera.translate(0, yMove);//keeps camera within the map's bounds
+                tonpose.tonposeScreen.playerHealthY+=yMove;
+                tonpose.tonposeScreen.actionButtonDeadZone.setPosition(tonpose.tonposeScreen.actionButtonDeadZone.x,tonpose.tonposeScreen.actionButtonDeadZone.y+yMove); //moves dead zones with the camera
+                tonpose.tonposeScreen.inventoryDeadZone.setPosition(tonpose.tonposeScreen.inventoryDeadZone.x,tonpose.tonposeScreen.inventoryDeadZone.y+yMove);
+                tonpose.tonposeScreen.playersOnlineDeadZone.setPosition(tonpose.tonposeScreen.playersOnlineDeadZone.x,tonpose.tonposeScreen.playersOnlineDeadZone.y+yMove);
             }
         }
     }
@@ -192,31 +192,31 @@ public class Player extends Living {
         }
         switch (currentHp){
             case 0:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza0.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza0.png"));
                 break;
             case 1:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza1.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza1.png"));
                 break;
             case 2:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza2.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza2.png"));
                 break;
             case 3:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza3.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza3.png"));
                 break;
             case 4:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza4.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza4.png"));
                 break;
             case 5:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza5.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza5.png"));
                 break;
             case 6:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza6.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza6.png"));
                 break;
             case 7:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza7.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza7.png"));
                 break;
             case 8:
-                TonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
+                tonpose.tonposeScreen.healthImage=new Texture(Gdx.files.internal("pizza8.png"));
                 break;
             default:
                if(killable){
