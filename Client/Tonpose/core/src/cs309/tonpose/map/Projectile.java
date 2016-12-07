@@ -23,12 +23,13 @@ public class Projectile {
     protected float ySpeed;
     protected int damage;
     protected Tonpose tonpose;
-    protected int itemID;
+    protected int tid;
     protected Rectangle rectangle;
     public int ownerID;
 
     public Projectile(int uid, float startX, float startY, float targetX, float targetY, int speed, int damage, Tonpose t){
         this.uid = uid;
+        this.tid = 20;
         currentX = startX;
         currentY = startY;
         this.damage = damage;
@@ -86,7 +87,7 @@ public class Projectile {
             }
         }
         Network.MoveElement move = new Network.MoveElement();
-        move.tid = itemID;
+        move.tid = tid;
         move.uid = uid;
         move.x = currentX;
         move.y = currentY;
@@ -96,6 +97,8 @@ public class Projectile {
     public void move(float newX, float newY, Player user){
         currentX = newX;
         currentY = newY;
+        rectangle.setX(currentX);
+        rectangle.setY(currentY);
         if(user.getRectangle().overlaps(rectangle)){
             user.changeHp(-damage/10);
             tonpose.tonposeScreen.Map.removeFromMap(this);

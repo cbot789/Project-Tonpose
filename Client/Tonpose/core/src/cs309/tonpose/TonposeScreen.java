@@ -394,7 +394,7 @@ public class TonposeScreen implements Screen {
 		if(time > lastFire + FIREDELAY){
 			if(targeting == true){
 				if(aiming == true){
-					((Wand)player.equiped).fire(aimX, aimY, player, tonpose);
+					((Wand)player.equiped).fire(aimX, aimY, player);
 					targeting = false;
 					lastFire = time;
 				}

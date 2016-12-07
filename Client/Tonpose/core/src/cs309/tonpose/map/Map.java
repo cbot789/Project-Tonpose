@@ -248,7 +248,7 @@ public class Map {
     public void addToMap(Projectile projectile){
         projectileAdd.add(projectile);
         Network.AddElement add = new Network.AddElement();
-        add.id = projectile.itemID;
+        add.id = projectile.tid;
         add.uid = projectile.uid;
         add.x = projectile.currentX;
         add.y = projectile.currentY;
@@ -301,7 +301,7 @@ public class Map {
     public void removeFromMap(Projectile projectile){
         projectileDelete.add(projectile);
         Network.RemoveElement remove = new Network.RemoveElement();
-        remove.tid = projectile.itemID;
+        remove.tid = projectile.tid;
         remove.uid = projectile.uid;
         tonpose.client.sendTCP(remove);
     }
@@ -376,7 +376,7 @@ public class Map {
         }else if(move.tid == 20) {
             for (Projectile p : projectiles) {
                 if (p.uid == move.uid) {
-                    p.move(move.x, move.y, TonposeScreen.player);
+                    p.move(move.x, move.y, tonpose.tonposeScreen.player);
                 }
             }
         }
