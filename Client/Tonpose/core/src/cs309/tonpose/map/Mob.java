@@ -55,7 +55,7 @@ public class Mob extends Living {
         target = prey;
     }
     public void scare(int duration){
-        flee += duration;
+        flee = duration;
     }
 
     @Override

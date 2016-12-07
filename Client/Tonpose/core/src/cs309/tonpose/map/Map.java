@@ -135,6 +135,8 @@ public class Map {
             case 3:
                 mobCount++;
                 return new Wizard(uid, -1, x,y, tonpose);
+            case 4:
+                return new Trap(uid, x, y, tonpose);
             case 8:
                 return new WoodBlock(uid, x,y, tonpose);
             case 9:

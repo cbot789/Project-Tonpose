@@ -43,8 +43,8 @@ public class TonposeScreen implements Screen {
 	private Music music;
 
 	private Texture playerImage, buttonImage, playerMoving1, playerMoving2, Background;
-	private Texture mob, tree, cabbage, woodBlock;
-	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones,trap1,trap2;
+	private Texture mob, tree, cabbage, woodBlock,trap1,trap2;
+	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones;
 	private Texture moving1Mob;
 	private Texture moving2Mob;
 	private Texture attacking1Mob;
@@ -298,7 +298,11 @@ public class TonposeScreen implements Screen {
 									batch.draw(getTextureMob(((Mob) entity).old, 2), entity.locationX, entity.locationY);
 									break;
 								case 4: //trap
-									batch.draw(entity.texture, entity.locationX,entity.locationY);
+									if(((Trap)entity).old == 0) {
+										batch.draw(trap1, entity.locationX, entity.locationY);
+									}else{
+										batch.draw(trap2, entity.locationX, entity.locationY);
+									}
 								case 8:
 									batch.draw(woodBlock, entity.locationX, entity.locationY);
 									break;
@@ -441,10 +445,12 @@ public class TonposeScreen implements Screen {
 		}
 		if(time>lastTrap+TRAPDELAY){
 			for(Entity entity:Map.getEntities()){
-				if(entity.id==4){
+				if(entity instanceof Trap){
 					if(Map.getDistance(entity.getX(),entity.getY(),player.getX(),player.getY())<75){
 						player.changeHp(-1);
-						entity.texture=trap2;
+						player.old = 1;
+					}else{
+						player.old = 0;
 					}
 				}
 			}
