@@ -1,6 +1,9 @@
 package cs309.tonpose.map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import cs309.tonpose.Network;
 import cs309.tonpose.Tonpose;
@@ -12,9 +15,15 @@ import static java.lang.Math.abs;
  */
 
 public class Wizard extends Mob {
+    public Music shoot;
+    private long lastShot;
+    private long SHOTDELAY = 1280000000L;
+
     public Wizard(int uid, int targetID, float x, float y, Tonpose t) {
         super(uid, targetID, x, y, t);
         id = 3;
+        shoot = Gdx.audio.newMusic(Gdx.files.internal("fire.wav"));
+        shoot.setVolume((float) 0.3);
     }
 
     @Override
@@ -24,7 +33,7 @@ public class Wizard extends Mob {
         float sum = abs(x) + abs(y);
         boolean collidedX = false;
         boolean collidedY = false;
-        if (sum > 100) { //stops if within 4 units of target location to prevent "the shakes"
+        if (sum > 300 || flee > 0) { //stops if within 300 units of target location to prevent attack from ranged
             nextAnimation(1);
             float xMove = (moveSpeed * (x / sum)) * scale + modX;
             float yMove = (moveSpeed * (y / sum)) * scale + modY;
@@ -95,6 +104,17 @@ public class Wizard extends Mob {
             }
         }else{
             scare(1);
+            if(TimeUtils.nanoTime() > lastShot + SHOTDELAY){
+                fire(target.getX(), target.getY(), tonpose);
+                lastShot = TimeUtils.nanoTime();
+            }
         }
+    }
+
+    private void fire(float targetX, float targetY, Tonpose t){
+        shoot.setPosition(0);
+        shoot.play();
+
+        t.tonposeScreen.Map.addToMap(new Projectile(tonpose.tonposeScreen.Map.UIDmax++, locationX, locationY, targetX, targetY, 20, 10, 2, t));
     }
 }

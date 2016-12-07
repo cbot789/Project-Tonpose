@@ -27,13 +27,13 @@ public class Projectile {
     protected Rectangle rectangle;
     public int ownerID;
 
-    public Projectile(int uid, float startX, float startY, float targetX, float targetY, int speed, int damage, Tonpose t){
+    public Projectile(int uid, float startX, float startY, float targetX, float targetY, int speed, int damage, int owner, Tonpose t){
         this.uid = uid;
         currentX = startX;
         currentY = startY;
         this.damage = damage;
         rectangle = new Rectangle(startX, startY, 32, 32);
-        ownerID = 1;
+        ownerID = owner;
         float x = targetX - startX;
         float y = targetY - startY;
         float sum = abs(x) + abs(y);
@@ -45,18 +45,13 @@ public class Projectile {
     }
 
 
-    public Projectile(int uid, float startX, float startY, int id, Tonpose t){
+    public Projectile(int uid, float startX, float startY, Tonpose t){
         this.uid = uid;
         currentX = startX;
         currentY = startY;
         rectangle = new Rectangle(startX, startY, 32, 32);
         ownerID = -1;
-        switch (id){
-            case 20:
-                damage = 20;
-            default:
-                damage = id;
-        }
+        damage = 20;
         tonpose = t;
     }
 
@@ -70,12 +65,14 @@ public class Projectile {
         }else if(currentY < 0 || currentY > tonpose.tonposeScreen.Map.getHeight()){
             tonpose.tonposeScreen.Map.removeFromMap(this);
         }else{
-            for(Entity entity : entityList){
-                if(entity.getRectangle().overlaps(rectangle)){
-                    System.out.print(damage);
-                    entity.changeHp(-damage);
-                    tonpose.tonposeScreen.Map.removeFromMap(this);
-                    return;
+            if(ownerID != 2){
+                for(Entity entity : entityList){
+                    if(entity.getRectangle().overlaps(rectangle)){
+                        System.out.print(damage);
+                        entity.changeHp(-damage);
+                        tonpose.tonposeScreen.Map.removeFromMap(this);
+                        return;
+                    }
                 }
             }
             if(ownerID != 1){
@@ -96,6 +93,8 @@ public class Projectile {
     public void move(float newX, float newY, Player user){
         currentX = newX;
         currentY = newY;
+        rectangle.setX(currentX);
+        rectangle.setY(currentY);
         if(user.getRectangle().overlaps(rectangle)){
             user.changeHp(-damage/10);
             tonpose.tonposeScreen.Map.removeFromMap(this);

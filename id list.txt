@@ -1,6 +1,8 @@
 entity
 	 0 - cabbage
 	 2 - mob
+	 3 - Wizard
+	 4 - trapBox
 	 8 - WoodBlock
 	 9 - tree
 
@@ -10,7 +12,14 @@ item
 	12 - cabbage leaves
 	13 - log
 	14 - plank
-	
+	15 - bone
+	16 - sword
+	17 - wand
+	18 - trap
+
+projectile
+	20 - generic
+
 Terrain
 	100 - Grass
 	101 - River Horizontal
