@@ -3,6 +3,7 @@ package cs309.tonpose.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 import cs309.tonpose.Tonpose;
@@ -31,11 +32,11 @@ public class Wand extends Item {
 
     }
 
-    public void fire(float targetX, float targetY, Player user, Tonpose t){
+    public void fire(float targetX, float targetY, Player user){
         shoot.setPosition(0);
         shoot.play();
 
         int speed = user.power;
-        t.tonposeScreen.Map.addToMap(new Projectile(tonpose.tonposeScreen.Map.UIDmax++, user.getX(), user.getY(), targetX, targetY, 20, speed,t));
+        tonpose.tonposeScreen.Map.addToMap(new Projectile(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), user.getX(), user.getY(), targetX, targetY, 20, speed, 1, tonpose));
     }
 }

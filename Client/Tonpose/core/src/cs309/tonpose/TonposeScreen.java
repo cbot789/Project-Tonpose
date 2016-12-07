@@ -53,6 +53,7 @@ public class TonposeScreen implements Screen {
 	private Texture attacking2Player;
 	private Texture hitPlayer;
 	private Texture fire;
+	private Texture ranged;
 
 	public Texture healthImage;
 	private Stage stage;
@@ -123,6 +124,7 @@ public class TonposeScreen implements Screen {
 		cabbage=new Texture(Gdx.files.internal("cabbage.png"));
 		woodBlock =new Texture(Gdx.files.internal("woodBlock.png"));
 		tree =new Texture(Gdx.files.internal("treeStill.png"));
+		ranged=new Texture(Gdx.files.internal("rangedBase.png"));
 
 		//load mob animation textures
 		moving2Mob = new Texture(Gdx.files.internal("player2WalkingRight3.png"));
@@ -280,7 +282,7 @@ public class TonposeScreen implements Screen {
 									batch.draw(cabbage, entity.locationX, entity.locationY);
 									break;
 								case 2:
-									batch.draw(getTextureMob(((Mob) entity).old), entity.locationX, entity.locationY);
+									batch.draw(getTextureMob(((Mob) entity).old, 2), entity.locationX, entity.locationY);
 									break;
 								case 8:
 									batch.draw(woodBlock, entity.locationX, entity.locationY);
@@ -289,7 +291,7 @@ public class TonposeScreen implements Screen {
 									batch.draw(tree, entity.locationX, entity.locationY);
 									break;
 								default:
-									batch.draw(getTexturePlayer(player.old), entity.locationX, entity.locationY);
+									batch.draw(ranged, entity.locationX, entity.locationY);
 							}
 						}
 					}
@@ -395,7 +397,7 @@ public class TonposeScreen implements Screen {
 		if(time > lastFire + FIREDELAY){
 			if(targeting == true){
 				if(aiming == true){
-					((Wand)player.equiped).fire(aimX, aimY, player, tonpose);
+					((Wand)player.equiped).fire(aimX, aimY, player);
 					targeting = false;
 					lastFire = time;
 				}
@@ -468,7 +470,7 @@ public class TonposeScreen implements Screen {
 		}
 
 		for(Projectile projectile : Map.getProjectiles()){
-			if(projectile.ownerID == 1){
+			if(projectile.ownerID != -1){
 				projectile.move(Map.getEntities(), player);
 			}
 		}
@@ -598,34 +600,67 @@ public class TonposeScreen implements Screen {
 	}
 
 	//sets the texture for mob
-	private Texture getTextureMob(int old){
-		switch (old) {
-			case 10:
-				return moving1Mob;
-			case 11:
-				return mob;
-			case 12:
-				return moving2Mob;
-			case 13:
-				return mob;
+	private Texture getTextureMob(int old, int type){
+		switch (type){
 			case 2:
-				return mob;
-			case 3:
-				return mob;
-			case 21:
-				return attacking1Mob;
-			case 22:
-				return attacking2Mob;
-			case 31:
-				return hitMob;
-			case 32:
-				return hitMob;
-			case 33:
-				return hitMob;
-			case 34:
-				return hitMob;
+				switch (old) {
+					case 10:
+						return moving1Mob;
+					case 11:
+						return mob;
+					case 12:
+						return moving2Mob;
+					case 13:
+						return mob;
+					case 2:
+						return mob;
+					case 3:
+						return mob;
+					case 21:
+						return attacking1Mob;
+					case 22:
+						return attacking2Mob;
+					case 31:
+						return hitMob;
+					case 32:
+						return hitMob;
+					case 33:
+						return hitMob;
+					case 34:
+						return hitMob;
+					default:
+						return mob;
+				}
 			default:
-				return mob;
+				switch (old) {
+					case 10:
+						return moving1Mob;
+					case 11:
+						return mob;
+					case 12:
+						return moving2Mob;
+					case 13:
+						return mob;
+					case 2:
+						return mob;
+					case 3:
+						return mob;
+					case 21:
+						return attacking1Mob;
+					case 22:
+						return attacking2Mob;
+					case 31:
+						return hitMob;
+					case 32:
+						return hitMob;
+					case 33:
+						return hitMob;
+					case 34:
+						return hitMob;
+					default:
+						return mob;
+				}
 		}
+
 	}
 }

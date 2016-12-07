@@ -84,7 +84,7 @@ public class Map {
 
     //randomly spawns an npc onto the map
     public void spawnNPC(){
-        addToMap(generateEntities(1));
+        addToMap(generateEntities(3));
     }
 
     //used for single player
@@ -110,7 +110,9 @@ public class Map {
                 mobCount = 1;
             //UIDmax += tonpose.ID;
             return new Mob(MathUtils.random(UIDmax), tonpose.ID, x, y, tonpose);
-        }else if(id == 8){
+        }else if (id == 3){
+            return new Wizard(MathUtils.random(UIDmax), tonpose.ID, x, y, tonpose);
+        } else if(id == 8){
             WoodBlock woodBlock = new WoodBlock(MathUtils.random(UIDmax), x, y, tonpose);
             return woodBlock;
         }
@@ -136,6 +138,9 @@ public class Map {
             case 2:
                 mobCount++;
                 return new Mob(uid, -1, x,y, tonpose);
+            case 3:
+                mobCount++;
+                return new Wizard(uid, -1, x,y, tonpose);
             case 8:
                 return new WoodBlock(uid, x,y, tonpose);
             case 9:
@@ -176,7 +181,7 @@ public class Map {
                 int id=MathUtils.random(0,10);
                 switch(id){
                     default:
-                        terrains[i][j] = new grass(i * 20, j* 20, tonpose);
+                        terrains[i][j] = new grass(i * 80, j* 80, tonpose);
                 }
             }
         }
@@ -248,7 +253,7 @@ public class Map {
     public void addToMap(Projectile projectile){
         projectileAdd.add(projectile);
         Network.AddElement add = new Network.AddElement();
-        add.id = projectile.itemID;
+        add.id = projectile.tid;
         add.uid = projectile.uid;
         add.x = projectile.currentX;
         add.y = projectile.currentY;
@@ -274,7 +279,7 @@ public class Map {
         else if(add.id <= 16){
             itemsAdd.add(generateItems(add.uid, add.id, add.x, add.y));
         }else{
-            projectileAdd.add(new Projectile(add.uid, add.x, add.y, add.id, tonpose));
+            projectileAdd.add(new Projectile(add.uid, add.x, add.y, tonpose));
         }
         UIDmax = add.uid + 1;
     }
@@ -301,7 +306,7 @@ public class Map {
     public void removeFromMap(Projectile projectile){
         projectileDelete.add(projectile);
         Network.RemoveElement remove = new Network.RemoveElement();
-        remove.tid = projectile.itemID;
+        remove.tid = projectile.tid;
         remove.uid = projectile.uid;
         tonpose.client.sendTCP(remove);
     }
@@ -373,10 +378,17 @@ public class Map {
             }
                 mobCount++;
             }*/
+        }else if(move.tid == 3){
+            for(Entity e: entities){
+                if(e.uid == move.uid){
+                    e.move(move.x, move.y);
+                    exists = true;
+                }
+            }
         }else if(move.tid == 20) {
             for (Projectile p : projectiles) {
                 if (p.uid == move.uid) {
-                    p.move(move.x, move.y, TonposeScreen.player);
+                    p.move(move.x, move.y, tonpose.tonposeScreen.player);
                 }
             }
         }
