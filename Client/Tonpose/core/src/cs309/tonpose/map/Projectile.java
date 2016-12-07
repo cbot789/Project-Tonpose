@@ -25,7 +25,7 @@ public class Projectile {
     protected Tonpose tonpose;
     protected int tid;
     protected Rectangle rectangle;
-    public int ownerID;
+    public int ownerID; // 2 from mobs, 1 from player, -1 from other players
 
     public Projectile(int uid, float startX, float startY, float targetX, float targetY, int speed, int damage, int owner, Tonpose t){
         this.uid = uid;

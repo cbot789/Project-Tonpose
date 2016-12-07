@@ -56,10 +56,6 @@ public class Tonpose extends Game{
         androidMethod.Toast(text);
     }
 
-    public static void Tone(int pitch){
-        androidMethod.Tone(pitch);
-    }
-
     public void menu(){
         //client.close();
         androidMethod.menu();

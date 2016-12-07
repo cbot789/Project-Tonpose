@@ -97,7 +97,7 @@ public class Wizard extends Mob {
                 body.setX(locationX);
                 body.setY(locationY);
                 Network.MoveElement move = new Network.MoveElement();
-                move.tid = 2;
+                move.tid = 3;
                 move.uid = uid;
                 move.x = locationX;// + xMove;
                 move.y = locationY;// + yMove;

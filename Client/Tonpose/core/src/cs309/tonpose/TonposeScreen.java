@@ -41,7 +41,7 @@ public class TonposeScreen implements Screen {
 	public Map Map;
 	private Music music;
 
-	private Texture playerImage, buttonImage, playerMoving1, playerMoving2,Background;
+	private Texture playerImage, buttonImage, playerMoving1, playerMoving2, Background;
 	private Texture mob, tree, cabbage, woodBlock;
 	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones;
 	private Texture moving1Mob;
@@ -55,7 +55,7 @@ public class TonposeScreen implements Screen {
 	private Texture fire;
 	private Texture ranged;
 
-	public Texture healthImage;
+	public Texture healthImage, healthImage0, healthImage1, healthImage2, healthImage3, healthImage4, healthImage5, healthImage6, healthImage7, healthImage8;
 	private Stage stage;
 	private TextureRegion buttonRegion;
 	private TextureRegionDrawable buttonRegionDrawable;
@@ -149,6 +149,16 @@ public class TonposeScreen implements Screen {
 		attacking1Player=new Texture(Gdx.files.internal("mainAttack1.png"));
 		attacking2Player=new Texture(Gdx.files.internal("mainAttack2.png"));
 		hitPlayer=new Texture(Gdx.files.internal("mainScared.png"));
+
+		healthImage0=new Texture(Gdx.files.internal("pizza0.png"));
+		healthImage1=new Texture(Gdx.files.internal("pizza1.png"));
+		healthImage2=new Texture(Gdx.files.internal("pizza2.png"));
+		healthImage3=new Texture(Gdx.files.internal("pizza3.png"));
+		healthImage4=new Texture(Gdx.files.internal("pizza4.png"));
+		healthImage5=new Texture(Gdx.files.internal("pizza5.png"));
+		healthImage6=new Texture(Gdx.files.internal("pizza6.png"));
+		healthImage7=new Texture(Gdx.files.internal("pizza7.png"));
+		healthImage8=new Texture(Gdx.files.internal("pizza8.png"));
 
 		// load music
 		music = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -347,7 +357,7 @@ public class TonposeScreen implements Screen {
 		font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
 		font.draw(batch, Lvl+player.lvl, playerHealthX+65, playerHealthY+30); // draws current player level
 		//renders hp bar
-		batch.draw(healthImage,playerHealthX,playerHealthY);			//FIXME hp doesnt display after dying and re-entering
+		batch.draw(updateHP(), playerHealthX, playerHealthY);			//FIXME hp doesnt display after dying and re-entering
 		batch.end();  // submits all drawing requests between begin() and end() at once. Speeds up OpenGL rendering
 		// make player move on touch
 		int i=0;
@@ -662,5 +672,30 @@ public class TonposeScreen implements Screen {
 				}
 		}
 
+	}
+
+	private Texture updateHP(){
+		switch(player.currentHp){
+			case 0:
+				return healthImage0;
+			case 1:
+				return healthImage1;
+			case 2:
+				return healthImage2;
+			case 3:
+				return healthImage3;
+			case 4:
+				return healthImage4;
+			case 5:
+				return healthImage5;
+			case 6:
+				return healthImage6;
+			case 7:
+				return healthImage7;
+			case 8:
+				return healthImage8;
+			default:
+				return healthImage0;
+		}
 	}
 }

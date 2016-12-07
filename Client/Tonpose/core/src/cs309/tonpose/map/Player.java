@@ -292,5 +292,17 @@ public class Player extends Living {
         locationX = -1000;
         locationY = -1000;
         body.setCenter(-1000, -1000);
+        for (Entity entity : tonpose.tonposeScreen.Map.getEntities()) {
+            if(entity instanceof Mob){
+                if(((Mob)entity).targetID == tonpose.ID){
+                    tonpose.tonposeScreen.Map.removeFromMap(entity);
+                }
+            }
+        }
+        for( Projectile p : tonpose.tonposeScreen.Map.getProjectiles()){
+            if(p.ownerID != -1){
+                tonpose.tonposeScreen.Map.removeFromMap(p);
+            }
+        }
     }
 }

@@ -14,7 +14,6 @@ import android.widget.Toast;
 public class AndroidMethod implements AndroidMethods {
     Handler handler;
     Context context;
-    ToneGenerator player = new ToneGenerator(0,100);
 
     public AndroidMethod(Context context){
         handler=new Handler();                                                                         //allows enqueuing of actions to be performed in a different thread
@@ -28,16 +27,6 @@ public class AndroidMethod implements AndroidMethods {
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void Tone(final int pitch){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                player.startTone(pitch);
-            }
-        });
-
     }
 
     public void menu(){
