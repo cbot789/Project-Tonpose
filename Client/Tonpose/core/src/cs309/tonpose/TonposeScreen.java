@@ -192,7 +192,7 @@ public class TonposeScreen implements Screen {
 		*/
 
 		player = new Player(tonpose.lastX, tonpose.lastY, tonpose.Name, tonpose);
-		Map.spawnNPC();
+		Map.spawnNPC(player.lvl);
 
 		//add terrain to map	//TODO figure out what this is and rename it or delete it
 		terrain = new Array<Rectangle>(); //the array for terrain
@@ -435,7 +435,7 @@ public class TonposeScreen implements Screen {
 			updatePlayer();
 
 		if (time > lastSpawn + SPAWNDELAY){
-			Map.spawnNPC();
+			Map.spawnNPC(player.lvl);
 			lastSpawn = time;
 		}
 

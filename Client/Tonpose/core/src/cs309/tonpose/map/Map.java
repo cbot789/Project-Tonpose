@@ -83,8 +83,18 @@ public class Map {
     }
 
     //randomly spawns an npc onto the map
-    public void spawnNPC(){
-        addToMap(generateEntities(1));
+    public void spawnNPC(int lvl){
+        int difficulty = (5-lvl);
+        if(difficulty < 0)
+            difficulty = 0;
+        int i = (int) (MathUtils.random()*(difficulty));
+        switch (i){
+            case 0:
+                addToMap(generateEntities(3));
+                break;
+            default:
+                addToMap(generateEntities(1));
+        }
     }
 
     //used for single player
