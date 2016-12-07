@@ -382,7 +382,7 @@ public class Map {
         }
     }
 
-    //checks for nearby targets for the player
+    //checks for nearby targets for the player or traps
     public Entity checkMap(float x, float y, float rangeX, float rangeY){ //TODO improve selection method
         Entity returnEntity=null;
         for (Entity entity:entities) {

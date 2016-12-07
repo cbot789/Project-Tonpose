@@ -80,12 +80,14 @@ public class TonposeScreen implements Screen {
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
 	private long lastFire = 0;
+	private long lastTrap = 0;
 	private final int TICKDELAY =       20000000;
 	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     50000000;
 	private final long ANIMATIONDELAY = 160000000L;
 	private final long SPAWNDELAY =     80000000000L;
+	private final long TRAPDELAY  =     800000000L;
 	private final long FIREDELAY = 		640000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
@@ -189,7 +191,6 @@ public class TonposeScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-
 		//sets area around screen so client only renders what the user will see
 		float renderUpperX = camera.position.x + renderBufferX;
 		float renderLowerX = camera.position.x - renderBufferX;
@@ -420,6 +421,16 @@ public class TonposeScreen implements Screen {
 			player.nextAnimation(nextAnimation);
 			lastAnimation = time;
 			animationCount++;
+		}
+		if(time>lastTrap+TRAPDELAY){
+			for(Entity entity:Map.getEntities()){
+				if(entity.id==4){
+					if(Map.getDistance(entity.getX(),entity.getY(),player.getX(),player.getY())<75){
+						player.changeHp(-1);
+					}
+				}
+			}
+			lastTrap=time;
 		}
 
 		if(player.currentHp < 0 && player.killable) //checks if player is dead and changes screen accordingly
