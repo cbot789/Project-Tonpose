@@ -10,7 +10,8 @@ item
 	12 - cabbage leaves
 	13 - log
 	14 - plank
-	
+	15 - bones
+	16 - sword
 Terrain
 	100 - Grass
 	101 - River Horizontal
