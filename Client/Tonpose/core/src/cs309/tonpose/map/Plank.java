@@ -17,7 +17,7 @@ public class Plank extends Item {
         texture = new Texture(Gdx.files.internal("shlog.png"));
         hasAction = true;
         name = "Planks";
-        //craftingBase = true;
+        craftingBase = true;
     }
 
     @Override
@@ -29,4 +29,7 @@ public class Plank extends Item {
             user.updateScore(5); //add points for placing woodblock
         }
     }
+
+
+
 }
