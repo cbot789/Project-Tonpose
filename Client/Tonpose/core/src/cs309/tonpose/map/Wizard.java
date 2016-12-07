@@ -90,7 +90,7 @@ public class Wizard extends Mob {
                 }
             }
             if(collidedX && collidedY){
-                attack(locationX, locationY);
+
             }else{
                 locationX += xMove;
                 locationY += yMove;
