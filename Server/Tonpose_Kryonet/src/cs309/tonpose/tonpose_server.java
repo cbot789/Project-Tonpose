@@ -249,6 +249,7 @@ public class tonpose_server {
 					switch(move.tid){
 						// Elements is an entity
 						case 0:
+						case 4:
 						case 8:
 						case 9:
 							ArrayList<ServerEntity> eList = map.getEntities();
@@ -263,7 +264,6 @@ public class tonpose_server {
 						break;
 						case 2:
 						case 3:
-						case 4:
 							ArrayList<ServerEntity> mList = map.getMobs();
 							for(int i = 0; i < mList.size(); i++){
 								if(move.uid == mList.get(i).uniqueID){
@@ -348,6 +348,7 @@ public class tonpose_server {
 					switch(remove.tid){
 						// Elements is an entity
 						case 0:
+						case 4:
 						case 8:
 						case 9:
 							ArrayList<ServerEntity> eList = map.getEntities();
@@ -361,7 +362,6 @@ public class tonpose_server {
 						break;
 						case 2:
 						case 3:
-						case 4:
 							ArrayList<ServerEntity> mList = map.getMobs();
 							for(int i = 0; i < mList.size(); i++){
 								if(remove.uid == mList.get(i).uniqueID){

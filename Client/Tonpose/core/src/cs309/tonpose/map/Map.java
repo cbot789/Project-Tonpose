@@ -130,10 +130,10 @@ public class Map {
             case 0:
                 return new Cabbage(uid, x,y, tonpose);
             case 2:
-                mobCount++;
+                //mobCount++;
                 return new Mob(uid, -1, x,y, tonpose);
             case 3:
-                mobCount++;
+                //mobCount++;
                 return new Wizard(uid, -1, x,y, tonpose);
             case 4:
                 return new Trap(uid, x, y, tonpose);
@@ -165,6 +165,8 @@ public class Map {
                 return new Sword(uid, 1, x, y, true, tonpose);
             case 17:
                 return new Wand(uid, 1, x, y, true, tonpose);
+            case 18:
+                return new TrapParts(uid, 1, x, y, true, tonpose);
             default:
                 return new Wand(uid, 1, x, y, true, tonpose);
         }
@@ -277,7 +279,7 @@ public class Map {
         }else{
             projectileAdd.add(new Projectile(add.uid, add.x, add.y, tonpose));
         }
-        UIDmax = add.uid + 1;
+        //UIDmax = add.uid + 1;
     }
 
     public int getWidth(){
@@ -310,7 +312,7 @@ public class Map {
     //removes an entity so it no longer shows on the server map
     public void removeFromMap(Entity entity){
         entitiesDelete.add(entity);
-        mobCount--;
+        //mobCount--;
         Network.RemoveElement remove = new Network.RemoveElement();
         remove.tid = entity.id;
         remove.uid = entity.uid;
@@ -323,13 +325,13 @@ public class Map {
             for(Entity e: entities){
                 if(e.uid == remove.uid){
                     entitiesDelete.add(e);
-                    if(remove.tid == 2){
+                    /*if(remove.tid == 2){
                         mobCount--;
-                    }
+                    }*/
                 }
             }
         }
-        else if(remove.tid <= 16){
+        else if(remove.tid <= 18){
             for(Item i: items){
                 if(i.uid == remove.uid){
                     itemsDelete.add(i);
