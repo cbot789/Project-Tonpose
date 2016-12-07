@@ -132,7 +132,11 @@ public class Tonpose extends Game{
                 // Adds an item or element to the map
                 if (object instanceof Network.AddElement) {
                     Network.AddElement add = (Network.AddElement) object;
-                    tonposeScreen.Map.addToMap(add);
+                    try{
+                        tonposeScreen.Map.addToMap(add);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 // Removes an item or element from the map
                 if (object instanceof Network.RemoveElement) {
