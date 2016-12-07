@@ -83,13 +83,13 @@ public class TonposeScreen implements Screen {
 	private long lastAnimation = 0;
 	private long lastFire = 0;
 	private long lastTrap = 0;
-	private final int TICKDELAY =       20000000;
-	private final int NPCDELAY =        80000000;
-	private final int MOVEDELAY =       20000000;
-	private final int UPDATEDELAY =     50000000;
+	private final int TICKDELAY =        20000000;
+	private final int NPCDELAY =         80000000;
+	private final int MOVEDELAY =        20000000;
+	private final int UPDATEDELAY =      50000000;
 	private final long ANIMATIONDELAY = 160000000L;
-	private final long SPAWNDELAY =     100000000000L;
-	private final long TRAPDELAY  =     800000000L;
+	private final long SPAWNDELAY =  100000000000L;
+	private final long TRAPDELAY  =    1280000000L;
 	private final long FIREDELAY = 		640000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
@@ -303,6 +303,7 @@ public class TonposeScreen implements Screen {
 									}else{
 										batch.draw(trap2, entity.locationX, entity.locationY);
 									}
+									break;
 								case 8:
 									batch.draw(woodBlock, entity.locationX, entity.locationY);
 									break;
