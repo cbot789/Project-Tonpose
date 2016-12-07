@@ -48,6 +48,14 @@ public class Logs extends Item {
                         return new Sword(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX, locationY, true, tonpose);
                     }
                 }
+            case 14: //planks
+                    if(count >= 1){
+                        if(mod.count >= 1){
+                            count--;
+                            mod.count--;
+                            return new TrapParts(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX, locationY, true, tonpose);
+                        }
+                    }
                 break;
             default:
                 break;

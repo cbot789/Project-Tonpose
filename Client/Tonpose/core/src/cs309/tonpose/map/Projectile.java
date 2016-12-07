@@ -23,12 +23,13 @@ public class Projectile {
     protected float ySpeed;
     protected int damage;
     protected Tonpose tonpose;
-    protected int itemID;
+    protected int tid;
     protected Rectangle rectangle;
     public int ownerID;
 
     public Projectile(int uid, float startX, float startY, float targetX, float targetY, int speed, int damage, int owner, Tonpose t){
         this.uid = uid;
+        this.tid = 20;
         currentX = startX;
         currentY = startY;
         this.damage = damage;
@@ -83,7 +84,7 @@ public class Projectile {
             }
         }
         Network.MoveElement move = new Network.MoveElement();
-        move.tid = itemID;
+        move.tid = tid;
         move.uid = uid;
         move.x = currentX;
         move.y = currentY;

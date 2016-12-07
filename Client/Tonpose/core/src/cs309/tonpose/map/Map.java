@@ -253,7 +253,7 @@ public class Map {
     public void addToMap(Projectile projectile){
         projectileAdd.add(projectile);
         Network.AddElement add = new Network.AddElement();
-        add.id = projectile.itemID;
+        add.id = projectile.tid;
         add.uid = projectile.uid;
         add.x = projectile.currentX;
         add.y = projectile.currentY;
@@ -306,7 +306,7 @@ public class Map {
     public void removeFromMap(Projectile projectile){
         projectileDelete.add(projectile);
         Network.RemoveElement remove = new Network.RemoveElement();
-        remove.tid = projectile.itemID;
+        remove.tid = projectile.tid;
         remove.uid = projectile.uid;
         tonpose.client.sendTCP(remove);
     }
