@@ -80,6 +80,7 @@ public class Projectile {
                 if(user.getRectangle().overlaps(rectangle)){
                     user.changeHp(-damage/10);
                     tonpose.tonposeScreen.Map.removeFromMap(this);
+                    return;
                 }
             }
         }
