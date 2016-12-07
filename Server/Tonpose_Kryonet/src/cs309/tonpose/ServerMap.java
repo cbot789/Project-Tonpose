@@ -158,7 +158,7 @@ public class ServerMap {
     }
 
     public void add(ServerEntity entity){
-        if(entity.typeID == 2){
+        if((entity.typeID == 2) || (entity.typeID == 3)){
         	mobCount++;
         	mobs.add(entity);
         }
@@ -174,7 +174,7 @@ public class ServerMap {
     }
 
     public void remove(ServerEntity entity){
-        if(entity.typeID == 2){
+        if((entity.typeID == 2) || (entity.typeID == 3)){
         	mobCount--;
         	mobs.remove(entity);
         }
