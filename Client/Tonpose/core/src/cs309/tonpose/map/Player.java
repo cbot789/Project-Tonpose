@@ -289,9 +289,9 @@ public class Player extends Living {
     @Override
     public void kill() {
         death.play();
-        locationX = -1000;
-        locationY = -1000;
-        body.setCenter(-1000, -1000);
+        //locationX = -1000;
+        //locationY = -1000;
+        //body.setCenter(-1000, -1000);
         for (Entity entity : tonpose.tonposeScreen.Map.getEntities()) {
             if(entity instanceof Mob){
                 if(((Mob)entity).targetID == tonpose.ID){
