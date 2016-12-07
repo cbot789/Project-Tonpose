@@ -137,7 +137,11 @@ public class Tonpose extends Game{
                 // Removes an item or element from the map
                 if (object instanceof Network.RemoveElement) {
                     Network.RemoveElement remove = (Network.RemoveElement) object;
-                    tonposeScreen.Map.removeFromMap(remove);
+                    try{
+                        tonposeScreen.Map.removeFromMap(remove);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
             public void disconnected(Connection connection) {

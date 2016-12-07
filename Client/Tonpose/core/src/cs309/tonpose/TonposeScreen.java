@@ -31,6 +31,7 @@ import cs309.tonpose.map.Mob;
 import cs309.tonpose.map.Player;
 import cs309.tonpose.map.Projectile;
 import cs309.tonpose.map.Terrain;
+import cs309.tonpose.map.Trap;
 import cs309.tonpose.map.Wand;
 
 import static java.lang.Math.abs;
@@ -43,7 +44,7 @@ public class TonposeScreen implements Screen {
 
 	private Texture playerImage, buttonImage, playerMoving1, playerMoving2, Background;
 	private Texture mob, tree, cabbage, woodBlock;
-	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones;
+	private Texture	treeSeeds, cabbageSeeds, cabbageLeaves, log, sword, bones,trap1,trap2;
 	private Texture moving1Mob;
 	private Texture moving2Mob;
 	private Texture attacking1Mob;
@@ -87,7 +88,7 @@ public class TonposeScreen implements Screen {
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     50000000;
 	private final long ANIMATIONDELAY = 160000000L;
-	private final long SPAWNDELAY =     80000000000L;
+	private final long SPAWNDELAY =     100000000000L;
 	private final long TRAPDELAY  =     800000000L;
 	private final long FIREDELAY = 		640000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
@@ -118,6 +119,8 @@ public class TonposeScreen implements Screen {
 		this.tonpose = t;
 
 		// load standing Entity textures
+		trap1=new Texture(Gdx.files.internal("dot.png"));
+		trap2=new Texture(Gdx.files.internal("beartrap.png"));
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		mob=new Texture(Gdx.files.internal("player2base.png"));
@@ -294,6 +297,8 @@ public class TonposeScreen implements Screen {
 								case 2:
 									batch.draw(getTextureMob(((Mob) entity).old, 2), entity.locationX, entity.locationY);
 									break;
+								case 4: //trap
+									batch.draw(entity.texture, entity.locationX,entity.locationY);
 								case 8:
 									batch.draw(woodBlock, entity.locationX, entity.locationY);
 									break;
@@ -439,6 +444,7 @@ public class TonposeScreen implements Screen {
 				if(entity.id==4){
 					if(Map.getDistance(entity.getX(),entity.getY(),player.getX(),player.getY())<75){
 						player.changeHp(-1);
+						entity.texture=trap2;
 					}
 				}
 			}

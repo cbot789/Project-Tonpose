@@ -84,7 +84,7 @@ public class Map {
 
     //randomly spawns an npc onto the map
     public void spawnNPC(){
-        addToMap(generateEntities(3));
+        addToMap(generateEntities(1));
     }
 
     //used for single player
