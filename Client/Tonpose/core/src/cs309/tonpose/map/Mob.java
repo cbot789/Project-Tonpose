@@ -232,6 +232,7 @@ public class Mob extends Living {
     @Override
     public void changeHp(int mod) {
         super.changeHp(mod);
+        System.out.println(-mod + " damage taken, new hp = " + currentHp);
         scare(10);
         nextAnimation(3);
     }

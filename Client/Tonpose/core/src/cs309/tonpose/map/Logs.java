@@ -31,6 +31,15 @@ public class Logs extends Item {
                     }
                 }
                 break;
+            case 12: //cabbage leaves
+                if(count >= 1){
+                    if(mod.count >= 1){
+                        count--;
+                        mod.count--;
+                        return new Wand(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), 1, locationX, locationY, true, tonpose);
+                    }
+                }
+                break;
             case 15: //bones
                 if(count >= 1){
                     if(mod.count >= 1){

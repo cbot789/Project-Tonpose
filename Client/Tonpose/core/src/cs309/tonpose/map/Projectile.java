@@ -33,7 +33,7 @@ public class Projectile {
         currentY = startY;
         this.damage = damage;
         rectangle = new Rectangle(startX, startY, 32, 32);
-        ownerID = tonpose.ID;
+        ownerID = 1;
         float x = targetX - startX;
         float y = targetY - startY;
         float sum = abs(x) + abs(y);
@@ -55,7 +55,7 @@ public class Projectile {
             case 20:
                 damage = 20;
             default:
-                damage = 20;
+                damage = id;
         }
         tonpose = t;
     }
@@ -72,13 +72,17 @@ public class Projectile {
         }else{
             for(Entity entity : entityList){
                 if(entity.getRectangle().overlaps(rectangle)){
-                    entity.changeHp(damage);
+                    System.out.print(damage);
+                    entity.changeHp(-damage);
                     tonpose.tonposeScreen.Map.removeFromMap(this);
                     return;
                 }
             }
-            if(user.getRectangle().overlaps(rectangle)){
-                user.changeHp(damage/10);
+            if(ownerID != 1){
+                if(user.getRectangle().overlaps(rectangle)){
+                    user.changeHp(-damage/10);
+                    tonpose.tonposeScreen.Map.removeFromMap(this);
+                }
             }
         }
         Network.MoveElement move = new Network.MoveElement();
@@ -93,7 +97,16 @@ public class Projectile {
         currentX = newX;
         currentY = newY;
         if(user.getRectangle().overlaps(rectangle)){
-            user.changeHp(damage/10);
+            user.changeHp(-damage/10);
+            tonpose.tonposeScreen.Map.removeFromMap(this);
         }
+    }
+
+    public float getX(){
+        return currentX;
+    }
+
+    public float getY(){
+        return currentY;
     }
 }

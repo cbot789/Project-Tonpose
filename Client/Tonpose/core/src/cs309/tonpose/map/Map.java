@@ -64,6 +64,9 @@ public class Map {
         itemsAdd = new ArrayList<Item>();
         entitiesDelete=new ArrayList<Entity>();
         itemsDelete = new ArrayList<Item>();
+        projectileDelete = new ArrayList<Projectile>();
+        projectileAdd = new ArrayList<Projectile>();
+        projectiles = new ArrayList<Projectile>();
         this.terrains = new Terrain[height/80+1][width/80+1];
         mobCount = 0;
 
@@ -146,9 +149,9 @@ public class Map {
     private Item generateItems(int uid, int id, float x, float y){
         switch(id){
             case 10:
-                return new TreeSeeds(uid, 1, x, y, true, tonpose);
+                return new TreeSeeds(uid, 2, x, y, true, tonpose);
             case 11:
-                return new CabbageSeeds(uid, 1, x, y, true, tonpose);
+                return new CabbageSeeds(uid, 2, x, y, true, tonpose);
             case 12:
                 return new CabbageLeaves(uid, 1, x, y, true, tonpose);
             case 13:
@@ -160,9 +163,9 @@ public class Map {
             case 16:
                 return new Sword(uid, 1, x, y, true, tonpose);
             case 17:
-                return new Bow(uid, 1, x, y, true, tonpose);
+                return new Wand(uid, 1, x, y, true, tonpose);
             default:
-                return new Bow(uid, 1, x, y, true, tonpose);
+                return new Wand(uid, 1, x, y, true, tonpose);
         }
     }
 

@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import java.util.ArrayList;
 
 import cs309.tonpose.Network.MovePlayer;
-import cs309.tonpose.map.Bow;
 import cs309.tonpose.map.Entity;
 import cs309.tonpose.map.Item;
 import cs309.tonpose.map.Map;
@@ -32,6 +31,7 @@ import cs309.tonpose.map.Mob;
 import cs309.tonpose.map.Player;
 import cs309.tonpose.map.Projectile;
 import cs309.tonpose.map.Terrain;
+import cs309.tonpose.map.Wand;
 
 import static java.lang.Math.abs;
 
@@ -52,6 +52,7 @@ public class TonposeScreen implements Screen {
 	private Texture attacking1Player;
 	private Texture attacking2Player;
 	private Texture hitPlayer;
+	private Texture fire;
 
 	public Texture healthImage;
 	private Stage stage;
@@ -78,12 +79,14 @@ public class TonposeScreen implements Screen {
 	private long lastUpdate = 0;
 	private long lastSpawn = 0;
 	private long lastAnimation = 0;
+	private long lastFire = 0;
 	private final int TICKDELAY =       20000000;
 	private final int NPCDELAY =        80000000;
 	private final int MOVEDELAY =       20000000;
 	private final int UPDATEDELAY =     50000000;
 	private final long ANIMATIONDELAY = 160000000L;
 	private final long SPAWNDELAY =     80000000000L;
+	private final long FIREDELAY = 		640000000L;
 	private final long GROWTHDELAY =    8000000000L; //TODO implement growth of trees and cabbages after planting
 
 	private int animationCount = 0;
@@ -133,6 +136,7 @@ public class TonposeScreen implements Screen {
 		log =new Texture(Gdx.files.internal("shlog.png"));
 		sword =new Texture(Gdx.files.internal("sword.png"));
 		bones =new Texture(Gdx.files.internal("bone.png"));
+		fire = new Texture(Gdx.files.internal("fire.png"));
 
 		//load player textures
 		playerMoving1=new Texture(Gdx.files.internal("mainWalkingRight1.png"));
@@ -332,6 +336,11 @@ public class TonposeScreen implements Screen {
 			}
 		}
 
+		//renders projectiles
+		for (Projectile p: Map.getProjectiles()){
+			batch.draw(fire, p.getX(), p.getY());
+		}
+
 		font.draw(batch, Score+player.getScore(),playerHealthX+65,playerHealthY+60);					//Render Score
 		font.draw(batch, Lvl+player.lvl, playerHealthX+65, playerHealthY+30); // draws current player level
 		//renders hp bar
@@ -350,7 +359,7 @@ public class TonposeScreen implements Screen {
 				if(actionButtonDeadZone.contains(touchPos.x,touchPos.y)||playersOnlineDeadZone.contains(touchPos.x,touchPos.y)||inventoryDeadZone.contains(touchPos.x,touchPos.y)){ //checks if touch is in the dead zone, if so the player will not move
 					tonpose.lastX = player.getX();
 					tonpose.lastY = player.getY();
-					if(player.equiped instanceof Bow){
+					if(player.equiped instanceof Wand){
 						aiming = true;
 					}
 				}
@@ -376,19 +385,21 @@ public class TonposeScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 
-		if(targeting == true){
-			if(aiming == false){
-				((Bow)player.equiped).fire(aimX, aimY, player, tonpose);
-				targeting = false;
-			}
-		}
-
 		if (TimeUtils.nanoTime() > lastTick + TICKDELAY) {
 			tick(TimeUtils.nanoTime());
 		}
 	}
 
 	private void tick(long time) {
+		if(time > lastFire + FIREDELAY){
+			if(targeting == true){
+				if(aiming == true){
+					((Wand)player.equiped).fire(aimX, aimY, player, tonpose);
+					targeting = false;
+					lastFire = time;
+				}
+			}
+		}
 
 		if (time > lastMove + MOVEDELAY)
 			//if(moving)
@@ -445,9 +456,8 @@ public class TonposeScreen implements Screen {
 			}
 		}
 
-		//moves projectiles
 		for(Projectile projectile : Map.getProjectiles()){
-			if(projectile.ownerID == tonpose.ID){
+			if(projectile.ownerID == 1){
 				projectile.move(Map.getEntities(), player);
 			}
 		}
