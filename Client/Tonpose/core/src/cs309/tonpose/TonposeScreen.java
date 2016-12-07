@@ -119,8 +119,8 @@ public class TonposeScreen implements Screen {
 		this.tonpose = t;
 
 		// load standing Entity textures
-		trap1=new Texture(Gdx.files.internal("dot.png"));
-		trap2=new Texture(Gdx.files.internal("beartrap.png"));
+		trap1=new Texture(Gdx.files.internal("beartrap.png"));
+		trap2=new Texture(Gdx.files.internal("dot.png"));
 		healthImage=new Texture(Gdx.files.internal("pizza8.png"));
 		playerImage=new Texture(Gdx.files.internal("mainbase.png"));
 		mob=new Texture(Gdx.files.internal("player2base.png"));
@@ -240,8 +240,11 @@ public class TonposeScreen implements Screen {
 		}
 
 		//renders other players and plays walking or standing animation
+
 		for (User value	: tonpose.users.values()) {
 			boolean found = false;
+
+			/*
 			for (User old: oldPlayers) {
 				if(old.id == value.id){
 					if(old.x != value.x || old.y != value.y){
@@ -272,7 +275,8 @@ public class TonposeScreen implements Screen {
 			}
 			if(found == false){
 				oldPlayers.add(value);
-			}
+			}*/
+			batch.draw(playerImage, value.x, value.y);
 		}
 
 		/*//render other players old
