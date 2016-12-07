@@ -2,6 +2,7 @@ package cs309.tonpose.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -115,6 +116,6 @@ public class Wizard extends Mob {
         shoot.setPosition(0);
         shoot.play();
 
-        t.tonposeScreen.Map.addToMap(new Projectile(tonpose.tonposeScreen.Map.UIDmax++, locationX, locationY, targetX, targetY, 20, 10, 2, t));
+        t.tonposeScreen.Map.addToMap(new Projectile(MathUtils.random(tonpose.tonposeScreen.Map.UIDmax), locationX, locationY, targetX, targetY, 20, 10, 2, t));
     }
 }

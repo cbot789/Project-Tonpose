@@ -108,7 +108,6 @@ public class Map {
             mobCount++;
             if(mobCount > 10000)
                 mobCount = 1;
-            //UIDmax += tonpose.ID;
             return new Mob(MathUtils.random(UIDmax), tonpose.ID, x, y, tonpose);
         }else if (id == 3){
             return new Wizard(MathUtils.random(UIDmax), tonpose.ID, x, y, tonpose);
@@ -121,11 +120,6 @@ public class Map {
             if(tree.body.overlaps(playerRectangle)){
                 return generateEntities(2);
             }
-            /*for(Entity enitity:entities){ //check for overlap
-                if(tree.body.overlaps(enitity.getRectangle())){
-                    return generateTerrain();
-                }
-            }*/
             return tree;
         }
     }
@@ -351,38 +345,10 @@ public class Map {
     //moves mobs from other clients
     public void moveElement(Network.MoveElement move){
         // Only move mob and projectile elements
-        boolean exists = false;
-        if(move.tid == 2){
-            for(Entity e: entities){
-                if(e.uid == move.uid){
+        if(move.tid == 2 || move.tid == 3){
+            for(Entity e: entities) {
+                if (e.uid == move.uid) {
                     e.move(move.x, move.y);
-                    exists = true;
-                }
-            }
-            /*if(!exists){
-                entitiesAdd.add(generateEntities(move.uid, 2, move.x, move.y));
-                UIDmax = move.uid;
-                UIDmax++;
-            }
-        }else if(move.tid == 20){
-            for(Projectile p: projectiles){
-                if(p.uid == move.uid){
-                    p.move(move.x, move.y, TonposeScreen.player);
-                    exists = true;
-                }
-            }
-            if(!exists){
-                projectileAdd.add(new Projectile(move.uid, move.x, move.y, 20, tonpose));
-                UIDmax = move.uid;
-                UIDmax++;
-            }
-                mobCount++;
-            }*/
-        }else if(move.tid == 3){
-            for(Entity e: entities){
-                if(e.uid == move.uid){
-                    e.move(move.x, move.y);
-                    exists = true;
                 }
             }
         }else if(move.tid == 20) {

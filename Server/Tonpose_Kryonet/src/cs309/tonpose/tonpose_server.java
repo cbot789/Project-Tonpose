@@ -42,7 +42,7 @@ public class tonpose_server {
 		Network.register(server);
 		
 		// Initialize the game map
-		map = new ServerMap(1000, 1000, 20);
+		map = new ServerMap(1000, 1000, 30);
 
 		server.addListener(new Listener() {
 			public void received (Connection c, Object object) {
